@@ -6,7 +6,7 @@ import ucsLogo from '../assets/images/logo/ucs_logo.png'
 
 const Navbar = () => {
   return (
-    <div className='container z-10'>
+    <div className='container z-10 '>
       <div className=' navbar bg-base-100'>
         <div className='navbar-start'>
           <div className='dropdown'>

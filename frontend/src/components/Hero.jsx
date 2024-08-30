@@ -7,7 +7,7 @@ const Hero = () => {
   }
   return (
     <>
-      <div className='hero bg-base-200 h-full py-14 sm:p-20'>
+      <div className='hero bg-base-200 h-full py-14 sm:px-0 sm:p-20 '>
         <div className='container'>
           <div className='flex justify-between items-center gap-x-5'>
             <div className='left max-w-[500px] space-y-5'>
