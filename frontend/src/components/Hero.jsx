@@ -2,14 +2,12 @@ import React from 'react'
 import heroImage from '../assets/images/heroSection.jpg'
 
 const Hero = () => {
-  const heroSection = {
-    height: 'calc(100vh - 72px)',
-  }
   return (
     <>
       <div className='hero bg-base-200 h-full py-14 sm:px-0 sm:p-20 '>
         <div className='container'>
           <div className='flex justify-between items-center gap-x-5'>
+            {/* Left */}
             <div className='left max-w-[500px] space-y-5'>
               <h1 className='font-bold text-4xl sm:text-5xl sm:leading-tight'>
                 Welcome to the{' '}
@@ -28,6 +26,7 @@ const Hero = () => {
               </a>
             </div>
 
+            {/* Right */}
             <div className='right max-w-[550px]'>
               <img
                 src={heroImage}

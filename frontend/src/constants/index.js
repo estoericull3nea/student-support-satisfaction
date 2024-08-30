@@ -32,5 +32,45 @@ export const servicesData = [
       'https://images.pexels.com/photos/877971/pexels-photo-877971.jpeg?auto=compress&cs=tinysrgb&w=400',
       'https://images.pexels.com/photos/159711/books-bookstore-book-reading-159711.jpeg?auto=compress&cs=tinysrgb&w=400',
     ],
+    link: '/library',
+  },
+
+  {
+    title: 'Office of the School Principal',
+    description:
+      'Experience leadership dedicated to nurturing an environment of academic excellence and personal growth. Our principals office ensures effective management and support for all stakeholders.',
+    btnText: 'Learn More',
+    images: [
+      'https://images.pexels.com/photos/4043789/pexels-photo-4043789.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+      'https://images.pexels.com/photos/21325137/pexels-photo-21325137/free-photo-of-electronics-on-an-office-desk.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+      'https://images.pexels.com/photos/7212949/pexels-photo-7212949.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+    ],
+    link: '/school-principal',
+  },
+
+  {
+    title: 'Office of the School Administrator',
+    description:
+      'Efficiency and organization are the cornerstones of our administrative services. From scheduling to resource allocation, our administrators office ensures smooth operations for the entire institution.',
+    btnText: 'Discover More',
+    images: [
+      'https://images.pexels.com/photos/3791185/pexels-photo-3791185.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+      'https://images.pexels.com/photos/6150070/pexels-photo-6150070.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+      'https://images.pexels.com/photos/6609460/pexels-photo-6609460.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+    ],
+    link: '/school-administrator',
+  },
+
+  {
+    title: 'Office of the School Registrar',
+    description:
+      'Entrusted with maintaining accurate academic records, our registrars office ensures transparency and integrity in all matters related to student enrollment, transcripts, and certifications',
+    btnText: 'Explore Registrar Services',
+    images: [
+      'https://images.pexels.com/photos/9034250/pexels-photo-9034250.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+      'https://images.pexels.com/photos/4144222/pexels-photo-4144222.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+      'https://images.pexels.com/photos/7156103/pexels-photo-7156103.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+    ],
+    link: '/school-registrar',
   },
 ]

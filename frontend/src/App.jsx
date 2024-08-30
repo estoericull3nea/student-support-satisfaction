@@ -17,6 +17,19 @@ const App = () => {
         tagline='Explore Our Offerings'
         description='Discover the comprehensive range of services we provide to support the educational journey'
       />
+
+      {servicesData.map((service, index) => (
+        <Services
+          key={index}
+          title={service.title}
+          description={service.description}
+          btnText={service.btnText}
+          images={service.images}
+          reverse={index % 2 !== 0}
+          index={index}
+          link={service.link}
+        />
+      ))}
     </>
   )
 }

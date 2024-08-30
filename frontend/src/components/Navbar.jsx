@@ -9,6 +9,7 @@ const Navbar = () => {
     <div className='container z-10 '>
       <div className=' navbar bg-base-100'>
         <div className='navbar-start'>
+          {/* DropDown */}
           <div className='dropdown'>
             <div tabIndex={0} role='button' className='btn btn-ghost lg:hidden'>
               <svg
@@ -57,6 +58,8 @@ const Navbar = () => {
               </li>
             </ul>
           </div>
+
+          {/* Logo */}
           <a href='/' className='flex items-center gap-x-2 w-full sm:w-max'>
             <img src={ucsLogo} alt='' className='w-14 ml-1 sm:ml-0' />
             <h1 className='font-medium text-xl hidden sm:block'>
@@ -65,6 +68,7 @@ const Navbar = () => {
           </a>
         </div>
 
+        {/* Links */}
         <div className='navbar-center hidden lg:flex'>
           <ul className='menu menu-horizontal px-1'>
             <li>
@@ -99,6 +103,7 @@ const Navbar = () => {
           </ul>
         </div>
 
+        {/* Sign Up */}
         <div className='navbar-end'>
           <a className='btn bg-primary hover:bg-primary-hover text-white'>
             Sign Up
