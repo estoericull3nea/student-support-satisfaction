@@ -28,27 +28,32 @@ const Navbar = () => {
             </div>
             <ul
               tabIndex={0}
-              className='menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-max p-2 shadow'
+              className='menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-5 w-max p-2 shadow'
             >
               <li>
-                <a>Home</a>
+                <a className='hover:bg-primary hover:text-white'>Home</a>
               </li>
               <li>
-                <a>Services</a>
+                <a className='hover:bg-primary hover:text-white'>Services</a>
                 <ul className='p-2 '>
                   {services &&
                     services.map((data) => (
                       <li key={data.id}>
-                        <a href={data.link}>{data.serviceName}</a>
+                        <a
+                          href={data.link}
+                          className='hover:bg-primary hover:text-white'
+                        >
+                          {data.serviceName}
+                        </a>
                       </li>
                     ))}
                 </ul>
               </li>
               <li>
-                <a>About</a>
+                <a className='hover:bg-primary hover:text-white'>About</a>
               </li>
               <li>
-                <a>Contact</a>
+                <a className='hover:bg-primary hover:text-white'>Contact</a>
               </li>
             </ul>
           </div>
@@ -63,26 +68,33 @@ const Navbar = () => {
         <div className='navbar-center hidden lg:flex'>
           <ul className='menu menu-horizontal px-1'>
             <li>
-              <a>Home</a>
+              <a className='hover:bg-primary hover:text-white'>Home</a>
             </li>
             <li>
               <details>
-                <summary>Services</summary>
+                <summary className='hover:bg-primary hover:text-white'>
+                  Services
+                </summary>
                 <ul className='p-2 w-max'>
                   {services &&
                     services.map((data) => (
                       <li key={data.id}>
-                        <a href={data.link}>{data.serviceName}</a>
+                        <a
+                          href={data.link}
+                          className='hover:bg-primary hover:text-white'
+                        >
+                          {data.serviceName}
+                        </a>
                       </li>
                     ))}
                 </ul>
               </details>
             </li>
             <li>
-              <a>About</a>
+              <a className='hover:bg-primary hover:text-white'>About</a>
             </li>
             <li>
-              <a>Contact</a>
+              <a className='hover:bg-primary hover:text-white'>Contact</a>
             </li>
           </ul>
         </div>
