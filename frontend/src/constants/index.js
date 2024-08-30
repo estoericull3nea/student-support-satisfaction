@@ -74,3 +74,39 @@ export const servicesData = [
     link: '/school-registrar',
   },
 ]
+
+export const links = [
+  {
+    id: 1,
+    linkName: 'Home',
+    link: '/',
+  },
+  {
+    id: 2,
+    linkName: 'About',
+    link: '/about',
+  },
+  {
+    id: 3,
+    linkName: 'Contact',
+    link: '/contact',
+  },
+]
+
+export const legals = [
+  {
+    id: 1,
+    legalName: 'Terms of Use',
+    link: '/terms',
+  },
+  {
+    id: 2,
+    legalName: 'Privacy Policy',
+    link: '/privacy-policy',
+  },
+  {
+    id: 3,
+    legalName: 'Cookie Policy',
+    link: '/cookie-policy',
+  },
+]
