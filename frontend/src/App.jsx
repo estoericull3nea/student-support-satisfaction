@@ -1,39 +1,15 @@
 import React from 'react'
-import Navbar from './components/Navbar'
-import Hero from './components/Hero'
-import Services from './components/Services'
-import Heading from './components/Heading'
-import Footer from './components/Footer'
-
-import { servicesData } from './constants'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import LandingPage from './pages/LandingPage'
 
 const App = () => {
   return (
-    <>
-      <Navbar />
-      <Hero />
-
-      <Heading
-        title='Our Services'
-        tagline='Explore Our Offerings'
-        description='Discover the comprehensive range of services we provide to support the educational journey'
-      />
-
-      {servicesData.map((service, index) => (
-        <Services
-          key={index}
-          title={service.title}
-          description={service.description}
-          btnText={service.btnText}
-          images={service.images}
-          reverse={index % 2 !== 0}
-          index={index}
-          link={service.link}
-        />
-      ))}
-
-      <Footer />
-    </>
+    <Router>
+      <Routes>
+        <Route path='/' element={<LandingPage />} />
+        {/* Add other routes here if needed */}
+      </Routes>
+    </Router>
   )
 }
 
