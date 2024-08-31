@@ -5,3 +5,16 @@
 * {
   @apply font-poppins;
 }
+
+@layer components {
+  .primary-btn-outline {
+    background-color: transparent;
+    border: 1px solid #a53232;
+    color: black;
+  }
+
+  .primary-btn-outline:hover {
+    background-color: #a53232;
+    color: white;
+  }
+}

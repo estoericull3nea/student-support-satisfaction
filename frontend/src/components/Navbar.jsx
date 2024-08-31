@@ -4,6 +4,8 @@ import { services } from '../constants/index'
 // logo
 import ucsLogo from '../assets/images/logo/ucs_logo.png'
 
+import { Link } from 'react-router-dom'
+
 const Navbar = () => {
   return (
     <div className='container z-10 '>
@@ -104,10 +106,16 @@ const Navbar = () => {
         </div>
 
         {/* Sign Up */}
-        <div className='navbar-end'>
-          <a className='btn bg-primary hover:bg-primary-hover text-white'>
-            Sign Up
-          </a>
+        <div className='navbar-end space-x-2'>
+          <Link to='/register'>
+            <button className='btn bg-primary hover:bg-primary-hover text-white'>
+              Sign Up
+            </button>
+          </Link>
+
+          <Link to='/login'>
+            <button className='btn primary-btn-outline'>Sign In</button>
+          </Link>
         </div>
       </div>
     </div>
