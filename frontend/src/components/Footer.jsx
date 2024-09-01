@@ -5,8 +5,8 @@ import { services, links, legals } from '../constants/index'
 const Footer = () => {
   return (
     <>
-      <div>
-        <footer className='footer bg-base-200 text-base-content p-10'>
+      <div className='bg-base-200'>
+        <footer className='footer text-base-content p-10 container'>
           <aside>
             <div className='flex justify-center items-center gap-x-2'>
               <img src={ucsLogo} alt='' className='w-14 ml-1 sm:ml-0' />
