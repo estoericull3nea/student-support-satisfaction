@@ -7,6 +7,7 @@ import Library from './Pages/Library'
 import PrincipalOffice from './Pages/PrincipalOffice'
 import SchoolRegistrar from './Pages/SchoolRegistrar'
 import SchoolAdministrator from './Pages/SchoolAdministrator'
+import Contact from './Pages/Contact'
 
 const App = () => {
   return (
@@ -19,6 +20,7 @@ const App = () => {
         <Route path='/school-principal' element={<PrincipalOffice />} />
         <Route path='/school-registrar' element={<SchoolRegistrar />} />
         <Route path='/school-administrator' element={<SchoolAdministrator />} />
+        <Route path='/contact-us' element={<Contact />} />
       </Routes>
     </Router>
   )

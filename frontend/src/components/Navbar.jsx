@@ -101,9 +101,13 @@ const Navbar = () => {
             <li>
               <a className='hover:bg-primary hover:text-white'>About</a>
             </li>
-            <li>
-              <a className='hover:bg-primary hover:text-white'>Contact</a>
-            </li>
+            <Link to='/contact-us'>
+              <li>
+                <button className='hover:bg-primary hover:text-white'>
+                  Contact
+                </button>
+              </li>
+            </Link>
           </ul>
         </div>
 
