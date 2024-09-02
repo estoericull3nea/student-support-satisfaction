@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { Link } from 'react-router-dom'
+
 const Services = ({ title, description, btnText, images, index, link }) => {
   const reverse = index % 2 !== 0 // Alternate layout based on index
 
@@ -27,12 +29,11 @@ const Services = ({ title, description, btnText, images, index, link }) => {
         >
           <h1 className='text-3xl font-bold mb-4 text-primary'>{title}</h1>
           <p className='text-md mb-4 text-sm '>{description}</p>
-          <a
-            className='btn bg-primary text-white hover:bg-primary-hover'
-            href={link}
-          >
-            {btnText}
-          </a>
+          <Link to={link}>
+            <button className='btn bg-primary text-white hover:bg-primary-hover'>
+              {btnText}
+            </button>
+          </Link>
         </div>
       </div>
     </div>

@@ -62,12 +62,14 @@ const Navbar = () => {
           </div>
 
           {/* Logo */}
-          <a href='/' className='flex items-center gap-x-2 w-full sm:w-max'>
-            <img src={ucsLogo} alt='' className='w-14 ml-1 sm:ml-0' />
-            <h1 className='font-medium text-xl hidden sm:block'>
-              Student Support
-            </h1>
-          </a>
+          <Link to='/'>
+            <button className='flex items-center gap-x-2 w-full sm:w-max'>
+              <img src={ucsLogo} alt='' className='w-14 ml-1 sm:ml-0' />
+              <h1 className='font-medium text-xl hidden sm:block'>
+                Student Support
+              </h1>
+            </button>
+          </Link>
         </div>
 
         {/* Links */}
