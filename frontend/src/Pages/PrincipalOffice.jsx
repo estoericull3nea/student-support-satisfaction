@@ -11,7 +11,7 @@ import { BsEmojiNeutralFill } from 'react-icons/bs'
 import { BsFillEmojiSmileFill } from 'react-icons/bs'
 import { BsEmojiGrinFill } from 'react-icons/bs'
 
-const Library = () => {
+const PrincipalOffice = () => {
   return (
     <>
       <Navbar />
@@ -22,11 +22,12 @@ const Library = () => {
           <div className='max-w-[400px] p-5 xl:p-0 space-y-3'>
             <span className='text-[.8rem]'>Services</span>
             <h1 className='font-bold text-5xl tracking-wider text-primary'>
-              Library
+              Office of the School Principal
             </h1>
             <p>
-              Welcome to our library, where we offer a wealth of resources,
-              services, and facilities to support your academic journey.
+              Welcome to the Office of the School Principal, where we are
+              dedicated to fostering a positive and nurturing learning
+              environment for all students and staff.
             </p>
             <a
               href='#'
@@ -65,48 +66,54 @@ const Library = () => {
 
         {/* Text and Box */}
         <div className='max-w-[600px] mx-auto space-y-10 py-10 rounded-md'>
-          {/* Our Library */}
+          {/* Office of the School Principal */}
           <div className='our-library space-y-4 '>
             <h2 className='font-bold text-3xl tracking-wide text-primary'>
-              Our Library
+              Office of the School Principal
             </h2>
-            <p>
-              Our collection includes a diverse range of materials, from books
-              and journals to multimedia resources, catering to a variety of
-              interests and academic disciplines. Whether you're conducting
-              research, studying for exams, or simply exploring new topics,
-              you'll find plenty to discover within our extensive collection.
-            </p>
 
             <p>
-              In addition to our vast array of resources, we provide comfortable
-              study spaces, equipped with modern amenities to enhance your
-              learning experience. From quiet reading areas to collaborative
-              study rooms, you'll find the perfect environment to focus and
-              engage with your studies. Our computer labs and printing
-              facilities are also available to assist you with your academic
-              projects and assignments.
-            </p>
-            <p>
-              At our library, we are committed to providing the support and
-              resources you need to succeed in your academic endeavors. Explore
-              our collection, utilize our facilities, and let us help you on
-              your journey to academic excellence.
+              At the heart of our institution, the Office of the School
+              Principal plays a crucial role in guiding the vision and mission
+              of our school. We are committed to providing strong leadership and
+              support to ensure the success and well-being of our school
+              community. In this section, you will find a detailed explanation
+              of the role and responsibilities of the principal's office,
+              including insights into our leadership style, goals, and ongoing
+              initiatives.
             </p>
           </div>
 
-          {/* Library Staff */}
+          {/*  Meet the Principal */}
           <div className='our-library space-y-4 '>
             <h2 className='font-bold text-3xl tracking-wide text-primary'>
-              Library Staff
+              Meet the Principal
             </h2>
             <p>
-              Behind every great library is a dedicated team of professionals
-              ready to assist you. Meet our knowledgeable librarians and support
-              staff, who are here to help you navigate our resources and answer
-              any questions you may have. Whether you need research assistance,
-              guidance on citing sources, or recommendations for your next read,
-              we're here to support your academic journey.
+              Get to know our school principal, [Principal's Name], who brings
+              [his/her] wealth of experience and dedication to our institution.
+              Learn about [his/her] background, educational philosophy, and
+              vision for our school's future. Additionally, hear directly from
+              students, faculty, and parents through testimonials and quotes
+              about the positive impact of [Principal's Name]'s leadership on
+              our school community.
+            </p>
+          </div>
+
+          {/* Policies and Procedures */}
+          <div className='our-library space-y-4 '>
+            <h2 className='font-bold text-3xl tracking-wide text-primary'>
+              Policies and Procedures
+            </h2>
+            <p>
+              Transparency and accountability are key principles of our school's
+              administration. In this section, you will find an overview of the
+              various policies and procedures implemented by the principal's
+              office. From disciplinary procedures to academic regulations, we
+              strive to create a safe, inclusive, and conducive learning
+              environment for all. Explore our policies and procedures to better
+              understand our expectations and guidelines for student conduct and
+              academic excellence.
             </p>
           </div>
 
@@ -116,13 +123,13 @@ const Library = () => {
               Contact Information
             </h2>
             <p>
-              Your feedback and suggestions are valuable to us. If you have any
-              questions, comments, or special requests, please don't hesitate to
-              get in touch. In this section, you'll find contact information for
-              our library staff, including email addresses, phone numbers, and
-              office hours. Whether you prefer to reach out in person, by phone,
-              or via email, we're here to assist you and ensure your library
-              experience is a positive and enriching one.
+              Your feedback and input are important to us. If you have any
+              questions, concerns, or ideas you'd like to share with the
+              principal's office, we encourage you to reach out. In this
+              section, you will find instructions on how to schedule meetings
+              with the principal or address concerns. We are here to listen,
+              support, and collaborate with our school community to ensure the
+              success and well-being of every student.
             </p>
           </div>
 
@@ -277,9 +284,9 @@ const Library = () => {
           {/* Pre Footer */}
           <div>
             <p className='text-center'>
-              Thank you for visiting our library. We look forward to supporting
-              your academic journey and helping you unlock the power of
-              knowledge and discovery.
+              Thank you for visiting the Office of the School Principal.
+              Together, let's continue to inspire excellence and empower the
+              future leaders of tomorrow.
             </p>
           </div>
         </div>
@@ -289,4 +296,4 @@ const Library = () => {
   )
 }
 
-export default Library
+export default PrincipalOffice
