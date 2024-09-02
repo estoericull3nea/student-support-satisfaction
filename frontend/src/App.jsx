@@ -5,6 +5,7 @@ import Register from './pages/Register'
 import Login from './pages/Login'
 import Library from './Pages/Library'
 import PrincipalOffice from './Pages/PrincipalOffice'
+import SchoolRegistrar from './Pages/SchoolRegistrar'
 
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
         <Route path='/login' element={<Login />} />
         <Route path='/library' element={<Library />} />
         <Route path='/school-principal' element={<PrincipalOffice />} />
+        <Route path='/school-registrar' element={<SchoolRegistrar />} />
       </Routes>
     </Router>
   )
