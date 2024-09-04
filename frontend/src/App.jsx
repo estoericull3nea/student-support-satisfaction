@@ -8,6 +8,7 @@ import PrincipalOffice from './Pages/PrincipalOffice'
 import SchoolRegistrar from './Pages/SchoolRegistrar'
 import SchoolAdministrator from './Pages/SchoolAdministrator'
 import Contact from './Pages/Contact'
+import About from './Pages/About'
 
 const App = () => {
   return (
@@ -21,6 +22,7 @@ const App = () => {
         <Route path='/school-registrar' element={<SchoolRegistrar />} />
         <Route path='/school-administrator' element={<SchoolAdministrator />} />
         <Route path='/contact-us' element={<Contact />} />
+        <Route path='/about-us' element={<About />} />
       </Routes>
     </Router>
   )

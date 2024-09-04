@@ -2,8 +2,6 @@ import React from 'react'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 
-import ucsHeroPageTemp from '../assets/images/ucsHeroPageTemp.png'
-
 import { FaFacebook } from 'react-icons/fa'
 import { MdEmail } from 'react-icons/md'
 

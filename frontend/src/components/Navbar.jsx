@@ -33,9 +33,13 @@ const Navbar = () => {
               tabIndex={0}
               className='menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-5 w-max p-2 shadow'
             >
-              <li>
-                <a className='hover:bg-primary hover:text-white'>Home</a>
-              </li>
+              <Link to='/'>
+                <li>
+                  <button className='hover:bg-primary hover:text-white'>
+                    Home
+                  </button>
+                </li>
+              </Link>
               <li>
                 <a className='hover:bg-primary hover:text-white'>Services</a>
                 <ul className='p-2 '>
@@ -52,12 +56,20 @@ const Navbar = () => {
                     ))}
                 </ul>
               </li>
-              <li>
-                <a className='hover:bg-primary hover:text-white'>About</a>
-              </li>
-              <li>
-                <a className='hover:bg-primary hover:text-white'>Contact</a>
-              </li>
+              <Link to='/about-us'>
+                <li>
+                  <button className='hover:bg-primary hover:text-white'>
+                    About
+                  </button>
+                </li>
+              </Link>
+              <Link to='/contact-us'>
+                <li>
+                  <button className='hover:bg-primary hover:text-white'>
+                    Contact
+                  </button>
+                </li>
+              </Link>
             </ul>
           </div>
 
@@ -65,7 +77,7 @@ const Navbar = () => {
           <Link to='/'>
             <button className='flex items-center gap-x-2 w-full sm:w-max'>
               <img src={ucsLogo} alt='' className='w-14 ml-1 sm:ml-0' />
-              <h1 className='font-medium text-xl hidden sm:block'>
+              <h1 className='font-bold text-primary text-xl hidden sm:block'>
                 Student Support
               </h1>
             </button>
@@ -75,9 +87,13 @@ const Navbar = () => {
         {/* Links */}
         <div className='navbar-center hidden lg:flex'>
           <ul className='menu menu-horizontal px-1'>
-            <li>
-              <a className='hover:bg-primary hover:text-white'>Home</a>
-            </li>
+            <Link to='/'>
+              <li>
+                <button className='hover:bg-primary hover:text-white'>
+                  Home
+                </button>
+              </li>
+            </Link>
             <li>
               <details>
                 <summary className='hover:bg-primary hover:text-white'>
@@ -98,9 +114,13 @@ const Navbar = () => {
                 </ul>
               </details>
             </li>
-            <li>
-              <a className='hover:bg-primary hover:text-white'>About</a>
-            </li>
+            <Link to='/about-us'>
+              <li>
+                <button className='hover:bg-primary hover:text-white'>
+                  About
+                </button>
+              </li>
+            </Link>
             <Link to='/contact-us'>
               <li>
                 <button className='hover:bg-primary hover:text-white'>
@@ -114,13 +134,15 @@ const Navbar = () => {
         {/* Sign Up */}
         <div className='navbar-end space-x-2'>
           <Link to='/register'>
-            <button className='btn bg-primary hover:bg-primary-hover text-white'>
+            <button className='btn text-xs px-[.5rem] md:px-[1rem] bg-primary hover:bg-primary-hover text-white'>
               Sign Up
             </button>
           </Link>
 
           <Link to='/login'>
-            <button className='btn primary-btn-outline'>Sign In</button>
+            <button className='btn text-xs primary-btn-outline  px-[.5rem] md:px-[1rem]'>
+              Sign In
+            </button>
           </Link>
         </div>
       </div>
