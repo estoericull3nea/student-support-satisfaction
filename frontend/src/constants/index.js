@@ -45,7 +45,7 @@ export const servicesData = [
       'https://images.pexels.com/photos/21325137/pexels-photo-21325137/free-photo-of-electronics-on-an-office-desk.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
       'https://images.pexels.com/photos/7212949/pexels-photo-7212949.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
     ],
-    link: '/school-principal',
+    link: '/office-of-the-school-principal',
   },
 
   {
@@ -58,7 +58,7 @@ export const servicesData = [
       'https://images.pexels.com/photos/6150070/pexels-photo-6150070.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
       'https://images.pexels.com/photos/6609460/pexels-photo-6609460.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
     ],
-    link: '/school-administrator',
+    link: '/office-of-the-school-administrator',
   },
 
   {
@@ -71,7 +71,7 @@ export const servicesData = [
       'https://images.pexels.com/photos/4144222/pexels-photo-4144222.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
       'https://images.pexels.com/photos/7156103/pexels-photo-7156103.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
     ],
-    link: '/school-registrar',
+    link: '/office-of-the-school-registrar',
   },
 ]
 
@@ -84,12 +84,12 @@ export const links = [
   {
     id: 2,
     linkName: 'About',
-    link: '/about',
+    link: '/about-us',
   },
   {
     id: 3,
     linkName: 'Contact',
-    link: '/contact',
+    link: '/contact-us',
   },
 ]
 

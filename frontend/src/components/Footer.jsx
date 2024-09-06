@@ -36,7 +36,11 @@ const Footer = () => {
 
             {links &&
               links.map((link) => (
-                <a className='link link-hover hover:text-primary' key={link.id}>
+                <a
+                  className='link link-hover hover:text-primary'
+                  key={link.id}
+                  href={link.link}
+                >
                   {link.linkName}
                 </a>
               ))}

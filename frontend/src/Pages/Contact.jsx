@@ -96,7 +96,7 @@ const Contact = () => {
 
               <div className='form-control'>
                 <label className='label cursor-pointer gap-x-2'>
-                  <input type='checkbox' defaultChecked className='checkbox' />
+                  <input type='checkbox' className='checkbox' />
                   <span className='label-text text-sm'>
                     I have read and accepted the Terms and Conditions and
                     Privacy Policy.

@@ -1,7 +1,8 @@
 import dotenv from 'dotenv'
-import User from '../model/User.js'
+import User from '../models/User.js'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
+import Blacklist from '../models/Blacklist.js'
 
 dotenv.config()
 
@@ -173,6 +174,9 @@ export const deleteUser = async (req, res) => {
 // Logout User
 export const logoutUser = async (req, res) => {
   try {
+    // Cleanup expired tokens before logging out
+    // await Blacklist.deleteMany({ expiresAt: { $lt: new Date() } })
+
     // Extract the token from the authorization header
     const token = req.headers.authorization?.split(' ')[1]
 
@@ -187,10 +191,17 @@ export const logoutUser = async (req, res) => {
       return res.status(400).json({ message: 'Invalid token' })
     }
 
-    // Save the token in the blacklist with the same expiration as the token
+    // Check if the token is already blacklisted
+    const blacklisted = await Blacklist.findOne({ token })
+
+    if (blacklisted) {
+      return res.status(400).json({ message: 'Token is already invalidated' })
+    }
+
+    // Save the token in the blacklist with the expiration time
     const blacklistedToken = new Blacklist({
       token,
-      expiresAt: new Date(decoded.exp * 1000), // Expiration date in milliseconds
+      expiresAt: new Date(decoded.exp * 1000), // Convert from seconds to milliseconds
     })
 
     await blacklistedToken.save()
