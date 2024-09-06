@@ -92,3 +92,62 @@ export const loginUser = async (req, res) => {
     return res.status(500).json({ message: 'Server error: ' + error.message })
   }
 }
+
+// Update User
+export const updateUser = async (req, res) => {
+  const { id } = req.params // Assuming user ID is passed as a route parameter
+  const { firstName, lastName } = req.body
+
+  try {
+    // Find the user by ID
+    const user = await User.findById(id)
+
+    // If the user does not exist
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' })
+    }
+
+    // ======================= Dynamic Field Updates =======================
+    // Update the first name if provided
+    if (firstName) {
+      user.firstName = firstName
+    }
+
+    // Update the last name if provided
+    if (lastName) {
+      user.lastName = lastName
+    }
+
+    // Save the updated user
+    const updatedUser = await user.save()
+
+    // Return the updated user data, excluding sensitive information
+    return res.status(200).json({
+      message: 'User updated successfully',
+      updatedUser,
+    })
+  } catch (error) {
+    // Error handling
+    return res.status(500).json({ message: 'Server error: ' + error.message })
+  }
+}
+// Delete User
+export const deleteUser = async (req, res) => {
+  const { id } = req.params // Assuming user ID is passed as a route parameter
+
+  try {
+    // Find and delete the user by ID
+    const user = await User.findByIdAndDelete(id)
+
+    // If the user does not exist
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' })
+    }
+
+    // Success response
+    return res.status(200).json({ message: 'User deleted successfully' })
+  } catch (error) {
+    // Error handling
+    return res.status(500).json({ message: 'Server error: ' + error.message })
+  }
+}
