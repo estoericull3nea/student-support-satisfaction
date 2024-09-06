@@ -2,23 +2,24 @@ import User from '../model/User.js'
 import bcrypt from 'bcryptjs'
 
 export const getAllUsers = async (req, res) => {
-  let users
   try {
-    // finding all users
-    users = await User.find()
+    // Finding all users, excluding sensitive fields like password
+    const users = await User.find().select('-password').lean()
+
+    // Check if no users were found
+    if (!users.length) {
+      return res.status(404).json({ message: 'No Users Found' })
+    }
+
+    // Return user data along with count
+    return res.status(200).json({
+      count: users.length,
+      users,
+    })
   } catch (error) {
-    return res.status(400).json({ message: error.message })
+    // Return server error status in case of failure
+    return res.status(500).json({ message: 'Server Error: ' + error.message })
   }
-
-  // ======================= Validations =======================
-  if (users.length < 1) {
-    return res.status(404).json({ message: 'No Users Found' })
-  }
-
-  return res.status(200).json({
-    count: users.length,
-    users,
-  })
 }
 
 // Registering User
@@ -59,33 +60,35 @@ export const registerUser = async (req, res) => {
   }
 }
 
+// Login User
 export const loginUser = async (req, res) => {
-  // getting from body
+  // Extract email and password from request body
   const { email, password } = req.body
 
-  let thisUser
-
   try {
-    thisUser = await User.findOne({ email })
+    // Find the user by email
+    const thisUser = await User.findOne({ email })
+
+    // Check if user exists
+    if (!thisUser) {
+      return res.status(404).json({ message: 'User not found with this email' })
+    }
+
+    // Compare the password using bcrypt (asynchronously)
+    const isPasswordCorrect = await bcrypt.compare(password, thisUser.password)
+
+    // Check if the password is correct
+    if (!isPasswordCorrect) {
+      return res.status(401).json({ message: 'Incorrect Email or Password' })
+    }
+
+    // Return a success message and user info (without password)
+    return res.status(200).json({
+      message: 'Login successful',
+      thisUser,
+    })
   } catch (error) {
-    return res.status(400).json({ message: error.message })
+    // Return an error response in case of failure
+    return res.status(500).json({ message: 'Server error: ' + error.message })
   }
-
-  // checking if this user is registered
-  if (!thisUser) {
-    return res.status(404).json({ message: "Could'nt Find User by this Email" })
-  }
-
-  // comparing password
-  const isPasswordCorrect = bycrypt.compareSync(password, thisUser.password)
-
-  //checking if password is correcet
-  if (!isPasswordCorrect) {
-    return res.status(400).json({ message: 'Incorrect Password' })
-  }
-
-  return res.status(200).json({
-    message: 'Login Successfull',
-    thisUser,
-  })
 }

@@ -1,16 +1,16 @@
 # Getting All Users
-# GET http://localhost:5000/api/users
+GET http://localhost:5000/api/users
 
 # Creating a New User
-POST http://localhost:5000/api/users/register
-Content-Type: application/json
+# POST http://localhost:5000/api/users/register
+# Content-Type: application/json
 
-{
-    "firstName": "Gina",
-    "lastName":"Palisoc",
-    "email":"Gina@gmail.com",
-    "password":"Gina123"
-}
+# {
+#     "firstName": "Gina",
+#     "lastName":"Palisoc",
+#     "email":"Gina@gmail.com",
+#     "password":"Gina123"
+# }
 
 # Login User
 # POST http://localhost:5000/api/users/login
