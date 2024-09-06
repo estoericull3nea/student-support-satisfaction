@@ -6,6 +6,7 @@ import Blacklist from '../models/Blacklist.js'
 
 dotenv.config()
 
+// Get All Users
 export const getAllUsers = async (req, res) => {
   try {
     // Finding all users, excluding sensitive fields like password
@@ -24,6 +25,27 @@ export const getAllUsers = async (req, res) => {
   } catch (error) {
     // Return server error status in case of failure
     return res.status(500).json({ message: 'Server Error: ' + error.message })
+  }
+}
+
+// Get User By ID
+export const getUserById = async (req, res) => {
+  const { id } = req.params // Extract the user ID from the request parameters
+
+  try {
+    // Find the user by ID, excluding the password field
+    const user = await User.findById(id).select('-password')
+
+    // If user is not found, return a 404 error
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' })
+    }
+
+    // Return the user data
+    return res.status(200).json(user)
+  } catch (error) {
+    // Return a 500 server error if something goes wrong
+    return res.status(500).json({ message: 'Server error: ' + error.message })
   }
 }
 
@@ -67,14 +89,13 @@ export const registerUser = async (req, res) => {
 
 // Login User
 export const loginUser = async (req, res) => {
-  // Extract email and password from request body
   const { email, password } = req.body
 
   try {
     // Find the user by email
     const thisUser = await User.findOne({ email })
 
-    // Check if user exists
+    // Check if the user exists
     if (!thisUser) {
       return res.status(404).json({ message: 'User not found with this email' })
     }
@@ -89,7 +110,7 @@ export const loginUser = async (req, res) => {
 
     // Generate a JWT token
     const token = jwt.sign(
-      { id: thisUser._id, email: thisUser.email }, // Payload
+      { id: thisUser._id, email: thisUser.email },
       process.env.JWT_SECRET, // Secret key from environment variable
       { expiresIn: '1h' } // Token expiration time
     )
@@ -97,16 +118,10 @@ export const loginUser = async (req, res) => {
     // Return a success message and user info (without password)
     return res.status(200).json({
       message: 'Login successful',
-      token, // The generated JWT token
-      user: {
-        id: thisUser._id,
-        firstName: thisUser.firstName,
-        lastName: thisUser.lastName,
-        email: thisUser.email,
-      },
+      token,
+      thisUser,
     })
   } catch (error) {
-    // Return an error response in case of failure
     return res.status(500).json({ message: 'Server error: ' + error.message })
   }
 }
@@ -175,7 +190,7 @@ export const deleteUser = async (req, res) => {
 export const logoutUser = async (req, res) => {
   try {
     // Cleanup expired tokens before logging out
-    // await Blacklist.deleteMany({ expiresAt: { $lt: new Date() } })
+    await Blacklist.deleteMany({ expiresAt: { $lt: new Date() } })
 
     // Extract the token from the authorization header
     const token = req.headers.authorization?.split(' ')[1]

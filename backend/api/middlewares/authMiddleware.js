@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken'
 import Blacklist from '../models/Blacklist.js'
 
 export const protect = async (req, res, next) => {
-  // Get token from headers
+  // Get the token from headers
   const token = req.headers.authorization?.split(' ')[1]
 
   if (!token) {
