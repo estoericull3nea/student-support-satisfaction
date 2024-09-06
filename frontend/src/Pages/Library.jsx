@@ -38,7 +38,7 @@ const Library = () => {
 
           {/* Right */}
           <div className='max-w-[650px] lg:block hidden'>
-            <img src={ucsHeroPageTemp} alt='' />
+            <img src={ucsHeroPageTemp} alt='Library Hero Image' />
           </div>
         </div>
       </div>
@@ -127,7 +127,7 @@ const Library = () => {
           </div>
 
           {/* Box */}
-          <div className='shadow-xl p-3 md:p-10 space-y-4 mx-auto'>
+          <form className='shadow-xl p-3 md:p-10 space-y-4 mx-auto'>
             {/* Give us feedback */}
             <h3 className='font-semibold text-2xl'>
               Give us <span className='text-primary'>feedback</span>
@@ -272,7 +272,16 @@ const Library = () => {
                 className='input input-bordered w-full input-md'
               />
             </label>
-          </div>
+
+            <div className='text-end'>
+              <button
+                type='submit'
+                className='btn bg-primary hover:bg-primary-hover text-white'
+              >
+                Submit
+              </button>
+            </div>
+          </form>
 
           {/* Pre Footer */}
           <div>

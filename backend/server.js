@@ -1,17 +1,26 @@
+// ======================= Imports =======================
 import dotenv from 'dotenv'
-dotenv.config()
-
 import express from 'express'
-import mongoose from 'mongoose'
-const app = express()
+
+// Routes
+import userRouter from './api/routes/userRoutes.js'
+import connectDB from './api/utils/connectDB.js'
+
+dotenv.config()
 const PORT = process.env.PORT || 5000
+const app = express()
 
-mongoose.connect(process.env.CONNECTION_STRING).then(() => {
-  app.listen(PORT, () =>
-    console.log(`Server is Running on PORT ${PORT} and Connected to Database`)
-  )
-})
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 
-app.use('/api', (req, res, next) => {
-  res.send('hello, world')
-})
+// Using Routes
+app.use('/api/users', userRouter)
+
+// ======================= Connection to MongoDB =======================
+connectDB()
+  .then(() => {
+    app.listen(PORT, () =>
+      console.log(`Server is Running on PORT ${PORT} and Connected to Database`)
+    )
+  })
+  .catch((err) => console.log(err))
