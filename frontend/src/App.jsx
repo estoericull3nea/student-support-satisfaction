@@ -9,6 +9,7 @@ import SchoolRegistrar from './Pages/SchoolRegistrar'
 import SchoolAdministrator from './Pages/SchoolAdministrator'
 import Contact from './Pages/Contact'
 import About from './Pages/About'
+import NotFound from './Pages/NotFound'
 
 const App = () => {
   return (
@@ -29,6 +30,7 @@ const App = () => {
         />
         <Route path='/contact-us' element={<Contact />} />
         <Route path='/about-us' element={<About />} />
+        <Route path='*' element={<NotFound />} />
       </Routes>
     </Router>
   )
