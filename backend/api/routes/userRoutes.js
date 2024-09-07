@@ -1,5 +1,6 @@
 import express from 'express'
 import {
+  deleteAllUsers,
   deleteUser,
   getAllUsers,
   getUserById,
@@ -11,6 +12,8 @@ const router = express.Router()
 
 router.get('/', protect, getAllUsers)
 router.get('/:id', protect, getUserById)
+
+router.delete('/', protect, deleteAllUsers)
 
 router.put('/:id', protect, updateUser)
 

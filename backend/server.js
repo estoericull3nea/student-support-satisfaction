@@ -7,7 +7,11 @@ import userRouter from './api/routes/userRoutes.js'
 import authRouter from './api/routes/authRoute.js'
 import connectDB from './api/utils/connectDB.js'
 
+// Cleaning of expired token every hour
+import './api/utils/cronJobs.js'
+
 dotenv.config()
+
 const PORT = process.env.PORT || 5000
 const app = express()
 

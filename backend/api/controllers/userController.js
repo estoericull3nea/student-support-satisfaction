@@ -104,3 +104,19 @@ export const deleteUser = async (req, res) => {
     return res.status(500).json({ message: 'Server error: ' + error.message })
   }
 }
+
+// Delete All Users
+export const deleteAllUsers = async (_, res) => {
+  try {
+    // Perform deletion of all users
+    const result = await User.deleteMany({})
+
+    return res.status(200).json({
+      message: 'All users have been deleted',
+      deletedCount: result.deletedCount,
+    })
+  } catch (error) {
+    // Handle any errors that occur
+    return res.status(500).json({ message: 'Server error: ' + error.message })
+  }
+}

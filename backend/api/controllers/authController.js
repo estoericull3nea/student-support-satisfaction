@@ -102,9 +102,6 @@ export const registerUser = async (req, res) => {
 // Logout User
 export const logoutUser = async (req, res) => {
   try {
-    // Cleanup expired tokens before logging out
-    await Blacklist.deleteMany({ expiresAt: { $lt: new Date() } })
-
     // Extract the token from the authorization header
     const token = req.headers.authorization?.split(' ')[1]
 
@@ -121,7 +118,6 @@ export const logoutUser = async (req, res) => {
 
     // Check if the token is already blacklisted
     const blacklisted = await Blacklist.findOne({ token })
-
     if (blacklisted) {
       return res.status(400).json({ message: 'Token is already invalidated' })
     }
