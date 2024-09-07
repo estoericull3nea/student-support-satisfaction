@@ -16,9 +16,7 @@ export const protect = async (req, res, next) => {
     const blacklisted = await Blacklist.findOne({ token })
 
     if (blacklisted) {
-      return res
-        .status(401)
-        .json({ message: 'Token has been invalidated, please login again' })
+      return res.status(401).json({ message: 'Please login first' })
     }
 
     // Verify the token

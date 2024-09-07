@@ -4,6 +4,7 @@ import express from 'express'
 
 // Routes
 import userRouter from './api/routes/userRoutes.js'
+import authRouter from './api/routes/authRoute.js'
 import connectDB from './api/utils/connectDB.js'
 
 dotenv.config()
@@ -15,6 +16,7 @@ app.use(express.urlencoded({ extended: true }))
 
 // Using Routes
 app.use('/api/users', userRouter)
+app.use('/api/auth', authRouter)
 
 // ======================= Connection to MongoDB =======================
 connectDB()
