@@ -4,8 +4,8 @@ import express from 'express'
 import cors from 'cors'
 
 // Routes
-import userRouter from './api/routes/userRoutes.js'
-import authRouter from './api/routes/authRoute.js'
+import userRouter from './api/routes/user.route.js'
+import authRouter from './api/routes/auth.route.js'
 import connectDB from './api/utils/connectDB.js'
 
 // Cleaning of expired token every hour

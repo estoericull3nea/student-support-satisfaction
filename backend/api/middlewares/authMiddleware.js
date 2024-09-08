@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken'
-import Blacklist from '../models/Blacklist.js'
+import Blacklist from '../models/blacklist.model.js'
 
 export const protect = async (req, res, next) => {
   // Get the token from headers

@@ -1,5 +1,6 @@
 import dotenv from 'dotenv'
-import User from '../models/User.js'
+import User from '../models/user.model.js'
+import mongoose from 'mongoose'
 dotenv.config()
 
 // Get All Users
@@ -28,6 +29,11 @@ export const getAllUsers = async (req, res) => {
 export const getUserById = async (req, res) => {
   const { id } = req.params // Extract the user ID from the request parameters
 
+  // Checking if the id is valid for mongodb or not
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(404).json({ message: 'Invalid ID' })
+  }
+
   try {
     // Find the user by ID, excluding the password field
     const user = await User.findById(id).select('-password')
@@ -46,9 +52,14 @@ export const getUserById = async (req, res) => {
 }
 
 // Update User
-export const updateUser = async (req, res) => {
+export const updateUserById = async (req, res) => {
   const { id } = req.params // Assuming user ID is passed as a route parameter
   const { firstName, lastName } = req.body
+
+  // Checking if the id is valid for mongodb or not
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(404).json({ message: 'Invalid ID' })
+  }
 
   try {
     // Find the user by ID
@@ -85,8 +96,13 @@ export const updateUser = async (req, res) => {
 }
 
 // Delete User
-export const deleteUser = async (req, res) => {
+export const deleteUserById = async (req, res) => {
   const { id } = req.params // Assuming user ID is passed as a route parameter
+
+  // Checking if the id is valid for mongodb or not
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(404).json({ message: 'Invalid ID' })
+  }
 
   try {
     // Find and delete the user by ID

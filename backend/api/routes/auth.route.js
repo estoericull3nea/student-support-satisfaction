@@ -4,7 +4,7 @@ import {
   loginUser,
   logoutUser,
   registerUser,
-} from '../controllers/authController.js'
+} from '../controllers/auth.controller.js'
 import { protect } from '../middlewares/authMiddleware.js'
 import { validateUserRegistration } from '../middlewares/validators.js' // Import the validator
 

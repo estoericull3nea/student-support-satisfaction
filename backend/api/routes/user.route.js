@@ -1,11 +1,11 @@
 import express from 'express'
 import {
   deleteAllUsers,
-  deleteUser,
+  deleteUserById,
   getAllUsers,
   getUserById,
-  updateUser,
-} from '../controllers/userController.js'
+  updateUserById,
+} from '../controllers/user.controller.js'
 import { protect } from '../middlewares/authMiddleware.js'
 
 const router = express.Router()
@@ -15,8 +15,8 @@ router.get('/:id', protect, getUserById)
 
 router.delete('/', protect, deleteAllUsers)
 
-router.put('/:id', protect, updateUser)
+router.put('/:id', protect, updateUserById)
 
-router.delete('/:id', protect, deleteUser)
+router.delete('/:id', protect, deleteUserById)
 
 export default router

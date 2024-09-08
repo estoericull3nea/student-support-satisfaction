@@ -1,6 +1,6 @@
 // cronJobs.js
 import cron from 'node-cron'
-import Blacklist from '../models/Blacklist.js' // Import the Blacklist model
+import Blacklist from '../models/blacklist.model.js' // Import the Blacklist model
 
 // Schedule the cron job to run every hour to clean expired tokens
 cron.schedule('0 * * * *', async () => {

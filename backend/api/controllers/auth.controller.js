@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
-import Blacklist from '../models/Blacklist.js'
-import User from '../models/User.js'
+import Blacklist from '../models/blacklist.model.js'
+import User from '../models/user.model.js'
 import { validationResult } from 'express-validator'
 
 // Login User
