@@ -124,6 +124,16 @@ export const deleteUserById = async (req, res) => {
 // Delete All Users
 export const deleteAllUsers = async (_, res) => {
   try {
+    // Check if there are any registered users
+    const userCount = await User.countDocuments()
+
+    // If no users are found, return a message
+    if (userCount === 0) {
+      return res.status(400).json({
+        message: 'No users found, nothing to delete',
+      })
+    }
+
     // Perform deletion of all users
     const result = await User.deleteMany({})
 
