@@ -20,6 +20,7 @@ const Register = () => {
   const [message, setMessage] = useState('')
   const [messageType, setMessageType] = useState('')
   const [showToast, setShowToast] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   // Effect to automatically hide the toast after a few seconds
   useEffect(() => {
@@ -53,6 +54,9 @@ const Register = () => {
     }
 
     try {
+      // Set loading state to true when submission starts
+      setIsLoading(true)
+
       // Make a POST request to the backend
       const response = await axios.post(`${SERVER_URL}/auth/register`, {
         firstName: formData.firstName,
@@ -62,7 +66,9 @@ const Register = () => {
       })
 
       // Handle success response
-      setMessage(`${response.data.message}`)
+      setMessage(
+        `Registration successful! Please check your email to verify your account.`
+      )
       setMessageType('success')
       setShowToast(true) // Show the toast
 
@@ -86,6 +92,9 @@ const Register = () => {
       }
       setMessageType('error')
       setShowToast(true) // Show the toast
+    } finally {
+      // Set loading state to false after the request is done
+      setIsLoading(false)
     }
   }
 
@@ -206,7 +215,7 @@ const Register = () => {
 
             {/* Error or Success Message */}
             <div
-              className={`fixed top-0 left-1/2 transform -translate-x-1/2 mt-4 transition-all duration-500 ease-in-out w-max ${
+              className={`fixed top-0 left-1/2 transform -translate-x-1/2 mt-4 transition-all duration-500 ease-in-out ${
                 showToast
                   ? 'translate-y-0 opacity-100'
                   : '-translate-y-20 opacity-0'
@@ -215,18 +224,20 @@ const Register = () => {
               } shadow-lg text-white p-4 rounded-md`}
               style={{ zIndex: 9999 }}
             >
-              <div className='flex items-center'>
+              <div className='flex items-center justify-center w-full'>
                 <div>
-                  <span>{message}</span>
+                  <span className='w-full text-sm'>{message}</span>
                 </div>
               </div>
             </div>
 
+            {/* Loading spinner or Register button */}
             <button
               type='submit'
               className='btn w-full bg-primary text-white hover:bg-primary-hover mt-4'
+              disabled={isLoading} // Disable button when loading
             >
-              Sign Up
+              {isLoading ? 'Loading...' : 'Sign Up'} {/* Show loading text */}
             </button>
           </form>
 

@@ -58,7 +58,7 @@ export const registerUser = async (req, res) => {
     )
 
     // Send verification email
-    const verificationUrl = `http://localhost:${process.env.PORT}/api/auth/verify?token=${verificationToken}`
+    const verificationUrl = `http://localhost:5173/verify?token=${verificationToken}`
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: newUser.email,
