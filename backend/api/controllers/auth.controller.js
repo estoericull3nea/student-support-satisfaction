@@ -5,6 +5,8 @@ import nodemailer from 'nodemailer'
 import Blacklist from '../models/blacklist.model.js'
 import User from '../models/user.model.js'
 import { validationResult } from 'express-validator'
+import { logLogin } from '../middlewares/logLogin.js'
+
 dotenv.config()
 
 const transporter = nodemailer.createTransport({
@@ -154,6 +156,9 @@ export const loginUser = async (req, res) => {
       process.env.JWT_SECRET, // Secret key from environment variable
       { expiresIn: '1h' } // Token expiration time
     )
+
+    // Log the login activity
+    await logLogin(req, thisUser._id)
 
     // Return a success message and user info (without password)
     return res.status(200).json({
