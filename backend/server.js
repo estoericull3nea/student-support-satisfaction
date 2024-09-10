@@ -6,6 +6,7 @@ import cors from 'cors'
 // Routes
 import userRouter from './api/routes/user.route.js'
 import authRouter from './api/routes/auth.route.js'
+import loginHistoryRouter from './api/routes/loginHistory.route.js'
 import connectDB from './api/utils/connectDB.js'
 
 // Cleaning of expired token every hour
@@ -23,6 +24,7 @@ app.use(express.urlencoded({ extended: true }))
 // Using Routes
 app.use('/api/users', userRouter)
 app.use('/api/auth', authRouter)
+app.use('/api/logins/history', loginHistoryRouter)
 
 // ======================= Connection to MongoDB =======================
 connectDB()
