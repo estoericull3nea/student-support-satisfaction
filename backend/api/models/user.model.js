@@ -26,6 +26,8 @@ const userSchema = new mongoose.Schema(
       minLength: [8, 'Password must be at least 8 characters long'],
     },
     isVerified: { type: Boolean, default: false },
+    failedLoginAttempts: { type: Number, default: 0 }, // Track failed attempts
+    lockUntil: { type: Date }, // Track the lockout time
   },
   {
     timestamps: true,
