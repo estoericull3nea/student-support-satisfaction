@@ -1,15 +1,22 @@
 import React from 'react'
-import { services } from '../constants/index'
-
-// logo
+import { Link, useNavigate } from 'react-router-dom'
 import ucsLogo from '../assets/images/logo/ucs_logo.png'
-
-import { Link } from 'react-router-dom'
+import { services } from '../constants/index'
+import toast from 'react-hot-toast' // Import toast
 
 const Navbar = () => {
+  const token = localStorage.getItem('token') // Check if token exists to determine if user is logged in
+  const navigate = useNavigate()
+
+  const handleLogout = () => {
+    localStorage.removeItem('token') // Remove token from localStorage to log out the user
+    toast.success('Logged out') // Show success toast when logged out
+    navigate('/login') // Redirect to login page after logging out
+  }
+
   return (
     <div className='container z-10 '>
-      <div className=' navbar bg-base-100'>
+      <div className='navbar bg-base-100'>
         <div className='navbar-start'>
           {/* DropDown */}
           <div className='dropdown'>
@@ -131,19 +138,32 @@ const Navbar = () => {
           </ul>
         </div>
 
-        {/* Sign Up */}
+        {/* Sign Up and Sign In/Logout */}
         <div className='navbar-end space-x-2'>
-          <Link to='/register'>
-            <button className='btn text-xs px-[.5rem] md:px-[1rem] bg-primary hover:bg-primary-hover text-white'>
-              Sign Up
-            </button>
-          </Link>
+          {/* Only show Sign Up if the user is not logged in */}
+          {!token && (
+            <Link to='/register'>
+              <button className='btn text-xs px-[.5rem] md:px-[1rem] bg-primary hover:bg-primary-hover text-white'>
+                Sign Up
+              </button>
+            </Link>
+          )}
 
-          <Link to='/login'>
-            <button className='btn text-xs primary-btn-outline  px-[.5rem] md:px-[1rem]'>
-              Sign In
+          {/* Conditionally render "Sign In" or "Logout" based on token existence */}
+          {token ? (
+            <button
+              onClick={handleLogout}
+              className='btn text-xs primary-btn-outline px-[.5rem] md:px-[1rem]'
+            >
+              Logout
             </button>
-          </Link>
+          ) : (
+            <Link to='/login'>
+              <button className='btn text-xs primary-btn-outline px-[.5rem] md:px-[1rem]'>
+                Sign In
+              </button>
+            </Link>
+          )}
         </div>
       </div>
     </div>

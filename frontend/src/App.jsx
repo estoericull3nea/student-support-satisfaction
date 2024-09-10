@@ -11,30 +11,71 @@ import Contact from './Pages/Contact'
 import About from './Pages/About'
 import NotFound from './Pages/NotFound'
 import VerifyEmail from './Pages/VerifyEmail'
+import Protect from './components/Protect'
+import RedirectIfAuthenticated from './components/RedirectIfAuthenticated'
+import { Toaster } from 'react-hot-toast' // Import Toaster
 
 const App = () => {
   return (
-    <Router>
-      <Routes>
-        <Route path='/' element={<LandingPage />} />
-        <Route path='/register' element={<Register />} />
-        <Route path='/login' element={<Login />} />
-        <Route path='/library' element={<Library />} />
-        <Route
-          path='/office-of-the-school-principal'
-          element={<PrincipalOffice />}
-        />
-        <Route path='/office-of-the-registrar' element={<SchoolRegistrar />} />
-        <Route
-          path='/office-of-the-school-administrator'
-          element={<SchoolAdministrator />}
-        />
-        <Route path='/contact-us' element={<Contact />} />
-        <Route path='/about-us' element={<About />} />
-        <Route path='/verify' element={<VerifyEmail />} />
-        <Route path='*' element={<NotFound />} />
-      </Routes>
-    </Router>
+    <>
+      <Toaster
+        position='top-center'
+        reverseOrder={false}
+        containerClassName='text-xs'
+      />
+      {/* Toaster Component */}
+      <Router>
+        <Routes>
+          <Route path='/' element={<LandingPage />} />
+
+          <Route
+            path='/register'
+            element={
+              // Check if the user is already logged in then he/she can't access the login page anymore, unless he/she logged out
+              <RedirectIfAuthenticated>
+                <Register />
+              </RedirectIfAuthenticated>
+            }
+          />
+
+          <Route
+            path='/login'
+            element={
+              // Check if the user is already logged in then he/she can't access the login page anymore, unless he/she logged out
+              <RedirectIfAuthenticated>
+                <Login />
+              </RedirectIfAuthenticated>
+            }
+          />
+          <Route path='/library' element={<Library />} />
+          <Route
+            path='/office-of-the-school-principal'
+            element={<PrincipalOffice />}
+          />
+          <Route
+            path='/office-of-the-registrar'
+            element={<SchoolRegistrar />}
+          />
+          <Route
+            path='/office-of-the-school-administrator'
+            element={<SchoolAdministrator />}
+          />
+          <Route path='/contact-us' element={<Contact />} />
+
+          {/* Example of Protected Route */}
+          <Route
+            path='/about-us'
+            element={
+              <Protect>
+                <About />
+              </Protect>
+            }
+          />
+          <Route path='/verify' element={<VerifyEmail />} />
+          <Route path='*' element={<NotFound />} />
+        </Routes>
+      </Router>
+    </>
   )
 }
 
