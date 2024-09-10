@@ -19,6 +19,9 @@ const transporter = nodemailer.createTransport({
   },
 })
 
+const MAX_FAILED_ATTEMPTS = 5 // Max failed attempts before lockout
+const LOCK_TIME = 15 * 60 * 1000 // 15 minutes
+
 // Registering User
 export const registerUser = async (req, res) => {
   // Check for validation errors
@@ -142,13 +145,42 @@ export const loginUser = async (req, res) => {
       return res.status(404).json({ message: 'User not found with this email' })
     }
 
+    // Check if the user is locked out
+    const isLocked = thisUser.lockUntil && thisUser.lockUntil > Date.now()
+    if (isLocked) {
+      const lockDuration = Math.ceil(
+        (thisUser.lockUntil - Date.now()) / 1000 / 60
+      ) // Time remaining in minutes
+      return res.status(403).json({
+        message: `Too many failed login attempts. Try again in ${lockDuration} minutes.`,
+      })
+    }
+
     // Compare the password using bcrypt (asynchronously)
     const isPasswordCorrect = await bcrypt.compare(password, thisUser.password)
 
-    // Check if the password is correct
     if (!isPasswordCorrect) {
-      return res.status(401).json({ message: 'Incorrect Email or Password' })
+      // Increment failed login attempts
+      thisUser.failedLoginAttempts += 1
+
+      if (thisUser.failedLoginAttempts >= MAX_FAILED_ATTEMPTS) {
+        thisUser.lockUntil = Date.now() + LOCK_TIME // Lock the account for 15 minutes
+      }
+
+      await thisUser.save() // Save the updated thisUser data
+
+      return res.status(401).json({
+        message:
+          thisUser.failedLoginAttempts >= MAX_FAILED_ATTEMPTS
+            ? `Too many login attempts. Try again after 15 minutes.`
+            : 'Incorrect email or password.',
+      })
     }
+
+    // Reset failed login attempts on successful login
+    thisUser.failedLoginAttempts = 0
+    thisUser.lockUntil = undefined
+    await thisUser.save()
 
     // Generate a JWT token
     const token = jwt.sign(

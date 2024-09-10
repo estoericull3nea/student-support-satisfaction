@@ -8,11 +8,19 @@ import {
 } from '../controllers/auth.controller.js'
 import { protect } from '../middlewares/authMiddleware.js'
 import { validateUserRegistration } from '../middlewares/validators.js' // Import the validator
+import rateLimit from 'express-rate-limit'
 
 const router = express.Router()
 
+// Define rate limit: max 5 requests per minute per IP
+const loginLimiter = rateLimit({
+  windowMs: 10 * 1000, // 10 seconds window
+  max: 5, // Limit each IP to 5 requests per windowMs
+  message: 'Too many login attempts. Please try again after a minute.',
+})
+
 router.post('/register', validateUserRegistration, registerUser) // Apply validation middleware
-router.post('/login', loginUser)
+router.post('/login', loginLimiter, loginUser)
 router.post('/logout', protect, logoutUser)
 
 router.get('/verify', verifyEmail)
