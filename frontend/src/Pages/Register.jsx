@@ -3,6 +3,7 @@ import Navbar from '../components/Navbar'
 import ucsLoginRegisterCover from '../assets/images/ucsLoginRegisterCover.jpg'
 import ucsLogo from '../assets/images/logo/ucs_logo.png'
 import axios from 'axios'
+import { Link } from 'react-router-dom'
 
 const Register = () => {
   const SERVER_URL = `http://localhost:5000/api`
@@ -212,6 +213,18 @@ const Register = () => {
                 required
               />
             </label>
+
+            <div className='text-end'>
+              <span className='text-xs'>
+                Have an account?{' '}
+                <Link
+                  to='/login'
+                  className='text-xs underline text-primary hover:text-primary-hover'
+                >
+                  Sign In
+                </Link>
+              </span>
+            </div>
 
             {/* Error or Success Message */}
             <div

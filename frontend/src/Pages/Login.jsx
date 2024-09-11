@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Navbar from '../components/Navbar'
 import axios from 'axios'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast' // Import toaster
 
 import ucsLoginRegisterCover from '../assets/images/ucsLoginRegisterCover.jpg'
@@ -93,6 +93,24 @@ const Login = () => {
                 required
               />
             </label>
+
+            <div className='flex justify-between mt-1 items-center'>
+              <div>
+                <span className='text-xs'>
+                  Already have an account?{' '}
+                  <Link
+                    to='/register'
+                    className='text-xs underline text-primary hover:text-primary-hover'
+                  >
+                    Sign Up
+                  </Link>
+                </span>
+              </div>
+
+              <Link to='/forgot-password' className='text-xs underline'>
+                Forgot Password?
+              </Link>
+            </div>
 
             <button className='btn w-full bg-primary text-white hover:bg-primary-hover mt-4'>
               Sign In

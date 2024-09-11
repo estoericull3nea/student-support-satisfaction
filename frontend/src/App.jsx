@@ -14,6 +14,8 @@ import VerifyEmail from './Pages/VerifyEmail'
 import Protect from './components/Protect'
 import RedirectIfAuthenticated from './components/RedirectIfAuthenticated'
 import { Toaster } from 'react-hot-toast' // Import Toaster
+import ForgotPassword from './Pages/ForgotPassword'
+import ResetPassword from './Pages/ResetPassword'
 
 const App = () => {
   return (
@@ -27,7 +29,12 @@ const App = () => {
       <Router>
         <Routes>
           <Route path='/' element={<LandingPage />} />
+          <Route
+            path='/reset-password/:resetToken'
+            element={<ResetPassword />}
+          />
 
+          <Route path='/forgot-password' element={<ForgotPassword />} />
           <Route
             path='/register'
             element={
@@ -37,7 +44,6 @@ const App = () => {
               </RedirectIfAuthenticated>
             }
           />
-
           <Route
             path='/login'
             element={
@@ -61,7 +67,6 @@ const App = () => {
             element={<SchoolAdministrator />}
           />
           <Route path='/contact-us' element={<Contact />} />
-
           {/* Example of Protected Route */}
           <Route
             path='/about-us'

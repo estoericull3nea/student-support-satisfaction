@@ -51,10 +51,7 @@ export const forgotPassword = async (req, res) => {
     user.resetPasswordExpires = resetTokenExpires
     await user.save()
 
-    // Create the password reset URL
-    const resetUrl = `${req.protocol}://${req.get(
-      'host'
-    )}/reset-password/${resetToken}`
+    const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`
 
     // Send email with nodemailer
     const mailOptions = {
@@ -86,17 +83,24 @@ export const forgotPassword = async (req, res) => {
 
 export const resetPassword = async (req, res) => {
   const { resetToken } = req.params // Get the token from the URL
-  const { password, confirmPassword } = req.body // Destructure password and confirmPassword
+  const { password } = req.body // Destructure only password
 
   try {
-    // Check if password and confirmPassword match
-    if (password !== confirmPassword) {
-      return res.status(400).json({ message: 'Passwords do not match' })
+    // Validate password length (minimum 8 characters)
+    if (password.length < 8) {
+      return res
+        .status(400)
+        .json({ message: 'Password must be at least 8 characters long' })
     }
 
+    // Hash the token received in the URL
+    const hashedToken = crypto
+      .createHash('sha256')
+      .update(resetToken)
+      .digest('hex')
     // Find the user by the reset token and check if the token is still valid (not expired)
     const user = await User.findOne({
-      resetPasswordToken: resetToken,
+      resetPasswordToken: hashedToken,
       resetPasswordExpires: { $gt: Date.now() }, // Check if token is not expired
     })
 

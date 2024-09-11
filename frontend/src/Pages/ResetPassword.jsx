@@ -1,41 +1,48 @@
 import React, { useState } from 'react'
 import Navbar from '../components/Navbar'
 import axios from 'axios'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom' // Import useParams to get token from URL
 import toast from 'react-hot-toast' // Import toaster
-
+import { TiArrowLeft } from 'react-icons/ti'
 import ucsLoginRegisterCover from '../assets/images/ucsLoginRegisterCover.jpg'
 import ucsLogo from '../assets/images/logo/ucs_logo.png'
 
-import { TiArrowLeft } from 'react-icons/ti'
-
-const ForgotPassword = () => {
-  const [email, setEmail] = useState('')
-  const [error, setError] = useState(null) // Error state for handling errors
+const ResetPassword = () => {
+  const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
   const navigate = useNavigate()
+  const { resetToken } = useParams() // Get reset token from the URL
 
-  const handleForgotPassword = async (e) => {
+  const handleResetPassword = async (e) => {
     e.preventDefault()
+
+    // Check if passwords match before making the API request
+    if (password !== confirmPassword) {
+      toast.error('Passwords do not match') // Display error toast
+      return // Prevent the form submission
+    }
+
     try {
       // Set loading state to true when submission starts
       setIsLoading(true)
 
+      // Make the API request to reset the password using the token from the URL
       const response = await axios.post(
-        'http://localhost:5000/api/auth/forgot-password',
-        { email }
+        `http://localhost:5000/api/auth/reset-password/${resetToken}`,
+        { password }
       )
 
-      toast.success('Password reset link has been sent to your email!')
-      setError(null) // Clear any previous errors
+      console.log(response)
+
+      toast.success('Password has been reset successfully!')
       navigate('/login') // Optionally navigate to login after success
     } catch (error) {
       // Show toast error and set error message
       const errorMessage =
-        error.response?.data?.message || 'Request for password reset failed'
+        error.response?.data?.message || 'Failed to reset password'
       toast.error(errorMessage)
-      setError(errorMessage)
     } finally {
       setIsLoading(false)
     }
@@ -51,7 +58,7 @@ const ForgotPassword = () => {
           {/* Left */}
           <form
             className='max-w-[500px] p-5 xl:p-0'
-            onSubmit={handleForgotPassword}
+            onSubmit={handleResetPassword}
           >
             {/* Top Text */}
             <div className='text-center'>
@@ -62,24 +69,43 @@ const ForgotPassword = () => {
                 </h1>
               </div>
               <p className='my-3 text-primary font-semibold'>
-                Forgot Your Password
+                Reset Your Password
               </p>
             </div>
 
-            {/* Email Input */}
+            {/* Password Input */}
             <label className='form-control w-full '>
               <div className='label'>
                 <span className='label-text'>
-                  Email <span className='text-red-800'>*</span>
+                  Password <span className='text-red-800'>*</span>
                 </span>
               </div>
               <input
-                type='email'
+                type='password'
+                name='password'
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 className='input input-bordered input-md w-full'
-                placeholder='Type here...'
-                onChange={(e) => setEmail(e.target.value)}
+                placeholder='Type your new password...'
                 required
-                value={email}
+              />
+            </label>
+
+            {/* Confirm Password Input */}
+            <label className='form-control w-full '>
+              <div className='label'>
+                <span className='label-text'>
+                  Confirm Password <span className='text-red-800'>*</span>
+                </span>
+              </div>
+              <input
+                type='password'
+                name='confirmPassword'
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className='input input-bordered input-md w-full'
+                placeholder='Confirm your new password...'
+                required
               />
             </label>
 
@@ -97,7 +123,7 @@ const ForgotPassword = () => {
               className='btn w-full bg-primary text-white hover:bg-primary-hover mt-4'
               disabled={isLoading} // Disable button when loading
             >
-              {isLoading ? 'Loading...' : 'Forgot Password'}{' '}
+              {isLoading ? 'Loading...' : 'Reset Password'}{' '}
               {/* Show loading text */}
             </button>
           </form>
@@ -112,4 +138,4 @@ const ForgotPassword = () => {
   )
 }
 
-export default ForgotPassword
+export default ResetPassword
