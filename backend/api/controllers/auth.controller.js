@@ -73,7 +73,7 @@ export const registerUser = async (req, res) => {
       <p>Thank you for registering with us. To complete the registration process, please click on the link below to confirm your email address:</p>
       <p><a href="${verificationUrl}">Confirm Email</a></p>
       <p>This link will expire in 15 minutes. If you do not verify your email within this time, you will need to request a new confirmation link.</p>
-      <p>If you have any questions or need further assistance, please do not hesitate to contact us <a href="http://localhost:5173/contact-us">here</a>.</p>
+      <p>If you have any questions or need further assistance, please do not hesitate to contact us <a href="${process.env.FRONTEND_URL}contact-us">here</a>.</p>
       <p>Best regards,<br>UCS | ALDCS</p>
         `,
     })
@@ -83,6 +83,7 @@ export const registerUser = async (req, res) => {
     // Return success response
     return res.status(201).json({
       message: 'User Registered Successfully. Verification email sent.',
+      tokenREST: verificationToken,
       user: {
         id: newUser._id,
         firstName: newUser.firstName,
