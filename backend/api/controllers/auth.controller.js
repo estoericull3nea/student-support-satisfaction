@@ -143,6 +143,13 @@ export const registerUser = async (req, res) => {
       return res.status(409).json({ message: 'User Already Exists' })
     }
 
+    // Validate password length (minimum 8 characters)
+    // if (password.length < 8) {
+    //   return res
+    //     .status(400)
+    //     .json({ message: 'Password must be at least 8 characters long' })
+    // }
+
     // Hash the password asynchronously
     const hashedPassword = await bcrypt.hash(password, 10)
 

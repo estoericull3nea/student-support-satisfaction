@@ -4,6 +4,7 @@ import ucsLoginRegisterCover from '../assets/images/ucsLoginRegisterCover.jpg'
 import ucsLogo from '../assets/images/logo/ucs_logo.png'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
+// import toast from 'react-hot-toast'
 
 const Register = () => {
   const SERVER_URL = `http://localhost:5000/api`
@@ -214,19 +215,22 @@ const Register = () => {
               />
             </label>
 
-            <div className='text-end'>
-              <span className='text-xs'>
-                Have an account?{' '}
-                <Link
-                  to='/login'
-                  className='text-xs underline text-primary hover:text-primary-hover'
-                >
-                  Sign In
-                </Link>
-              </span>
-            </div>
+            {/* <div className='text-end'>
+              <span className='text-xs'>Have an account?</span>
+              <Link to='/login' className='text-xs underline'>
+                Sign In
+              </Link>
+            </div> */}
 
-            {/* Error or Success Message */}
+            <div className='text-end flex gap-x-1 justify-end mt-1'>
+              <span className='text-xs'>Have an account?</span>
+              <Link
+                to='/login'
+                className='text-xs underline text-primary hover:text-primary-hover'
+              >
+                Sign In
+              </Link>
+            </div>
             <div
               className={`fixed top-0 left-1/2 transform -translate-x-1/2 mt-4 transition-all duration-500 ease-in-out ${
                 showToast
