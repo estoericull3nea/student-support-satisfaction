@@ -19,7 +19,7 @@ const Library = () => {
       <div>
         <div className='container flex items-center justify-start lg:justify-center   '>
           {/* Left */}
-          <div className='max-w-[400px] p-5 xl:p-0 space-y-3'>
+          <div className='max-w-[400px] py-16 xl:py-0 space-y-3'>
             <span className='text-[.8rem]'>Services</span>
             <h1 className='font-bold text-5xl tracking-wider text-primary'>
               Library
@@ -49,22 +49,22 @@ const Library = () => {
           <img
             src='https://img.freepik.com/free-photo/ancient-books-adorn-library-carefully-arranged-with-classics-rare-gems_157027-2332.jpg?size=626&ext=jpg&ga=GA1.1.553209589.1713484800&semt=sph'
             alt=''
-            className='rounded-lg px-3 max-w-[350px]  '
+            className='rounded-lg px-3 max-w-[350px] w-full flex-grow flex-shrink-0 '
           />
           <img
             src='https://images.pexels.com/photos/877971/pexels-photo-877971.jpeg?auto=compress&cs=tinysrgb&w=400'
             alt=''
-            className='rounded-lg px-3 max-w-[350px]  '
+            className='rounded-lg px-3 max-w-[350px] w-full flex-grow flex-shrink-0 '
           />
           <img
             src='https://images.pexels.com/photos/159711/books-bookstore-book-reading-159711.jpeg?auto=compress&cs=tinysrgb&w=400'
             alt=''
-            className='rounded-lg px-3 max-w-[350px]  '
+            className='rounded-lg px-3 max-w-[350px] w-full flex-grow flex-shrink-0 '
           />
         </div>
 
         {/* Text and Box */}
-        <div className='max-w-[600px] mx-auto space-y-10 py-10 rounded-md'>
+        <div className='max-w-[850px] mx-auto space-y-10 py-10 rounded-md'>
           {/* Our Library */}
           <div className='our-library space-y-4 '>
             <h2 className='font-bold text-3xl tracking-wide text-primary'>
@@ -127,7 +127,7 @@ const Library = () => {
           </div>
 
           {/* Box */}
-          <form className='shadow-xl p-3 md:p-10 space-y-4 mx-auto'>
+          <form className='p-3 shadow-xl md:p-10 space-y-4 mx-auto'>
             {/* Give us feedback */}
             <h3 className='font-semibold text-2xl'>
               Give us <span className='text-primary'>feedback</span>

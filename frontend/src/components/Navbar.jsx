@@ -53,12 +53,12 @@ const Navbar = () => {
                   {services &&
                     services.map((data) => (
                       <li key={data.id}>
-                        <a
-                          href={data.link}
+                        <Link
+                          to={data.link}
                           className='hover:bg-primary hover:text-white'
                         >
                           {data.serviceName}
-                        </a>
+                        </Link>
                       </li>
                     ))}
                 </ul>
@@ -110,12 +110,12 @@ const Navbar = () => {
                   {services &&
                     services.map((data) => (
                       <li key={data.id}>
-                        <a
-                          href={data.link}
+                        <Link
+                          to={data.link}
                           className='hover:bg-primary hover:text-white'
                         >
                           {data.serviceName}
-                        </a>
+                        </Link>
                       </li>
                     ))}
                 </ul>

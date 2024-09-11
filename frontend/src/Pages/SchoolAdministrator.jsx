@@ -19,7 +19,7 @@ const SchoolAdministrator = () => {
       <div>
         <div className='container flex items-center justify-start lg:justify-center   '>
           {/* Left */}
-          <div className='max-w-[400px] p-5 xl:p-0 space-y-3'>
+          <div className='max-w-[400px] py-16 xl:py-0 space-y-3'>
             <span className='text-[.8rem]'>Services</span>
             <h1 className='font-bold text-5xl tracking-wider text-primary'>
               Office of the School Administrator
@@ -133,7 +133,7 @@ const SchoolAdministrator = () => {
           </div>
 
           {/* Box */}
-          <div className='shadow-xl p-3 md:p-10 space-y-4 mx-auto'>
+          <div className='p-3 shadow-xl md:p-10 space-y-4 mx-auto'>
             {/* Give us feedback */}
             <h3 className='font-semibold text-2xl'>
               Give us <span className='text-primary'>feedback</span>
