@@ -4,7 +4,7 @@ import ucsLoginRegisterCover from '../assets/images/ucsLoginRegisterCover.jpg'
 import ucsLogo from '../assets/images/logo/ucs_logo.png'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
-// import toast from 'react-hot-toast'
+import toast from 'react-hot-toast'
 
 const Register = () => {
   const SERVER_URL = `http://localhost:5000/api`
@@ -24,17 +24,6 @@ const Register = () => {
   const [showToast, setShowToast] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
-  // Effect to automatically hide the toast after a few seconds
-  useEffect(() => {
-    if (showToast) {
-      const timer = setTimeout(() => {
-        setShowToast(false)
-      }, 3000)
-
-      return () => clearTimeout(timer) // Cleanup the timer
-    }
-  }, [showToast])
-
   // Function to handle form changes
   const handleChange = (e) => {
     setFormData({
@@ -49,9 +38,7 @@ const Register = () => {
 
     // Check if passwords match
     if (formData.password !== formData.confirmPassword) {
-      setMessage('Passwords do not match')
-      setMessageType('error')
-      setShowToast(true) // Show the toast
+      toast.error('Passwords do not match')
       return
     }
 
@@ -68,11 +55,9 @@ const Register = () => {
       })
 
       // Handle success response
-      setMessage(
+      toast.success(
         `Registration successful! Please check your email to verify your account.`
       )
-      setMessageType('success')
-      setShowToast(true) // Show the toast
 
       // Clear form fields after successful request
       setFormData({
@@ -85,15 +70,13 @@ const Register = () => {
     } catch (error) {
       // Handle error response
       if (error.response) {
-        setMessage(
+        toast.error(
           error.response.data.message ||
             'Something Went Wrong, Please try again later'
         )
       } else {
-        setMessage('Server error, please try again later.')
+        toast.error('Server error, please try again later.')
       }
-      setMessageType('error')
-      setShowToast(true) // Show the toast
     } finally {
       // Set loading state to false after the request is done
       setIsLoading(false)
@@ -230,22 +213,6 @@ const Register = () => {
               >
                 Sign In
               </Link>
-            </div>
-            <div
-              className={`fixed top-0 left-1/2 transform -translate-x-1/2 mt-4 transition-all duration-500 ease-in-out ${
-                showToast
-                  ? 'translate-y-0 opacity-100'
-                  : '-translate-y-20 opacity-0'
-              } ${
-                messageType === 'success' ? 'bg-green-500' : 'bg-red-500'
-              } shadow-lg text-white p-4 rounded-md`}
-              style={{ zIndex: 9999 }}
-            >
-              <div className='flex items-center justify-center w-full'>
-                <div>
-                  <span className='w-full text-sm'>{message}</span>
-                </div>
-              </div>
             </div>
 
             {/* Loading spinner or Register button */}
