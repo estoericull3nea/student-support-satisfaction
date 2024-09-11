@@ -1,9 +1,11 @@
 // routes/authRoutes.js (or similar route file)
 import express from 'express'
 import {
+  forgotPassword,
   loginUser,
   logoutUser,
   registerUser,
+  resetPassword,
   verifyEmail,
 } from '../controllers/auth.controller.js'
 import { protect } from '../middlewares/authMiddleware.js'
@@ -24,5 +26,8 @@ router.post('/login', loginLimiter, loginUser)
 router.post('/logout', protect, logoutUser)
 
 router.get('/verify', verifyEmail)
+
+router.post('/forgot-password', forgotPassword)
+router.post('/reset-password/:resetToken', resetPassword)
 
 export default router

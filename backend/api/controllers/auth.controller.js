@@ -6,6 +6,7 @@ import Blacklist from '../models/blacklist.model.js'
 import User from '../models/user.model.js'
 import { validationResult } from 'express-validator'
 import { logLogin } from '../middlewares/logLogin.js'
+import crypto from 'crypto'
 
 dotenv.config()
 
@@ -19,8 +20,107 @@ const transporter = nodemailer.createTransport({
   },
 })
 
-const MAX_FAILED_ATTEMPTS = 5 // Max failed attempts before lockout
+const MAX_FAILED_ATTEMPTS = 5
 const LOCK_TIME = 15 * 60 * 1000 // 15 minutes
+
+export const forgotPassword = async (req, res) => {
+  const { email } = req.body
+
+  try {
+    // Find the user by email
+    const user = await User.findOne({ email })
+
+    // Check if the user exists
+    if (!user) {
+      return res.status(404).json({ message: 'No user found with this email' })
+    }
+
+    // Generate a secure reset token
+    const resetToken = crypto.randomBytes(32).toString('hex')
+
+    // Hash the token before saving it to the database for added security
+    const hashedResetToken = crypto
+      .createHash('sha256')
+      .update(resetToken)
+      .digest('hex')
+
+    const resetTokenExpires = Date.now() + 15 * 60 * 1000 // 15 minutes from now
+
+    // Save the hashed token and its expiration in the user's document
+    user.resetPasswordToken = hashedResetToken
+    user.resetPasswordExpires = resetTokenExpires
+    await user.save()
+
+    // Create the password reset URL
+    const resetUrl = `${req.protocol}://${req.get(
+      'host'
+    )}/reset-password/${resetToken}`
+
+    // Send email with nodemailer
+    const mailOptions = {
+      from: process.env.EMAIL_USER, // Your email address
+      to: user.email,
+      subject: 'Password Reset Request',
+      html: `<p>You requested a password reset. Click the link below to reset your password:</p>
+             <a href="${resetUrl}">Reset Password</a><br />
+             <p>This link is valid for 15 minutes.</p>`,
+    }
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error('Error sending email:', error)
+        return res.status(500).json({ message: 'Error sending email' })
+      }
+
+      // Send success response
+      res.status(200).json({
+        message: 'Password reset link sent to your email',
+        resetToken: hashedResetToken,
+      })
+    })
+  } catch (error) {
+    console.error('Server error:', error.message)
+    return res.status(500).json({ message: 'Server error: ' + error.message })
+  }
+}
+
+export const resetPassword = async (req, res) => {
+  const { resetToken } = req.params // Get the token from the URL
+  const { password, confirmPassword } = req.body // Destructure password and confirmPassword
+
+  try {
+    // Check if password and confirmPassword match
+    if (password !== confirmPassword) {
+      return res.status(400).json({ message: 'Passwords do not match' })
+    }
+
+    // Find the user by the reset token and check if the token is still valid (not expired)
+    const user = await User.findOne({
+      resetPasswordToken: resetToken,
+      resetPasswordExpires: { $gt: Date.now() }, // Check if token is not expired
+    })
+
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid or expired token' })
+    }
+
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(password, 10)
+
+    // Update the user's password and clear the reset token fields
+    user.password = hashedPassword
+    user.resetPasswordToken = undefined
+    user.resetPasswordExpires = undefined
+
+    await user.save()
+
+    return res
+      .status(200)
+      .json({ message: 'Password has been reset successfully' })
+  } catch (error) {
+    return res.status(500).json({ message: 'Server error: ' + error.message })
+  }
+}
 
 // Registering User
 export const registerUser = async (req, res) => {
@@ -54,7 +154,6 @@ export const registerUser = async (req, res) => {
     // Save the user to the database
     await newUser.save()
 
-    // testing ====================================
     // Generate a JWT token for email verification
     const verificationToken = jwt.sign(
       { email: newUser.email },
@@ -77,8 +176,6 @@ export const registerUser = async (req, res) => {
       <p>Best regards,<br>UCS | ALDCS</p>
         `,
     })
-
-    // testing ====================================
 
     // Return success response
     return res.status(201).json({
@@ -144,6 +241,13 @@ export const loginUser = async (req, res) => {
     // Check if the user exists
     if (!thisUser) {
       return res.status(404).json({ message: 'User not found with this email' })
+    }
+
+    // Check if the user is verified
+    if (!thisUser.isVerified) {
+      return res
+        .status(403)
+        .json({ message: 'Please verify your account before logging in.' })
     }
 
     // Check if the user is locked out
