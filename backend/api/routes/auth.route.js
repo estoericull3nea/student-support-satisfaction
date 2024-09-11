@@ -5,6 +5,7 @@ import {
   loginUser,
   logoutUser,
   registerUser,
+  resendVerificationEmail,
   resetPassword,
   verifyEmail,
 } from '../controllers/auth.controller.js'
@@ -29,5 +30,6 @@ router.get('/verify', verifyEmail)
 
 router.post('/forgot-password', forgotPassword)
 router.post('/reset-password/:resetToken', resetPassword)
+router.post('/resend-verification', resendVerificationEmail)
 
 export default router

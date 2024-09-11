@@ -10,10 +10,12 @@ import { protect } from '../middlewares/authMiddleware.js'
 
 const router = express.Router()
 
-router.get('/', protect, getAllUsers)
+// router.get('/', protect, getAllUsers) real
+router.get('/', getAllUsers) // testing
 router.get('/:id', protect, getUserById)
 
-router.delete('/', protect, deleteAllUsers)
+// router.delete('/', protect, deleteAllUsers) real
+router.delete('/', deleteAllUsers) // testing
 
 router.put('/:id', protect, updateUserById)
 

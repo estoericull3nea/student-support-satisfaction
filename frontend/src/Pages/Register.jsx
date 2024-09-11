@@ -3,13 +3,12 @@ import Navbar from '../components/Navbar'
 import ucsLoginRegisterCover from '../assets/images/ucsLoginRegisterCover.jpg'
 import ucsLogo from '../assets/images/logo/ucs_logo.png'
 import axios from 'axios'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
 
 const Register = () => {
   const SERVER_URL = `http://localhost:5000/api`
 
-  // State to hold form data
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -18,13 +17,9 @@ const Register = () => {
     confirmPassword: '',
   })
 
-  // State to hold the message and showToast for transitions
-  const [message, setMessage] = useState('')
-  const [messageType, setMessageType] = useState('')
-  const [showToast, setShowToast] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const navigate = useNavigate()
 
-  // Function to handle form changes
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -32,7 +27,12 @@ const Register = () => {
     })
   }
 
-  // Function to handle form submission
+  // Optional: Client-side email validation (in addition to HTML validation)
+  const isValidEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return emailRegex.test(email)
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
 
@@ -42,11 +42,15 @@ const Register = () => {
       return
     }
 
+    // Optional: Check if email is valid
+    if (!isValidEmail(formData.email)) {
+      toast.error('Invalid email address')
+      return
+    }
+
     try {
-      // Set loading state to true when submission starts
       setIsLoading(true)
 
-      // Make a POST request to the backend
       const response = await axios.post(`${SERVER_URL}/auth/register`, {
         firstName: formData.firstName,
         lastName: formData.lastName,
@@ -54,12 +58,12 @@ const Register = () => {
         password: formData.password,
       })
 
-      // Handle success response
       toast.success(
         `Registration successful! Please check your email to verify your account.`
       )
 
-      // Clear form fields after successful request
+      navigate('/login')
+
       setFormData({
         firstName: '',
         lastName: '',
@@ -68,17 +72,20 @@ const Register = () => {
         confirmPassword: '',
       })
     } catch (error) {
-      // Handle error response
+      // Better error logging for better debugging
       if (error.response) {
         toast.error(
-          error.response.data.message ||
-            'Something Went Wrong, Please try again later'
+          error.response.data.errors[0].msg ||
+            'Something went wrong. Please try again later.'
         )
+      } else if (error.request) {
+        console.error('Error request:', error.request)
+        toast.error('No response from the server. Please try again later.')
       } else {
-        toast.error('Server error, please try again later.')
+        console.error('Error', error.message)
+        toast.error('An unknown error occurred. Please try again later.')
       }
     } finally {
-      // Set loading state to false after the request is done
       setIsLoading(false)
     }
   }
@@ -88,9 +95,7 @@ const Register = () => {
       <Navbar />
       <div>
         <div className='container flex items-center justify-center xl:gap-x-10 xl:shadow-2xl shadow-none py-10 xl:py-20'>
-          {/* Left */}
           <form className='max-w-[500px] p-5 xl:p-0' onSubmit={handleSubmit}>
-            {/* Top Text */}
             <div className='text-center'>
               <div className='flex flex-col items-center gap-2 md:flex-row justify-center'>
                 <img
@@ -107,7 +112,6 @@ const Register = () => {
               </p>
             </div>
 
-            {/* Fname & Lname Input */}
             <div className='flex flex-col md:flex-row md:gap-x-3'>
               <label className='form-control w-full'>
                 <div className='label'>
@@ -123,6 +127,7 @@ const Register = () => {
                   className='input input-bordered input-md w-full'
                   placeholder='Type here...'
                   required
+                  disabled={isLoading} // Disable input during loading
                 />
               </label>
 
@@ -140,11 +145,11 @@ const Register = () => {
                   className='input input-bordered input-md w-full'
                   placeholder='Type here...'
                   required
+                  disabled={isLoading} // Disable input during loading
                 />
               </label>
             </div>
 
-            {/* Email Input */}
             <label className='form-control w-full '>
               <div className='label'>
                 <span className='label-text'>
@@ -159,10 +164,10 @@ const Register = () => {
                 className='input input-bordered input-md w-full'
                 placeholder='Type here...'
                 required
+                disabled={isLoading} // Disable input during loading
               />
             </label>
 
-            {/* Password Input */}
             <label className='form-control w-full '>
               <div className='label'>
                 <span className='label-text'>
@@ -177,10 +182,10 @@ const Register = () => {
                 className='input input-bordered input-md w-full'
                 placeholder='Type here...'
                 required
+                disabled={isLoading} // Disable input during loading
               />
             </label>
 
-            {/* Confirm Password Input */}
             <label className='form-control w-full '>
               <div className='label'>
                 <span className='label-text'>
@@ -195,15 +200,9 @@ const Register = () => {
                 className='input input-bordered input-md w-full'
                 placeholder='Type here...'
                 required
+                disabled={isLoading} // Disable input during loading
               />
             </label>
-
-            {/* <div className='text-end'>
-              <span className='text-xs'>Have an account?</span>
-              <Link to='/login' className='text-xs underline'>
-                Sign In
-              </Link>
-            </div> */}
 
             <div className='text-end flex gap-x-1 justify-end mt-1'>
               <span className='text-xs'>Have an account?</span>
@@ -215,17 +214,15 @@ const Register = () => {
               </Link>
             </div>
 
-            {/* Loading spinner or Register button */}
             <button
               type='submit'
               className='btn w-full bg-primary text-white hover:bg-primary-hover mt-4'
-              disabled={isLoading} // Disable button when loading
+              disabled={isLoading}
             >
-              {isLoading ? 'Loading...' : 'Sign Up'} {/* Show loading text */}
+              {isLoading ? 'Loading...' : 'Sign Up'}
             </button>
           </form>
 
-          {/* Right */}
           <div className='max-w-[750px] xl:block hidden'>
             <img src={ucsLoginRegisterCover} alt='UCS Login/Register Cover' />
           </div>

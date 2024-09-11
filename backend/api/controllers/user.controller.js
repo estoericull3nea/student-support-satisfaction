@@ -7,7 +7,8 @@ dotenv.config()
 export const getAllUsers = async (req, res) => {
   try {
     // Finding all users, excluding sensitive fields like password
-    const users = await User.find().select('-password').lean()
+    // const users = await User.find().select('-password').lean()
+    const users = await User.find().select('-password')
 
     // Check if no users were found
     if (!users.length) {

@@ -23,6 +23,74 @@ const transporter = nodemailer.createTransport({
 const MAX_FAILED_ATTEMPTS = 5
 const LOCK_TIME = 15 * 60 * 1000 // 15 minutes
 
+export const resendVerificationEmail = async (req, res) => {
+  const { email } = req.body
+
+  try {
+    const user = await User.findOne({ email })
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' })
+    }
+
+    // Check if the user is already verified
+    if (user.isVerified) {
+      return res.status(400).json({ message: 'User is already verified' })
+    }
+
+    // Check if the user has requested a verification email recently (cooldown of 5 minutes)
+    const cooldownPeriod = 5 * 60 * 1000 // 5 minutes
+    if (Date.now() - user.lastVerificationRequest < cooldownPeriod) {
+      return res.status(429).json({
+        message:
+          'Please wait 5 minutes before requesting a new verification email',
+      })
+    }
+
+    // Check the maximum number of verification requests (limit to 5 per day)
+    const maxRequestsPerDay = 5
+    if (user.verificationRequestCount >= maxRequestsPerDay) {
+      return res.status(429).json({
+        message:
+          'You have exceeded the number of verification requests for today',
+      })
+    }
+
+    // Generate a new verification token
+    const verificationToken = jwt.sign(
+      { email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: '15m' } // 15 minutes expiration
+    )
+
+    // Update the user's verification token and request count
+    user.verificationToken = verificationToken
+    user.verificationTokenExpires = Date.now() + 15 * 60 * 1000 // 15 minutes from now
+    user.lastVerificationRequest = Date.now()
+    user.verificationRequestCount += 1
+    await user.save()
+
+    // Send the verification email
+    const verificationUrl = `http://localhost:5173/verify?token=${verificationToken}`
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: user.email,
+      subject: 'Verify your email',
+      html: `
+      <p>Dear ${user.firstName},</p>
+      <p>Please verify your email by clicking the link below:</p>
+      <p><a href="${verificationUrl}">Verify Email</a></p>
+      <p>This link will expire in 15 minutes. If you do not verify your email within this time, you will need to request a new confirmation link.</p>
+      <p>If you have any questions or need further assistance, please do not hesitate to contact us <a href="${process.env.FRONTEND_URL}contact-us">here</a>.</p>
+      <p>Best regards,<br>UCS | ALDCS</p>
+      `,
+    })
+
+    res.status(200).json({ message: 'Verification email sent successfully.' })
+  } catch (error) {
+    return res.status(500).json({ message: 'Server error: ' + error.message })
+  }
+}
+
 export const forgotPassword = async (req, res) => {
   const { email } = req.body
 
@@ -144,14 +212,21 @@ export const registerUser = async (req, res) => {
     }
 
     // Validate password length (minimum 8 characters)
-    // if (password.length < 8) {
-    //   return res
-    //     .status(400)
-    //     .json({ message: 'Password must be at least 8 characters long' })
-    // }
+    if (password.length < 8) {
+      return res
+        .status(400)
+        .json({ message: 'Password must be at least 8 characters long' })
+    }
 
     // Hash the password asynchronously
     const hashedPassword = await bcrypt.hash(password, 10)
+
+    // Generate a JWT token for email verification
+    const verificationToken = jwt.sign(
+      { email },
+      process.env.JWT_SECRET,
+      { expiresIn: '15m' } // Set token to expire in 15 minutes
+    )
 
     // Create a new user instance
     const newUser = new User({
@@ -160,17 +235,14 @@ export const registerUser = async (req, res) => {
       email,
       password: hashedPassword,
       isVerified: false,
+      verificationToken,
+      verificationTokenExpires: Date.now() + 15 * 60 * 1000, // 15 minutes from now
+      lastVerificationRequest: Date.now(),
+      verificationRequestCount: 1,
     })
 
     // Save the user to the database
     await newUser.save()
-
-    // Generate a JWT token for email verification
-    const verificationToken = jwt.sign(
-      { email: newUser.email },
-      process.env.JWT_SECRET,
-      { expiresIn: '15m' } // Set token to expire in 15 minutes
-    )
 
     // Send verification email
     const verificationUrl = `http://localhost:5173/verify?token=${verificationToken}`
@@ -228,6 +300,8 @@ export const verifyEmail = async (req, res) => {
 
     // Mark the user as verified
     user.isVerified = true
+    user.verificationToken = undefined // Clear the token after verification
+    user.verificationTokenExpires = undefined
     await user.save()
 
     return res.status(200).json({ message: 'Email verified successfully' })
