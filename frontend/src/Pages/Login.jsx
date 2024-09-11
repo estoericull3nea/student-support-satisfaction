@@ -10,7 +10,8 @@ import ucsLogo from '../assets/images/logo/ucs_logo.png'
 const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
+  const [modalVisible, setModalVisible] = useState(false)
+  const [isSendingVerification, setIsSendingVerification] = useState(false)
   const navigate = useNavigate()
 
   // Get the `redirect` query parameter from the URL
@@ -35,7 +36,33 @@ const Login = () => {
       // Navigate to the previous route or the dashboard after login
       navigate(redirectPath)
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Login failed')
+      // console.log('test')
+      // toast.error(error.response?.data?.message || 'Login failed')
+      if (
+        error.response &&
+        error.response.data.message ===
+          'Please verify your account before logging in.'
+      ) {
+        // Show the modal if verification is needed
+        setModalVisible(true)
+      } else {
+        toast.error(error.response.data.message)
+      }
+    }
+  }
+
+  const resendVerification = async () => {
+    try {
+      setIsSendingVerification(true)
+      await axios.post('http://localhost:5000/api/auth/resend-verification', {
+        email,
+      })
+      toast.success('Verification email has been sent.')
+      setIsSendingVerification(false)
+      setModalVisible(false) // Close the modal after sending
+    } catch (error) {
+      setIsSendingVerification(false)
+      console.error('Error resending verification', error.response.data.message)
     }
   }
   return (
@@ -115,7 +142,6 @@ const Login = () => {
             <button className='btn w-full bg-primary text-white hover:bg-primary-hover mt-4'>
               Sign In
             </button>
-            {error && <p>{error}</p>}
           </form>
 
           {/* Right */}
@@ -123,6 +149,35 @@ const Login = () => {
             <img src={ucsLoginRegisterCover} alt='' />
           </div>
         </div>
+
+        {/* Daisy UI Modal */}
+        {modalVisible && (
+          <div className='modal modal-open'>
+            <div className='modal-box'>
+              <h3 className='font-bold text-lg'>Email Verification Required</h3>
+              <p className='py-4'>
+                Please verify your email before logging in.
+              </p>
+              <div className='modal-action'>
+                <button
+                  className='btn btn-sm bg-primary hover:bg-primary-hover text-white'
+                  onClick={resendVerification}
+                  disabled={isSendingVerification}
+                >
+                  {isSendingVerification
+                    ? 'Sending...'
+                    : 'Resend Verification Email'}
+                </button>
+                <button
+                  className='btn btn-sm'
+                  onClick={() => setModalVisible(false)}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </>
   )

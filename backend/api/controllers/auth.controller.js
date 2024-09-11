@@ -37,8 +37,17 @@ export const resendVerificationEmail = async (req, res) => {
       return res.status(400).json({ message: 'User is already verified' })
     }
 
-    // Check if the user has requested a verification email recently (cooldown of 5 minutes)
+    const maxRequestsPerDay = 5
     const cooldownPeriod = 5 * 60 * 1000 // 5 minutes
+    const dayInMilliseconds = 24 * 60 * 60 * 1000 // 24 hours
+
+    // Check if more than 24 hours have passed since the last request
+    if (Date.now() - user.lastVerificationRequest >= dayInMilliseconds) {
+      // Reset the request count if more than a day has passed
+      user.verificationRequestCount = 0
+    }
+
+    // Check if the user has requested a verification email recently (cooldown of 5 minutes)
     if (Date.now() - user.lastVerificationRequest < cooldownPeriod) {
       return res.status(429).json({
         message:
@@ -46,8 +55,7 @@ export const resendVerificationEmail = async (req, res) => {
       })
     }
 
-    // Check the maximum number of verification requests (limit to 5 per day)
-    const maxRequestsPerDay = 5
+    // Check if the user has exceeded the number of verification requests for today
     if (user.verificationRequestCount >= maxRequestsPerDay) {
       return res.status(429).json({
         message:
