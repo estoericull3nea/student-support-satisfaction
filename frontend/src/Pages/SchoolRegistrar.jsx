@@ -64,7 +64,7 @@ const SchoolRegistrar = () => {
         </div>
 
         {/* Text and Box */}
-        <div className='max-w-[600px] mx-auto space-y-10 py-10 rounded-md'>
+        <div className='max-w-[850px] mx-auto space-y-10 py-10 rounded-md'>
           {/* Office of the Registrar */}
           <div className='our-library space-y-4 '>
             <h2 className='font-bold text-3xl tracking-wide text-primary'>
