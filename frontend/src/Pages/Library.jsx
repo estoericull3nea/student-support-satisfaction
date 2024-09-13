@@ -5,6 +5,7 @@ import axios from 'axios'
 import toast from 'react-hot-toast'
 import { useNavigate, useLocation } from 'react-router-dom'
 import ucsHeroPageTemp from '../assets/images/ucsHeroPageTemp.png'
+import { jwtDecode } from 'jwt-decode'
 
 // React Icons
 import { BsFillEmojiAngryFill } from 'react-icons/bs'
@@ -18,6 +19,7 @@ const Library = () => {
   const [comment, setComment] = useState('')
   const [email, setEmail] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
 
   const navigate = useNavigate()
   const location = useLocation()
@@ -35,6 +37,13 @@ const Library = () => {
     if (storedRating) setRating(storedRating)
     if (storedComment) setComment(storedComment)
     if (storedEmail) setEmail(storedEmail)
+
+    // Decode the JWT and populate the email field
+    if (token) {
+      const decoded = jwtDecode(token)
+      setEmail(decoded.email)
+      setIsLoggedIn(true)
+    }
 
     // Scroll to form-section if the hash is '#form-section'
     if (location.hash === '#form-section') {
@@ -388,6 +397,7 @@ const Library = () => {
                 placeholder='Type your email'
                 className='input input-bordered w-full input-md'
                 required
+                readOnly={isLoggedIn}
               />
             </label>
 
