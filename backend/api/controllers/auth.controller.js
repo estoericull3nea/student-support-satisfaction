@@ -213,12 +213,10 @@ export const resendVerificationEmail = async (req, res) => {
       `,
     })
 
-    res
-      .status(200)
-      .json({
-        message: 'Verification email sent successfully.',
-        verificationToken,
-      })
+    res.status(200).json({
+      message: 'Verification email sent successfully.',
+      verificationToken,
+    })
   } catch (error) {
     return res.status(500).json({ message: 'Server error: ' + error.message })
   }
@@ -287,7 +285,12 @@ export const loginUser = async (req, res) => {
 
     // Generate a JWT token
     const token = jwt.sign(
-      { id: thisUser._id, email: thisUser.email },
+      {
+        id: thisUser._id,
+        email: thisUser.email,
+        firstName: thisUser.firstName,
+        lastName: thisUser.lastName,
+      },
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
     )

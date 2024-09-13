@@ -1,11 +1,10 @@
 import Contact from '../models/contact.model.js'
 
 export const createContact = async (req, res) => {
-  const { firstName, lastName, email, message } = req.body
+  const { firstName, lastName, email, message, userId } = req.body
 
   try {
-    const userId = req.user ? req.user.id : null
-    console.log(req.user)
+    // const userId = req.user ? req.user.id : null
 
     const newContact = new Contact({
       firstName,
@@ -38,7 +37,7 @@ export const getAllContacts = async (req, res) => {
   }
 }
 
-export const getAllContactsWithNoUser = async (req, res) => {
+export const getAllContactsWithNoUser = async (_, res) => {
   try {
     const contacts = await Contact.find({ userId: null }, '-userId')
 
@@ -50,7 +49,7 @@ export const getAllContactsWithNoUser = async (req, res) => {
   }
 }
 
-export const getAllContactsWithUser = async (req, res) => {
+export const getAllContactsWithUser = async (_, res) => {
   try {
     const contacts = await Contact.find({ userId: { $ne: null } }).populate(
       'userId'
@@ -92,7 +91,7 @@ export const getContactById = async (req, res) => {
   }
 }
 
-export const clearAllContacts = async (req, res) => {
+export const clearAllContacts = async (_, res) => {
   try {
     await Contact.deleteMany({})
     res
@@ -103,7 +102,7 @@ export const clearAllContacts = async (req, res) => {
   }
 }
 
-export const clearContactsWithoutUser = async (req, res) => {
+export const clearContactsWithoutUser = async (_, res) => {
   try {
     await Contact.deleteMany({ userId: null })
 
@@ -117,7 +116,7 @@ export const clearContactsWithoutUser = async (req, res) => {
   }
 }
 
-export const clearContactsWithUser = async (req, res) => {
+export const clearContactsWithUser = async (_, res) => {
   try {
     await Contact.deleteMany({ userId: { $ne: null } })
 

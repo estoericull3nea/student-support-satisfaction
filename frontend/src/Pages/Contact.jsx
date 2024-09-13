@@ -1,11 +1,82 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
-
-import { FaFacebook } from 'react-icons/fa'
-import { MdEmail } from 'react-icons/md'
+import axios from 'axios'
+import toast from 'react-hot-toast'
+import { jwtDecode } from 'jwt-decode' // Import the jwt-decode library
 
 const Contact = () => {
+  const [firstName, setFirstName] = useState('') // Store first name
+  const [lastName, setLastName] = useState('') // Store last name
+  const [email, setEmail] = useState('') // Store email
+  const [message, setMessage] = useState('') // Store message
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [termsAccepted, setTermsAccepted] = useState(false) // Store checkbox state
+
+  useEffect(() => {
+    const token = localStorage.getItem('token') // Get the token from localStorage
+
+    if (token) {
+      // Decode the JWT token to get user information
+      const decodedToken = jwtDecode(token)
+
+      setIsLoggedIn(true)
+
+      // Assuming the JWT contains user info like firstName, lastName, and email
+      setFirstName(decodedToken.firstName || '')
+      setLastName(decodedToken.lastName || '')
+      setEmail(decodedToken.email || '')
+    }
+  }, [])
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    const token = localStorage.getItem('token') // Fetch the token inside handleSubmit
+
+    if (!firstName || !lastName || !email || !message) {
+      toast.error('Please fill in all fields.')
+      return
+    }
+
+    if (!termsAccepted) {
+      toast.error('Please accept the terms and conditions.')
+      return
+    }
+
+    let userId = null
+
+    if (token) {
+      // Decode the JWT token to get the userId
+      const decodedToken = jwtDecode(token)
+      userId = decodedToken?.id // Assuming the token has userId
+    }
+
+    try {
+      // Submit the form data to the server
+      await axios.post('http://localhost:5000/api/contacts', {
+        firstName,
+        lastName,
+        email,
+        message,
+        userId, // Only include if userId is present
+      })
+
+      toast.success('Message sent successfully!')
+
+      // Only clear the fields if the user is not logged in
+      if (!userId) {
+        setFirstName('') // Clear first name
+        setLastName('') // Clear last name
+        setEmail('') // Clear email
+      }
+      setMessage('') // Always clear the message field
+      setTermsAccepted(false) // Reset terms checkbox
+    } catch (error) {
+      toast.error('Failed to send message. Please try again.')
+    }
+  }
+
   return (
     <>
       <Navbar />
@@ -17,29 +88,17 @@ const Contact = () => {
             <h1 className='font-bold text-5xl tracking-wider text-primary'>
               GET IN TOUCH
             </h1>
-            <p>We are awards and we are here to serve! How can we help you?</p>
-            <div className='socials flex items-center gap-x-3'>
-              <a
-                href='https://www.facebook.com/ucsaldcs'
-                target='_blank'
-                rel='noopener noreferrer'
-              >
-                <FaFacebook className='text-2xl text-primary' />
-              </a>
-              <a href='mailto:urbiztondocatholicschool@gmail.com'>
-                <MdEmail className='text-3xl text-primary' />
-              </a>
-            </div>
+            <p>We are here to serve! How can we help you?</p>
           </div>
 
           {/* Right */}
           <div className='w-full xl:max-w-[650px] shadow-2xl p-4 py-8 lg:px-10 rounded-lg'>
             <p className='text-sm mb-3'>
-              If you have any questions, please contact us through this form
-              please complete the follow fields
+              Please contact us through this form and fill out all required
+              fields.
             </p>
-            <form className='space-y-3'>
-              {/* Fname & Lname Input */}
+            <form className='space-y-3' onSubmit={handleSubmit}>
+              {/* First Name & Last Name */}
               <div className='grid grid-cols-1 lg:grid-cols-2 gap-x-3'>
                 <label className='form-control w-full'>
                   <div className='label'>
@@ -50,7 +109,10 @@ const Contact = () => {
                   <input
                     type='text'
                     className='input input-bordered input-md w-full'
-                    placeholder='Type here...'
+                    placeholder='First Name'
+                    value={firstName} // Pre-filled from JWT
+                    onChange={(e) => setFirstName(e.target.value)}
+                    readOnly={isLoggedIn}
                   />
                 </label>
 
@@ -63,13 +125,16 @@ const Contact = () => {
                   <input
                     type='text'
                     className='input input-bordered input-md w-full'
-                    placeholder='Type here...'
+                    placeholder='Last Name'
+                    value={lastName} // Pre-filled from JWT
+                    onChange={(e) => setLastName(e.target.value)}
+                    readOnly={isLoggedIn}
                   />
                 </label>
               </div>
 
-              {/* Email Input */}
-              <label className='form-control w-full '>
+              {/* Email */}
+              <label className='form-control w-full'>
                 <div className='label'>
                   <span className='label-text'>
                     Email <span className='text-red-800'>*</span>
@@ -77,29 +142,39 @@ const Contact = () => {
                 </div>
                 <input
                   type='email'
-                  className='input input-bordered input-md w-full '
-                  placeholder='Type here...'
+                  className='input input-bordered input-md w-full'
+                  placeholder='Email'
+                  value={email} // Pre-filled from JWT
+                  onChange={(e) => setEmail(e.target.value)}
+                  readOnly={isLoggedIn}
                 />
               </label>
 
-              {/* Comment */}
+              {/* Message */}
               <div className='space-y-2'>
                 <h3>
                   Message <span className='text-red-700'>*</span>
                 </h3>
-
                 <textarea
                   className='textarea textarea-bordered w-full'
-                  placeholder='Type here'
+                  placeholder='Your message'
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
                 ></textarea>
               </div>
 
+              {/* Terms and Conditions */}
               <div className='form-control'>
                 <label className='label cursor-pointer gap-x-2'>
-                  <input type='checkbox' className='checkbox' />
+                  <input
+                    type='checkbox'
+                    className='checkbox'
+                    checked={termsAccepted}
+                    onChange={(e) => setTermsAccepted(e.target.checked)}
+                  />
                   <span className='label-text text-sm'>
-                    I have read and accepted the Terms and Conditions and
-                    Privacy Policy.
+                    I accept the Terms and Conditions and Privacy Policy.
+                    <span className='text-red-700'>*</span>
                   </span>
                 </label>
               </div>
@@ -113,7 +188,6 @@ const Contact = () => {
           </div>
         </div>
       </div>
-
       <Footer />
     </>
   )
