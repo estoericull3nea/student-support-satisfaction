@@ -8,6 +8,7 @@ import userRouter from './api/routes/user.route.js'
 import authRouter from './api/routes/auth.route.js'
 import loginHistoryRouter from './api/routes/loginHistory.route.js'
 import feedbackRouter from './api/routes/feedback.route.js'
+import contactRouter from './api/routes/contact.route.js'
 import connectDB from './api/utils/connectDB.js'
 
 // Cleaning of expired token every hour
@@ -26,6 +27,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use('/api/users', userRouter)
 app.use('/api/auth', authRouter)
 app.use('/api/feedbacks', feedbackRouter)
+app.use('/api/contacts', contactRouter)
 app.use('/api/logins/history', loginHistoryRouter)
 
 // ================================== Connection to MongoDB ==================================

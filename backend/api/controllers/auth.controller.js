@@ -213,7 +213,12 @@ export const resendVerificationEmail = async (req, res) => {
       `,
     })
 
-    res.status(200).json({ message: 'Verification email sent successfully.' })
+    res
+      .status(200)
+      .json({
+        message: 'Verification email sent successfully.',
+        verificationToken,
+      })
   } catch (error) {
     return res.status(500).json({ message: 'Server error: ' + error.message })
   }
