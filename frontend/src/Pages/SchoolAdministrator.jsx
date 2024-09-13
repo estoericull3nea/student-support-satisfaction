@@ -4,7 +4,7 @@ import Footer from '../components/Footer'
 import axios from 'axios'
 import toast from 'react-hot-toast'
 import { useNavigate, useLocation } from 'react-router-dom'
-import jwtDecode from 'jwt-decode' // To decode JWT
+import { jwtDecode } from 'jwt-decode' // To decode JWT
 
 import ucsHeroPageTemp from '../assets/images/ucsHeroPageTemp.png'
 
@@ -85,7 +85,7 @@ const SchoolAdministrator = () => {
       await axios.post(
         'http://localhost:5000/api/feedbacks',
         {
-          serviceName: 'Office of the School Administrator', // Change to "School Administrator"
+          serviceName: 'Office of the School Administrator',
           rating,
           comment,
           email,
@@ -100,7 +100,7 @@ const SchoolAdministrator = () => {
       toast.success('Feedback submitted successfully!')
       setRating('')
       setComment('')
-      setEmail('')
+      // setEmail('')
       // Clear localStorage after successful submission
       localStorage.removeItem('feedback_rating')
       localStorage.removeItem('feedback_comment')
@@ -115,6 +115,7 @@ const SchoolAdministrator = () => {
       setIsSubmitting(false) // Remove loading state
     }
   }
+
   return (
     <>
       <Navbar />
@@ -236,7 +237,12 @@ const SchoolAdministrator = () => {
           </div>
 
           {/* Box */}
-          <div className='p-3 shadow-xl md:p-10 space-y-4 mx-auto'>
+          <form
+            className='p-3 shadow-xl md:p-10 space-y-4 mx-auto'
+            onSubmit={handleFeedbackSubmit}
+            ref={feedbackFormRef}
+            id='form-section'
+          >
             {/* Give us feedback */}
             <h3 className='font-semibold text-2xl'>
               Give us <span className='text-primary'>feedback</span>
@@ -255,9 +261,11 @@ const SchoolAdministrator = () => {
                 <input
                   type='radio'
                   id='very-dissatisfied'
-                  name='hosting'
+                  name='rating'
                   value='very-dissatisfied'
-                  className='hidden peer'
+                  className='absolute opacity-0 peer'
+                  checked={rating === 'very-dissatisfied'}
+                  onChange={(e) => setRating(e.target.value)}
                   required
                 />
                 <label
@@ -275,9 +283,11 @@ const SchoolAdministrator = () => {
                 <input
                   type='radio'
                   id='dissatisfied'
-                  name='hosting'
+                  name='rating'
                   value='dissatisfied'
-                  className='hidden peer'
+                  className='absolute opacity-0 peer'
+                  checked={rating === 'dissatisfied'}
+                  onChange={(e) => setRating(e.target.value)}
                   required
                 />
                 <label
@@ -295,9 +305,11 @@ const SchoolAdministrator = () => {
                 <input
                   type='radio'
                   id='neutral'
-                  name='hosting'
+                  name='rating'
                   value='neutral'
-                  className='hidden peer'
+                  className='absolute opacity-0 peer'
+                  checked={rating === 'neutral'}
+                  onChange={(e) => setRating(e.target.value)}
                   required
                 />
                 <label
@@ -315,9 +327,11 @@ const SchoolAdministrator = () => {
                 <input
                   type='radio'
                   id='satisfied'
-                  name='hosting'
+                  name='rating'
                   value='satisfied'
-                  className='hidden peer'
+                  className='absolute opacity-0 peer'
+                  checked={rating === 'satisfied'}
+                  onChange={(e) => setRating(e.target.value)}
                   required
                 />
                 <label
@@ -335,9 +349,11 @@ const SchoolAdministrator = () => {
                 <input
                   type='radio'
                   id='very-satisfied'
-                  name='hosting'
+                  name='rating'
                   value='very-satisfied'
-                  className='hidden peer'
+                  className='absolute opacity-0 peer'
+                  checked={rating === 'very-satisfied'}
+                  onChange={(e) => setRating(e.target.value)}
                   required
                 />
                 <label
@@ -364,7 +380,10 @@ const SchoolAdministrator = () => {
               </p>
               <textarea
                 className='textarea textarea-bordered w-full'
-                placeholder='Type here'
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                placeholder='Type your comment here'
+                required
               ></textarea>
             </div>
 
@@ -376,12 +395,25 @@ const SchoolAdministrator = () => {
                 </span>
               </div>
               <input
-                type='text'
-                placeholder='Type here'
+                type='email'
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className='input input-bordered w-full input-md'
+                required
+                readOnly={isLoggedIn} // Make the email input read-only if logged in
               />
             </label>
-          </div>
+
+            <div className='text-end'>
+              <button
+                type='submit'
+                className='btn bg-primary hover:bg-primary-hover text-white'
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? 'Submitting...' : 'Submit'}
+              </button>
+            </div>
+          </form>
 
           {/* Pre Footer */}
           <div>

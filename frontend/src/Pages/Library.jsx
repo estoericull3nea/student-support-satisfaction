@@ -101,7 +101,7 @@ const Library = () => {
       toast.success('Feedback submitted successfully!')
       setRating('')
       setComment('')
-      setEmail('')
+      // setEmail('')
       // Clear localStorage after successful submission
       localStorage.removeItem('feedback_rating')
       localStorage.removeItem('feedback_comment')
