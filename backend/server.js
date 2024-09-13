@@ -1,4 +1,4 @@
-// ======================= Imports =======================
+// ================================== Imports ==================================
 import dotenv from 'dotenv'
 import express from 'express'
 import cors from 'cors'
@@ -28,7 +28,7 @@ app.use('/api/auth', authRouter)
 app.use('/api/feedbacks', feedbackRouter)
 app.use('/api/logins/history', loginHistoryRouter)
 
-// ======================= Connection to MongoDB =======================
+// ================================== Connection to MongoDB ==================================
 connectDB()
   .then(() => {
     app.listen(PORT, () =>

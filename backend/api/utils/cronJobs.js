@@ -1,8 +1,7 @@
-// cronJobs.js
 import cron from 'node-cron'
-import Blacklist from '../models/blacklist.model.js' // Import the Blacklist model
+import Blacklist from '../models/blacklist.model.js'
 
-// Schedule the cron job to run every hour to clean expired tokens
+// ================================== Schedule the cron job to run every hour to clean expired tokens ==================================
 cron.schedule('0 * * * *', async () => {
   try {
     await Blacklist.deleteMany({ expiresAt: { $lt: new Date() } })

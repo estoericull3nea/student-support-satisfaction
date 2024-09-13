@@ -21,7 +21,7 @@ const LandingPage = () => {
 
       {servicesData.map((service, index) => (
         <Services
-          key={service.id || index} // Preferably use a unique service id if available
+          key={service.id || index}
           title={service.title}
           description={service.description}
           btnText={service.btnText}

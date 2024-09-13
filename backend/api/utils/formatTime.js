@@ -1,5 +1,3 @@
-// utils/formatTime.js
-
 export const formatLoginTime = (date) => {
   const options = {
     year: 'numeric',
@@ -8,8 +6,8 @@ export const formatLoginTime = (date) => {
     hour: '2-digit',
     minute: '2-digit',
     second: '2-digit',
-    fractionalSecondDigits: 3, // for milliseconds
-    hour12: true, // 24-hour format
+    fractionalSecondDigits: 3, // milliseconds
+    hour12: true, // 12-hour format
   }
 
   return new Date(date).toLocaleString('en-US', options)

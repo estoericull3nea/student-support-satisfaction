@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Navbar from '../components/Navbar'
 import axios from 'axios'
 import { Link, useNavigate } from 'react-router-dom'
-import toast from 'react-hot-toast' // Import toaster
+import toast from 'react-hot-toast'
 
 import ucsLoginRegisterCover from '../assets/images/ucsLoginRegisterCover.jpg'
 import ucsLogo from '../assets/images/logo/ucs_logo.png'
@@ -11,7 +11,6 @@ import { TiArrowLeft } from 'react-icons/ti'
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('')
-  const [error, setError] = useState(null) // Error state for handling errors
   const [isLoading, setIsLoading] = useState(false)
 
   const navigate = useNavigate()
@@ -19,7 +18,6 @@ const ForgotPassword = () => {
   const handleForgotPassword = async (e) => {
     e.preventDefault()
     try {
-      // Set loading state to true when submission starts
       setIsLoading(true)
 
       const response = await axios.post(
@@ -28,14 +26,11 @@ const ForgotPassword = () => {
       )
 
       toast.success('Password reset link has been sent to your email!')
-      setError(null) // Clear any previous errors
-      navigate('/login') // Optionally navigate to login after success
+      navigate('/login')
     } catch (error) {
-      // Show toast error and set error message
       const errorMessage =
         error.response?.data?.message || 'Request for password reset failed'
       toast.error(errorMessage)
-      setError(errorMessage)
     } finally {
       setIsLoading(false)
     }
@@ -46,7 +41,6 @@ const ForgotPassword = () => {
       <Navbar />
 
       <div>
-        {/* Toaster container */}
         <div className='container flex items-center justify-center xl:gap-x-10 xl:shadow-2xl shadow-none py-10 xl:py-20'>
           {/* Left */}
           <form
@@ -95,10 +89,9 @@ const ForgotPassword = () => {
             <button
               type='submit'
               className='btn w-full bg-primary text-white hover:bg-primary-hover mt-4'
-              disabled={isLoading} // Disable button when loading
+              disabled={isLoading}
             >
               {isLoading ? 'Loading...' : 'Forgot Password'}{' '}
-              {/* Show loading text */}
             </button>
           </form>
 

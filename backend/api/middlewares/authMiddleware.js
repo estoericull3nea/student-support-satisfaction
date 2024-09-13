@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken'
 import Blacklist from '../models/blacklist.model.js'
 
+// ================================== Protecting Routes ==================================
 export const protect = async (req, res, next) => {
   // Get the token from headers
   const token = req.headers.authorization?.split(' ')[1]

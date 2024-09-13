@@ -1,14 +1,15 @@
 import loginHistoryModel from '../models/loginHistory.model.js'
-import mongoose from 'mongoose'
 import { formatLoginTime } from '../utils/formatTime.js'
 
-// Get all login history entries
-export const getAllLogins = async (req, res) => {
+import mongoose from 'mongoose'
+
+// ================================== Get all Login History Entries ==================================
+export const getAllLogins = async (_, res) => {
   try {
     // Fetch login history and populate the 'userId' field with user data
     const loginHistory = await loginHistoryModel
       .find()
-      .populate('userId') // Populate with 'name' and 'email' from User model
+      .populate('userId')
       .sort({ loginTime: -1 })
 
     // Check if no logins were found
@@ -16,7 +17,7 @@ export const getAllLogins = async (req, res) => {
       return res.status(404).json({ message: 'No Logins Found' })
     }
 
-    // Format the loginTime before sending the response
+    // Format the login time before sending the response
     const formattedHistory = loginHistory.map((history) => ({
       ...history.toObject(),
       loginTime: formatLoginTime(history.loginTime),
@@ -29,7 +30,7 @@ export const getAllLogins = async (req, res) => {
   }
 }
 
-// Get a specific login history entry by ID
+// ================================== Get a Specific Login History Entry by ID ==================================
 export const getLoginHistoryById = async (req, res) => {
   const { id } = req.params
 
@@ -40,13 +41,13 @@ export const getLoginHistoryById = async (req, res) => {
 
   try {
     // Fetch login history by ID and populate the 'userId' field with user data
-    const loginHistory = await loginHistoryModel.findById(id).populate('userId') // Populate with 'name' and 'email' from User model
+    const loginHistory = await loginHistoryModel.findById(id).populate('userId')
 
     if (!loginHistory) {
       return res.status(404).json({ message: 'Login history not found' })
     }
 
-    // Format the loginTime before sending the response
+    // Format the login time before sending the response
     const formattedHistory = {
       ...loginHistory.toObject(),
       loginTime: formatLoginTime(loginHistory.loginTime),
@@ -59,7 +60,7 @@ export const getLoginHistoryById = async (req, res) => {
   }
 }
 
-// Delete a specific login history entry by ID
+// ================================== Delete a Specific Login History Entry by ID ==================================
 export const deleteLoginHistoryById = async (req, res) => {
   const { id } = req.params
 
@@ -82,8 +83,8 @@ export const deleteLoginHistoryById = async (req, res) => {
   }
 }
 
-// Clear all login history (use cautiously, should be restricted to admins)
-export const clearLoginHistory = async (req, res) => {
+// ================================== Clear all Login History ==================================
+export const clearLoginHistory = async (_, res) => {
   try {
     await loginHistoryModel.deleteMany({})
     res.status(200).json({ message: 'All login history cleared' })

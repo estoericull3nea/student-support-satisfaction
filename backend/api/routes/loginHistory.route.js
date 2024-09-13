@@ -1,4 +1,3 @@
-// routes/authRoutes.js (or similar route file)
 import express from 'express'
 import {
   clearLoginHistory,

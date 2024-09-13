@@ -1,4 +1,3 @@
-// routes/authRoutes.js (or similar route file)
 import express from 'express'
 import {
   forgotPassword,
@@ -10,7 +9,7 @@ import {
   verifyEmail,
 } from '../controllers/auth.controller.js'
 import { protect } from '../middlewares/authMiddleware.js'
-import { validateUserRegistration } from '../middlewares/validators.js' // Import the validator
+import { validateUserRegistration } from '../middlewares/validators.js'
 import rateLimit from 'express-rate-limit'
 
 const router = express.Router()
@@ -22,7 +21,7 @@ const loginLimiter = rateLimit({
   message: 'Too many login attempts. Please try again after a minute.',
 })
 
-router.post('/register', validateUserRegistration, registerUser) // Apply validation middleware
+router.post('/register', validateUserRegistration, registerUser)
 router.post('/login', loginLimiter, loginUser)
 router.post('/logout', protect, logoutUser)
 

@@ -1,13 +1,14 @@
-import dotenv from 'dotenv'
 import User from '../models/user.model.js'
+
+import dotenv from 'dotenv'
 import mongoose from 'mongoose'
+
 dotenv.config()
 
-// Get All Users
-export const getAllUsers = async (req, res) => {
+// ================================== Get All Users ==================================
+export const getAllUsers = async (_, res) => {
   try {
     // Finding all users, excluding sensitive fields like password
-    // const users = await User.find().select('-password').lean()
     const users = await User.find().select('-password')
 
     // Check if no users were found
@@ -21,14 +22,13 @@ export const getAllUsers = async (req, res) => {
       users,
     })
   } catch (error) {
-    // Return server error status in case of failure
     return res.status(500).json({ message: 'Server Error: ' + error.message })
   }
 }
 
-// Get User By ID
+// ================================== Get User By ID ==================================
 export const getUserById = async (req, res) => {
-  const { id } = req.params // Extract the user ID from the request parameters
+  const { id } = req.params
 
   // Checking if the id is valid for mongodb or not
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -44,17 +44,15 @@ export const getUserById = async (req, res) => {
       return res.status(404).json({ message: 'User not found' })
     }
 
-    // Return the user data
     return res.status(200).json(user)
   } catch (error) {
-    // Return a 500 server error if something goes wrong
     return res.status(500).json({ message: 'Server error: ' + error.message })
   }
 }
 
-// Update User
+// ================================== Update User ==================================
 export const updateUserById = async (req, res) => {
-  const { id } = req.params // Assuming user ID is passed as a route parameter
+  const { id } = req.params
   const { firstName, lastName } = req.body
 
   // Checking if the id is valid for mongodb or not
@@ -71,7 +69,7 @@ export const updateUserById = async (req, res) => {
       return res.status(404).json({ message: 'User not found' })
     }
 
-    // ======================= Dynamic Field Updates =======================
+    // Dynamic Field Updates
     // Update the first name if provided
     if (firstName) {
       user.firstName = firstName
@@ -82,23 +80,20 @@ export const updateUserById = async (req, res) => {
       user.lastName = lastName
     }
 
-    // Save the updated user
     const updatedUser = await user.save()
 
-    // Return the updated user data, excluding sensitive information
     return res.status(200).json({
       message: 'User updated successfully',
       updatedUser,
     })
   } catch (error) {
-    // Error handling
     return res.status(500).json({ message: 'Server error: ' + error.message })
   }
 }
 
-// Delete User
+// ================================== Delete User ==================================
 export const deleteUserById = async (req, res) => {
-  const { id } = req.params // Assuming user ID is passed as a route parameter
+  const { id } = req.params
 
   // Checking if the id is valid for mongodb or not
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -106,7 +101,6 @@ export const deleteUserById = async (req, res) => {
   }
 
   try {
-    // Find and delete the user by ID
     const user = await User.findByIdAndDelete(id)
 
     // If the user does not exist
@@ -117,12 +111,11 @@ export const deleteUserById = async (req, res) => {
     // Success response
     return res.status(200).json({ message: 'User deleted successfully' })
   } catch (error) {
-    // Error handling
     return res.status(500).json({ message: 'Server error: ' + error.message })
   }
 }
 
-// Delete All Users
+// ================================== Delete All Users ==================================
 export const deleteAllUsers = async (_, res) => {
   try {
     // Check if there are any registered users
@@ -143,7 +136,6 @@ export const deleteAllUsers = async (_, res) => {
       deletedCount: result.deletedCount,
     })
   } catch (error) {
-    // Handle any errors that occur
     return res.status(500).json({ message: 'Server error: ' + error.message })
   }
 }

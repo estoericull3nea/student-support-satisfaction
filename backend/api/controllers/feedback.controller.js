@@ -1,9 +1,10 @@
 import Feedback from '../models/feedback.model.js'
 
-// Create Feedback
+// ================================== Create Feedback ==================================
 export const createFeedback = async (req, res) => {
   const { serviceName, rating, comment, email } = req.body
 
+  // All fields required
   if (!serviceName || !rating || !comment || !email) {
     return res.status(400).json({ message: 'All fields are required' })
   }
@@ -11,12 +12,13 @@ export const createFeedback = async (req, res) => {
   try {
     const feedback = await Feedback.create({
       serviceName,
-      user: req.user.id, // Ensure user is authenticated
+      user: req.user.id,
       rating,
       comment,
       email,
     })
 
+    // Success response
     res
       .status(201)
       .json({ message: 'Feedback submitted successfully', feedback })
@@ -25,7 +27,7 @@ export const createFeedback = async (req, res) => {
   }
 }
 
-// Get Feedbacks by Service
+// ================================== Get Feedbacks by Service ==================================
 export const getFeedbackByService = async (req, res) => {
   const { serviceId } = req.params
   try {
@@ -36,7 +38,7 @@ export const getFeedbackByService = async (req, res) => {
   }
 }
 
-// Get All Feedbacks
+// ================================== Get All Feedbacks ==================================
 export const getAllFeedbacks = async (req, res) => {
   try {
     const feedbacks = await Feedback.find().populate('user')
@@ -51,7 +53,7 @@ export const getAllFeedbacks = async (req, res) => {
   }
 }
 
-// Get All Feedbacks By User ID
+// ================================== Get All Feedbacks By User ID ==================================
 export const getAllFeedbacksByUserId = async (req, res) => {
   const { userId } = req.params // Extract userId from route parameters
 
@@ -65,26 +67,23 @@ export const getAllFeedbacksByUserId = async (req, res) => {
         .json({ message: 'No feedbacks found for this user' })
     }
 
-    // Return the feedbacks in the response
+    // Success response
     res.status(200).json(feedbacks)
   } catch (error) {
-    // Handle server errors
     res.status(500).json({ message: 'Server error: ' + error.message })
   }
 }
 
-// Clear All Feedbacks
+// ================================== Clear All Feedbacks ==================================
 export const clearAllFeedbacks = async (req, res) => {
   try {
-    // Delete all feedbacks from the database
     const deletedFeedbacks = await Feedback.deleteMany({})
 
-    // Respond with a success message and the count of deleted feedbacks
+    // Success response
     res.status(200).json({
       message: `${deletedFeedbacks.deletedCount} feedback(s) cleared successfully`,
     })
   } catch (error) {
-    // Handle server errors
     res.status(500).json({ message: 'Server error: ' + error.message })
   }
 }

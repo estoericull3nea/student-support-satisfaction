@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Navbar from '../components/Navbar'
 import axios from 'axios'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import toast from 'react-hot-toast' // Import toaster
+import toast from 'react-hot-toast'
 
 import ucsLoginRegisterCover from '../assets/images/ucsLoginRegisterCover.jpg'
 import ucsLogo from '../assets/images/logo/ucs_logo.png'
@@ -12,18 +12,18 @@ const Login = () => {
   const [password, setPassword] = useState('')
   const [modalVisible, setModalVisible] = useState(false)
   const [isSendingVerification, setIsSendingVerification] = useState(false)
-  const [isSubmitting, setIsSubmitting] = useState(false) // Handle loading state
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const navigate = useNavigate()
 
   // Get the `redirect` query parameter from the URL
   const location = useLocation()
   const queryParams = new URLSearchParams(location.search)
-  const redirectPath = queryParams.get('redirect') || '/' // Default to dashboard if no redirect
+  const redirectPath = queryParams.get('redirect') || '/'
 
   const handleLogin = async (e) => {
     e.preventDefault()
     try {
-      setIsSubmitting(true) // Show loading state
+      setIsSubmitting(true)
       const response = await axios.post(
         'http://localhost:5000/api/auth/login',
         {
@@ -42,11 +42,7 @@ const Login = () => {
       navigate(decodeURIComponent(redirectUrl))
 
       toast.success('Login successful!')
-      // Navigate to the previous route or the dashboard after login
-      // navigate(redirectPath)
     } catch (error) {
-      // console.log('test')
-      // toast.error(error.response?.data?.message || 'Login failed')
       if (
         error.response &&
         error.response.data.message ===

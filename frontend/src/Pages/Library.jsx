@@ -25,7 +25,6 @@ const Library = () => {
   const location = useLocation()
   const token = localStorage.getItem('token')
 
-  // Ref for the feedback form
   const feedbackFormRef = useRef(null)
 
   useEffect(() => {
@@ -51,7 +50,7 @@ const Library = () => {
           behavior: 'smooth',
           block: 'start',
         })
-      }, 100) // Delay to ensure DOM is fully loaded
+      }, 100)
     }
   }, [location, token])
 
@@ -71,7 +70,6 @@ const Library = () => {
       localStorage.setItem('feedback_email', email)
 
       toast.error('You need to be logged in to provide feedback')
-      // Redirect to login and include the form-section hash in the redirect URL
       const redirectUrl = `${location.pathname}${
         location.hash || '#form-section'
       }`
@@ -80,9 +78,8 @@ const Library = () => {
     }
 
     try {
-      setIsSubmitting(true) // Show loading state
+      setIsSubmitting(true)
 
-      // Make POST request to submit feedback
       await axios.post(
         'http://localhost:5000/api/feedbacks',
         {
@@ -93,7 +90,7 @@ const Library = () => {
         },
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Use token for authorization
+            Authorization: `Bearer ${token}`,
           },
         }
       )
@@ -101,7 +98,6 @@ const Library = () => {
       toast.success('Feedback submitted successfully!')
       setRating('')
       setComment('')
-      // setEmail('')
       // Clear localStorage after successful submission
       localStorage.removeItem('feedback_rating')
       localStorage.removeItem('feedback_comment')
@@ -113,7 +109,7 @@ const Library = () => {
         toast.error('Failed to submit feedback. Please try again.')
       }
     } finally {
-      setIsSubmitting(false) // Remove loading state
+      setIsSubmitting(false)
     }
   }
 

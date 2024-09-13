@@ -32,7 +32,6 @@ const Protect = ({ children }) => {
 
   // Handle redirection logic to login, storing the previous route
   if (!token || (token && jwtDecode(token).exp < Date.now() / 1000)) {
-    // Redirect to login with the current path in the `redirect` query parameter
     return <Navigate to={`/login?redirect=${location.pathname}`} />
   }
 

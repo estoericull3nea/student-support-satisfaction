@@ -4,7 +4,7 @@ import Footer from '../components/Footer'
 import axios from 'axios'
 import toast from 'react-hot-toast'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { jwtDecode } from 'jwt-decode' // To decode JWT
+import { jwtDecode } from 'jwt-decode'
 
 import ucsHeroPageTemp from '../assets/images/ucsHeroPageTemp.png'
 
@@ -14,6 +14,7 @@ import { BsEmojiFrownFill } from 'react-icons/bs'
 import { BsEmojiNeutralFill } from 'react-icons/bs'
 import { BsFillEmojiSmileFill } from 'react-icons/bs'
 import { BsEmojiGrinFill } from 'react-icons/bs'
+
 const PrincipalOffice = () => {
   const [rating, setRating] = useState('')
   const [comment, setComment] = useState('')
@@ -39,8 +40,8 @@ const PrincipalOffice = () => {
     // Check if the user is logged in by decoding the JWT token
     if (token) {
       const decoded = jwtDecode(token)
-      setEmail(decoded.email) // Pre-fill the email field
-      setIsLoggedIn(true) // Mark the user as logged in
+      setEmail(decoded.email)
+      setIsLoggedIn(true)
     }
 
     // Scroll to form-section if the hash is '#form-section'
@@ -50,7 +51,7 @@ const PrincipalOffice = () => {
           behavior: 'smooth',
           block: 'start',
         })
-      }, 100) // Delay to ensure DOM is fully loaded
+      }, 100)
     }
   }, [location, token])
 
@@ -78,9 +79,8 @@ const PrincipalOffice = () => {
     }
 
     try {
-      setIsSubmitting(true) // Show loading state
+      setIsSubmitting(true)
 
-      // Make POST request to submit feedback
       await axios.post(
         'http://localhost:5000/api/feedbacks',
         {
@@ -91,7 +91,7 @@ const PrincipalOffice = () => {
         },
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Use token for authorization
+            Authorization: `Bearer ${token}`,
           },
         }
       )
@@ -99,7 +99,6 @@ const PrincipalOffice = () => {
       toast.success('Feedback submitted successfully!')
       setRating('')
       setComment('')
-      // setEmail('')
       // Clear localStorage after successful submission
       localStorage.removeItem('feedback_rating')
       localStorage.removeItem('feedback_comment')
@@ -111,7 +110,7 @@ const PrincipalOffice = () => {
         toast.error('Failed to submit feedback. Please try again.')
       }
     } finally {
-      setIsSubmitting(false) // Remove loading state
+      setIsSubmitting(false)
     }
   }
 

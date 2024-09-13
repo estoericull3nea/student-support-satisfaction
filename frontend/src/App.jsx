@@ -13,7 +13,7 @@ import NotFound from './Pages/NotFound'
 import VerifyEmail from './Pages/VerifyEmail'
 import Protect from './components/Protect'
 import RedirectIfAuthenticated from './components/RedirectIfAuthenticated'
-import { Toaster } from 'react-hot-toast' // Import Toaster
+import { Toaster } from 'react-hot-toast'
 import ForgotPassword from './Pages/ForgotPassword'
 import ResetPassword from './Pages/ResetPassword'
 
@@ -67,7 +67,8 @@ const App = () => {
             element={<SchoolAdministrator />}
           />
           <Route path='/contact-us' element={<Contact />} />
-          {/* Example of Protected Route */}
+
+          {/* Protected Route */}
           <Route
             path='/about-us'
             element={

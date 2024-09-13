@@ -2,16 +2,16 @@ import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import ucsLogo from '../assets/images/logo/ucs_logo.png'
 import { services } from '../constants/index'
-import toast from 'react-hot-toast' // Import toast
+import toast from 'react-hot-toast'
 
 const Navbar = () => {
-  const token = localStorage.getItem('token') // Check if token exists to determine if user is logged in
+  const token = localStorage.getItem('token')
   const navigate = useNavigate()
 
   const handleLogout = () => {
-    localStorage.clear() // Removes all key-value pairs in localStorage
-    toast.success('Logged out') // Show success toast when logged out
-    navigate('/login') // Redirect to login page after logging out
+    localStorage.clear()
+    toast.success('Logged out')
+    navigate('/login')
   }
 
   return (

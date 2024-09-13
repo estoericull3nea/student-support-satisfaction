@@ -1,6 +1,6 @@
-// middlewares/validators.js
 import { body } from 'express-validator'
 
+// ================================== Validation for Register User ==================================
 export const validateUserRegistration = [
   body('firstName').not().isEmpty().withMessage('First name is required'),
   body('lastName').not().isEmpty().withMessage('Last name is required'),

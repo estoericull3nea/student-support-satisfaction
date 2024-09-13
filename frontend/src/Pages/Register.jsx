@@ -27,7 +27,6 @@ const Register = () => {
     })
   }
 
-  // Optional: Client-side email validation (in addition to HTML validation)
   const isValidEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     return emailRegex.test(email)
@@ -42,7 +41,6 @@ const Register = () => {
       return
     }
 
-    // Optional: Check if email is valid
     if (!isValidEmail(formData.email)) {
       toast.error('Invalid email address')
       return
@@ -72,7 +70,6 @@ const Register = () => {
         confirmPassword: '',
       })
     } catch (error) {
-      // Better error logging for better debugging
       if (error.response) {
         toast.error(
           error.response.data.errors[0].msg ||
@@ -127,7 +124,7 @@ const Register = () => {
                   className='input input-bordered input-md w-full'
                   placeholder='Type here...'
                   required
-                  disabled={isLoading} // Disable input during loading
+                  disabled={isLoading}
                 />
               </label>
 
@@ -145,7 +142,7 @@ const Register = () => {
                   className='input input-bordered input-md w-full'
                   placeholder='Type here...'
                   required
-                  disabled={isLoading} // Disable input during loading
+                  disabled={isLoading}
                 />
               </label>
             </div>
@@ -164,7 +161,7 @@ const Register = () => {
                 className='input input-bordered input-md w-full'
                 placeholder='Type here...'
                 required
-                disabled={isLoading} // Disable input during loading
+                disabled={isLoading}
               />
             </label>
 
@@ -182,7 +179,7 @@ const Register = () => {
                 className='input input-bordered input-md w-full'
                 placeholder='Type here...'
                 required
-                disabled={isLoading} // Disable input during loading
+                disabled={isLoading}
               />
             </label>
 
@@ -200,7 +197,7 @@ const Register = () => {
                 className='input input-bordered input-md w-full'
                 placeholder='Type here...'
                 required
-                disabled={isLoading} // Disable input during loading
+                disabled={isLoading}
               />
             </label>
 

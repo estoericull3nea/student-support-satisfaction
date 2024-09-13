@@ -3,7 +3,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 const Services = ({ title, description, btnText, images, index, link }) => {
-  const reverse = index % 2 !== 0 // Alternate layout based on index
+  const reverse = index % 2 !== 0
 
   return (
     <div className='py-3 md:py-14'>

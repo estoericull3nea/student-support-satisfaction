@@ -1,5 +1,6 @@
 import LoginHistory from '../models/loginHistory.model.js'
 
+// ================================== Logger the Login ==================================
 export const logLogin = async (req, userId) => {
   try {
     const loginHistory = new LoginHistory({

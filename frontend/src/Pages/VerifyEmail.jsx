@@ -6,7 +6,7 @@ const VerifyEmail = () => {
   const SERVER_URL = `http://localhost:5000`
   const [message, setMessage] = useState('')
   const [isVerified, setIsVerified] = useState(false)
-  const [countdown, setCountdown] = useState(8) // 8 seconds countdown
+  const [countdown, setCountdown] = useState(8)
   const location = useLocation()
   const navigate = useNavigate()
 
@@ -27,8 +27,8 @@ const VerifyEmail = () => {
         const countdownInterval = setInterval(() => {
           setCountdown((prevCountdown) => {
             if (prevCountdown <= 1) {
-              clearInterval(countdownInterval) // Clear the countdown interval
-              navigate('/login') // Redirect after countdown ends
+              clearInterval(countdownInterval)
+              navigate('/login')
             }
             return prevCountdown - 1
           })
@@ -50,7 +50,6 @@ const VerifyEmail = () => {
   return (
     <div className='flex items-center justify-center mt-[4rem] px-[1rem]'>
       <div className='max-w-lg mx-auto text-center'>
-        {/* Title with conditional styling for success or failure */}
         <h1
           className={`text-3xl font-bold mb-4 ${
             isVerified ? 'text-green-600' : 'text-red-600'
@@ -64,7 +63,6 @@ const VerifyEmail = () => {
         {/* Message body */}
         <p className='text-lg text-gray-700 mb-6'>{message}</p>
 
-        {/* Conditional rendering of success or failure message using DaisyUI alert */}
         <div
           className={`alert ${
             isVerified ? 'alert-success' : 'alert-error'
@@ -102,7 +100,6 @@ const VerifyEmail = () => {
             >
               Go to Login
             </button>
-            {/* Conditionally render countdown only if greater than 0 */}
             {countdown > 0 && (
               <span className='ml-4 text-gray-500'>{countdown} seconds...</span>
             )}

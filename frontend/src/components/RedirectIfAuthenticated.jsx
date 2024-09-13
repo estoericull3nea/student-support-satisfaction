@@ -15,7 +15,6 @@ const RedirectIfAuthenticated = ({ children }) => {
         return <Navigate to='/' />
       }
     } catch (error) {
-      // If there's an error decoding the token, allow the user to access the login page
       localStorage.removeItem('token')
     }
   }

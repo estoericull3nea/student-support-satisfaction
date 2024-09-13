@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import Navbar from '../components/Navbar'
 import axios from 'axios'
-import { Link, useNavigate, useParams } from 'react-router-dom' // Import useParams to get token from URL
-import toast from 'react-hot-toast' // Import toaster
+import { Link, useNavigate, useParams } from 'react-router-dom'
+import toast from 'react-hot-toast'
 import { TiArrowLeft } from 'react-icons/ti'
 import ucsLoginRegisterCover from '../assets/images/ucsLoginRegisterCover.jpg'
 import ucsLogo from '../assets/images/logo/ucs_logo.png'
@@ -13,22 +13,20 @@ const ResetPassword = () => {
   const [isLoading, setIsLoading] = useState(false)
 
   const navigate = useNavigate()
-  const { resetToken } = useParams() // Get reset token from the URL
+  const { resetToken } = useParams()
 
   const handleResetPassword = async (e) => {
     e.preventDefault()
 
     // Check if passwords match before making the API request
     if (password !== confirmPassword) {
-      toast.error('Passwords do not match') // Display error toast
-      return // Prevent the form submission
+      toast.error('Passwords do not match')
+      return
     }
 
     try {
-      // Set loading state to true when submission starts
       setIsLoading(true)
 
-      // Make the API request to reset the password using the token from the URL
       const response = await axios.post(
         `http://localhost:5000/api/auth/reset-password/${resetToken}`,
         { password }
@@ -37,9 +35,8 @@ const ResetPassword = () => {
       console.log(response)
 
       toast.success('Password has been reset successfully!')
-      navigate('/login') // Optionally navigate to login after success
+      navigate('/login')
     } catch (error) {
-      // Show toast error and set error message
       const errorMessage =
         error.response?.data?.message || 'Failed to reset password'
       toast.error(errorMessage)
@@ -121,10 +118,9 @@ const ResetPassword = () => {
             <button
               type='submit'
               className='btn w-full bg-primary text-white hover:bg-primary-hover mt-4'
-              disabled={isLoading} // Disable button when loading
+              disabled={isLoading}
             >
               {isLoading ? 'Loading...' : 'Reset Password'}{' '}
-              {/* Show loading text */}
             </button>
           </form>
 
