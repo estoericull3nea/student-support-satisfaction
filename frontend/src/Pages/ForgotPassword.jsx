@@ -3,15 +3,15 @@ import Navbar from '../components/Navbar'
 import axios from 'axios'
 import { Link, useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
-
 import ucsLoginRegisterCover from '../assets/images/ucsLoginRegisterCover.jpg'
 import ucsLogo from '../assets/images/logo/ucs_logo.png'
-
 import { TiArrowLeft } from 'react-icons/ti'
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [modalVisible, setModalVisible] = useState(false)
+  const [isSendingVerification, setIsSendingVerification] = useState(false)
 
   const navigate = useNavigate()
 
@@ -28,11 +28,33 @@ const ForgotPassword = () => {
       toast.success('Password reset link has been sent to your email!')
       navigate('/login')
     } catch (error) {
-      const errorMessage =
-        error.response?.data?.message || 'Request for password reset failed'
-      toast.error(errorMessage)
+      if (
+        error.response &&
+        error.response.data.message ===
+          'Your account is not verified. Please verify your account first'
+      ) {
+        // Show the modal if verification is needed
+        setModalVisible(true)
+      } else {
+        toast.error(error.response.data.message)
+      }
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  const resendVerification = async () => {
+    try {
+      setIsSendingVerification(true)
+      await axios.post('http://localhost:5000/api/auth/resend-verification', {
+        email,
+      })
+      toast.success('Verification email has been sent.')
+      setIsSendingVerification(false)
+      setModalVisible(false)
+    } catch (error) {
+      setIsSendingVerification(false)
+      console.error('Error resending verification', error.response.data.message)
     }
   }
 
@@ -100,6 +122,34 @@ const ForgotPassword = () => {
             <img src={ucsLoginRegisterCover} alt='' />
           </div>
         </div>
+        {/* Daisy UI Modal */}
+        {modalVisible && (
+          <div className='modal modal-open'>
+            <div className='modal-box'>
+              <h3 className='font-bold text-lg'>Email Verification Required</h3>
+              <p className='py-4'>
+                Your account is not verified. Please verify your account or
+                click "
+                <span className='font-semibold'>Resend Verification Email</span>
+                " to resend the verification email.
+              </p>
+              <div className='modal-action'>
+                <button
+                  className='btn bg-primary hover:bg-primary-hover text-white'
+                  onClick={resendVerification}
+                  disabled={isSendingVerification}
+                >
+                  {isSendingVerification
+                    ? 'Sending...'
+                    : 'Resend Verification Email'}
+                </button>
+                <button className='btn' onClick={() => setModalVisible(false)}>
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </>
   )

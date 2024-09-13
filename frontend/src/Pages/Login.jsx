@@ -54,7 +54,7 @@ const Login = () => {
         toast.error(error.response.data.message)
       }
     } finally {
-      setIsSubmitting(false) // Remove loading state
+      setIsSubmitting(false)
     }
   }
 
@@ -66,12 +66,13 @@ const Login = () => {
       })
       toast.success('Verification email has been sent.')
       setIsSendingVerification(false)
-      setModalVisible(false) // Close the modal after sending
+      setModalVisible(false)
     } catch (error) {
       setIsSendingVerification(false)
       console.error('Error resending verification', error.response.data.message)
     }
   }
+
   return (
     <>
       <Navbar />
@@ -170,7 +171,7 @@ const Login = () => {
               </p>
               <div className='modal-action'>
                 <button
-                  className='btn btn-sm bg-primary hover:bg-primary-hover text-white'
+                  className='btn bg-primary hover:bg-primary-hover text-white'
                   onClick={resendVerification}
                   disabled={isSendingVerification}
                 >
@@ -178,10 +179,7 @@ const Login = () => {
                     ? 'Sending...'
                     : 'Resend Verification Email'}
                 </button>
-                <button
-                  className='btn btn-sm'
-                  onClick={() => setModalVisible(false)}
-                >
+                <button className='btn' onClick={() => setModalVisible(false)}>
                   Cancel
                 </button>
               </div>
