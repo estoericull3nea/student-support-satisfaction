@@ -1,6 +1,7 @@
 import React from 'react'
 import ucsLogo from '../assets/images/logo/ucs_logo.png'
 import { services, links, legals } from '../constants/index'
+import { Link } from 'react-router-dom'
 
 const Footer = () => {
   return (
@@ -22,13 +23,13 @@ const Footer = () => {
 
             {services &&
               services.map((data) => (
-                <a
+                <Link
                   className='link link-hover hover:text-primary '
-                  href={data.link}
+                  to={data.link}
                   key={data.id}
                 >
                   {data.serviceName}
-                </a>
+                </Link>
               ))}
           </nav>
           <nav>
@@ -36,13 +37,13 @@ const Footer = () => {
 
             {links &&
               links.map((link) => (
-                <a
+                <Link
                   className='link link-hover hover:text-primary'
                   key={link.id}
-                  href={link.link}
+                  to={link.link}
                 >
                   {link.linkName}
-                </a>
+                </Link>
               ))}
           </nav>
           <nav>
@@ -50,13 +51,13 @@ const Footer = () => {
 
             {legals &&
               legals.map((legal) => (
-                <a
+                <Link
                   className='link link-hover hover:text-primary'
                   key={legal.id}
-                  href={legal.link}
+                  to={legal.link}
                 >
                   {legal.legalName}
-                </a>
+                </Link>
               ))}
           </nav>
         </footer>

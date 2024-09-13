@@ -194,6 +194,25 @@ export const resetPassword = async (req, res) => {
 
     await user.save()
 
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: user.email,
+      subject: 'Password Reset Confirmation',
+      html: `
+        <p>Dear ${user.firstName},</p>
+        <p>We are pleased to inform you that your password has been successfully reset.</p>
+        <p>For security reasons, we recommend following these tips when creating a password in the future:</p>
+        <ul>
+          <li>Use at least 8 characters, including uppercase, lowercase letters, numbers, and special symbols.</li>
+          <li>Avoid common words or easily guessable information like your name or birthdate.</li>
+          <li>Consider using a passphrase or a combination of random words.</li>
+          <li>Update your password regularly to ensure the safety of your account.</li>
+        </ul>
+        <p>If you have any questions or need further assistance, feel free to reach out to us <a href="${process.env.FRONTEND_URL}/contact-us">here</a>.</p>
+        <p>Best regards,<br>Urbiztondo Catholic School | ALDCS Team</p>
+      `,
+    })
+
     return res
       .status(200)
       .json({ message: 'Password has been reset successfully' })
