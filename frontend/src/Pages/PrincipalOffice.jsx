@@ -1,6 +1,10 @@
-import React from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
+import axios from 'axios'
+import toast from 'react-hot-toast'
+import { useNavigate, useLocation } from 'react-router-dom'
+import { jwtDecode } from 'jwt-decode' // To decode JWT
 
 import ucsHeroPageTemp from '../assets/images/ucsHeroPageTemp.png'
 
@@ -10,8 +14,107 @@ import { BsEmojiFrownFill } from 'react-icons/bs'
 import { BsEmojiNeutralFill } from 'react-icons/bs'
 import { BsFillEmojiSmileFill } from 'react-icons/bs'
 import { BsEmojiGrinFill } from 'react-icons/bs'
-
 const PrincipalOffice = () => {
+  const [rating, setRating] = useState('')
+  const [comment, setComment] = useState('')
+  const [email, setEmail] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+  const navigate = useNavigate()
+  const location = useLocation()
+  const token = localStorage.getItem('token')
+
+  const feedbackFormRef = useRef(null)
+
+  useEffect(() => {
+    const storedRating = localStorage.getItem('feedback_rating')
+    const storedComment = localStorage.getItem('feedback_comment')
+    const storedEmail = localStorage.getItem('feedback_email')
+
+    if (storedRating) setRating(storedRating)
+    if (storedComment) setComment(storedComment)
+    if (storedEmail) setEmail(storedEmail)
+
+    // Check if the user is logged in by decoding the JWT token
+    if (token) {
+      const decoded = jwtDecode(token)
+      setEmail(decoded.email) // Pre-fill the email field
+      setIsLoggedIn(true) // Mark the user as logged in
+    }
+
+    // Scroll to form-section if the hash is '#form-section'
+    if (location.hash === '#form-section') {
+      setTimeout(() => {
+        feedbackFormRef.current?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        })
+      }, 100) // Delay to ensure DOM is fully loaded
+    }
+  }, [location, token])
+
+  const handleFeedbackSubmit = async (e) => {
+    e.preventDefault()
+
+    // Validate form fields
+    if (!rating || !comment || !email) {
+      toast.error('Please fill in all fields')
+      return
+    }
+
+    if (!token) {
+      // Store form data before redirecting to login
+      localStorage.setItem('feedback_rating', rating)
+      localStorage.setItem('feedback_comment', comment)
+      localStorage.setItem('feedback_email', email)
+
+      toast.error('You need to be logged in to provide feedback')
+      const redirectUrl = `${location.pathname}${
+        location.hash || '#form-section'
+      }`
+      navigate(`/login?redirect=${encodeURIComponent(redirectUrl)}`)
+      return
+    }
+
+    try {
+      setIsSubmitting(true) // Show loading state
+
+      // Make POST request to submit feedback
+      await axios.post(
+        'http://localhost:5000/api/feedbacks',
+        {
+          serviceName: 'Office of the School Principal',
+          rating,
+          comment,
+          email,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Use token for authorization
+          },
+        }
+      )
+
+      toast.success('Feedback submitted successfully!')
+      setRating('')
+      setComment('')
+      setEmail('')
+      // Clear localStorage after successful submission
+      localStorage.removeItem('feedback_rating')
+      localStorage.removeItem('feedback_comment')
+      localStorage.removeItem('feedback_email')
+    } catch (error) {
+      if (error.response?.status === 401) {
+        toast.error('Unauthorized. Please log in to submit feedback.')
+      } else {
+        toast.error('Failed to submit feedback. Please try again.')
+      }
+    } finally {
+      setIsSubmitting(false) // Remove loading state
+    }
+  }
+
   return (
     <>
       <Navbar />
@@ -134,7 +237,12 @@ const PrincipalOffice = () => {
           </div>
 
           {/* Box */}
-          <div className='p-3 shadow-xl md:p-10 space-y-4 mx-auto'>
+          <form
+            className='p-3 shadow-xl md:p-10 space-y-4 mx-auto'
+            onSubmit={handleFeedbackSubmit}
+            ref={feedbackFormRef}
+            id='form-section'
+          >
             {/* Give us feedback */}
             <h3 className='font-semibold text-2xl'>
               Give us <span className='text-primary'>feedback</span>
@@ -153,9 +261,11 @@ const PrincipalOffice = () => {
                 <input
                   type='radio'
                   id='very-dissatisfied'
-                  name='hosting'
+                  name='rating'
                   value='very-dissatisfied'
-                  className='hidden peer'
+                  className='absolute opacity-0 peer'
+                  checked={rating === 'very-dissatisfied'}
+                  onChange={(e) => setRating(e.target.value)}
                   required
                 />
                 <label
@@ -173,9 +283,11 @@ const PrincipalOffice = () => {
                 <input
                   type='radio'
                   id='dissatisfied'
-                  name='hosting'
+                  name='rating'
                   value='dissatisfied'
-                  className='hidden peer'
+                  className='absolute opacity-0 peer'
+                  checked={rating === 'dissatisfied'}
+                  onChange={(e) => setRating(e.target.value)}
                   required
                 />
                 <label
@@ -193,9 +305,11 @@ const PrincipalOffice = () => {
                 <input
                   type='radio'
                   id='neutral'
-                  name='hosting'
+                  name='rating'
                   value='neutral'
-                  className='hidden peer'
+                  className='absolute opacity-0 peer'
+                  checked={rating === 'neutral'}
+                  onChange={(e) => setRating(e.target.value)}
                   required
                 />
                 <label
@@ -213,9 +327,11 @@ const PrincipalOffice = () => {
                 <input
                   type='radio'
                   id='satisfied'
-                  name='hosting'
+                  name='rating'
                   value='satisfied'
-                  className='hidden peer'
+                  className='absolute opacity-0 peer'
+                  checked={rating === 'satisfied'}
+                  onChange={(e) => setRating(e.target.value)}
                   required
                 />
                 <label
@@ -233,9 +349,11 @@ const PrincipalOffice = () => {
                 <input
                   type='radio'
                   id='very-satisfied'
-                  name='hosting'
+                  name='rating'
                   value='very-satisfied'
-                  className='hidden peer'
+                  className='absolute opacity-0 peer'
+                  checked={rating === 'very-satisfied'}
+                  onChange={(e) => setRating(e.target.value)}
                   required
                 />
                 <label
@@ -262,7 +380,10 @@ const PrincipalOffice = () => {
               </p>
               <textarea
                 className='textarea textarea-bordered w-full'
-                placeholder='Type here'
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                placeholder='Type your comment here'
+                required
               ></textarea>
             </div>
 
@@ -274,12 +395,26 @@ const PrincipalOffice = () => {
                 </span>
               </div>
               <input
-                type='text'
-                placeholder='Type here'
+                type='email'
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className='input input-bordered w-full input-md'
+                placeholder='Type your email here'
+                required
+                readOnly={isLoggedIn}
               />
             </label>
-          </div>
+
+            <div className='text-end'>
+              <button
+                type='submit'
+                className='btn bg-primary hover:bg-primary-hover text-white'
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? 'Submitting...' : 'Submit'}
+              </button>
+            </div>
+          </form>
 
           {/* Pre Footer */}
           <div>

@@ -1,6 +1,10 @@
-import React from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
+import axios from 'axios'
+import toast from 'react-hot-toast'
+import { useNavigate, useLocation } from 'react-router-dom'
+import jwtDecode from 'jwt-decode' // To decode JWT
 
 import ucsHeroPageTemp from '../assets/images/ucsHeroPageTemp.png'
 
@@ -12,6 +16,105 @@ import { BsFillEmojiSmileFill } from 'react-icons/bs'
 import { BsEmojiGrinFill } from 'react-icons/bs'
 
 const SchoolAdministrator = () => {
+  const [rating, setRating] = useState('')
+  const [comment, setComment] = useState('')
+  const [email, setEmail] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+  const navigate = useNavigate()
+  const location = useLocation()
+  const token = localStorage.getItem('token')
+
+  const feedbackFormRef = useRef(null)
+
+  useEffect(() => {
+    const storedRating = localStorage.getItem('feedback_rating')
+    const storedComment = localStorage.getItem('feedback_comment')
+    const storedEmail = localStorage.getItem('feedback_email')
+
+    if (storedRating) setRating(storedRating)
+    if (storedComment) setComment(storedComment)
+    if (storedEmail) setEmail(storedEmail)
+
+    // Check if the user is logged in by decoding the JWT token
+    if (token) {
+      const decoded = jwtDecode(token)
+      setEmail(decoded.email) // Pre-fill the email field
+      setIsLoggedIn(true) // Mark the user as logged in
+    }
+
+    // Scroll to form-section if the hash is '#form-section'
+    if (location.hash === '#form-section') {
+      setTimeout(() => {
+        feedbackFormRef.current?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        })
+      }, 100) // Delay to ensure DOM is fully loaded
+    }
+  }, [location, token])
+
+  const handleFeedbackSubmit = async (e) => {
+    e.preventDefault()
+
+    // Validate form fields
+    if (!rating || !comment || !email) {
+      toast.error('Please fill in all fields')
+      return
+    }
+
+    if (!token) {
+      // Store form data before redirecting to login
+      localStorage.setItem('feedback_rating', rating)
+      localStorage.setItem('feedback_comment', comment)
+      localStorage.setItem('feedback_email', email)
+
+      toast.error('You need to be logged in to provide feedback')
+      const redirectUrl = `${location.pathname}${
+        location.hash || '#form-section'
+      }`
+      navigate(`/login?redirect=${encodeURIComponent(redirectUrl)}`)
+      return
+    }
+
+    try {
+      setIsSubmitting(true) // Show loading state
+
+      // Make POST request to submit feedback
+      await axios.post(
+        'http://localhost:5000/api/feedbacks',
+        {
+          serviceName: 'Office of the School Administrator', // Change to "School Administrator"
+          rating,
+          comment,
+          email,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Use token for authorization
+          },
+        }
+      )
+
+      toast.success('Feedback submitted successfully!')
+      setRating('')
+      setComment('')
+      setEmail('')
+      // Clear localStorage after successful submission
+      localStorage.removeItem('feedback_rating')
+      localStorage.removeItem('feedback_comment')
+      localStorage.removeItem('feedback_email')
+    } catch (error) {
+      if (error.response?.status === 401) {
+        toast.error('Unauthorized. Please log in to submit feedback.')
+      } else {
+        toast.error('Failed to submit feedback. Please try again.')
+      }
+    } finally {
+      setIsSubmitting(false) // Remove loading state
+    }
+  }
   return (
     <>
       <Navbar />

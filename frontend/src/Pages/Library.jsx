@@ -25,7 +25,6 @@ const Library = () => {
   const location = useLocation()
   const token = localStorage.getItem('token')
 
-  const scrollRef = useRef(null)
   // Ref for the feedback form
   const feedbackFormRef = useRef(null)
 
@@ -54,7 +53,7 @@ const Library = () => {
         })
       }, 100) // Delay to ensure DOM is fully loaded
     }
-  }, [location])
+  }, [location, token])
 
   const handleFeedbackSubmit = async (e) => {
     e.preventDefault()
@@ -422,7 +421,6 @@ const Library = () => {
           </div>
         </div>
       </div>
-      <div ref={scrollRef}></div>
       <Footer />
     </>
   )
