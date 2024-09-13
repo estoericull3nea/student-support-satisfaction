@@ -1,7 +1,9 @@
-import React from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
-
+import axios from 'axios'
+import toast from 'react-hot-toast'
+import { useNavigate, useLocation } from 'react-router-dom'
 import ucsHeroPageTemp from '../assets/images/ucsHeroPageTemp.png'
 
 // React Icons
@@ -12,6 +14,101 @@ import { BsFillEmojiSmileFill } from 'react-icons/bs'
 import { BsEmojiGrinFill } from 'react-icons/bs'
 
 const Library = () => {
+  const [rating, setRating] = useState('')
+  const [comment, setComment] = useState('')
+  const [email, setEmail] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const navigate = useNavigate()
+  const location = useLocation()
+  const token = localStorage.getItem('token')
+
+  const scrollRef = useRef(null)
+  // Ref for the feedback form
+  const feedbackFormRef = useRef(null)
+
+  useEffect(() => {
+    const storedRating = localStorage.getItem('feedback_rating')
+    const storedComment = localStorage.getItem('feedback_comment')
+    const storedEmail = localStorage.getItem('feedback_email')
+
+    if (storedRating) setRating(storedRating)
+    if (storedComment) setComment(storedComment)
+    if (storedEmail) setEmail(storedEmail)
+
+    // Scroll to form-section if the hash is '#form-section'
+    if (location.hash === '#form-section') {
+      setTimeout(() => {
+        feedbackFormRef.current?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        })
+      }, 100) // Delay to ensure DOM is fully loaded
+    }
+  }, [location])
+
+  const handleFeedbackSubmit = async (e) => {
+    e.preventDefault()
+
+    // Validate form fields
+    if (!rating || !comment || !email) {
+      toast.error('Please fill in all fields')
+      return
+    }
+
+    if (!token) {
+      // Store form data before redirecting to login
+      localStorage.setItem('feedback_rating', rating)
+      localStorage.setItem('feedback_comment', comment)
+      localStorage.setItem('feedback_email', email)
+
+      toast.error('You need to be logged in to provide feedback')
+      // Redirect to login and include the form-section hash in the redirect URL
+      const redirectUrl = `${location.pathname}${
+        location.hash || '#form-section'
+      }`
+      navigate(`/login?redirect=${encodeURIComponent(redirectUrl)}`)
+      return
+    }
+
+    try {
+      setIsSubmitting(true) // Show loading state
+
+      // Make POST request to submit feedback
+      await axios.post(
+        'http://localhost:5000/api/feedbacks',
+        {
+          serviceName: 'Library', // Hardcoded for Library feedback
+          rating,
+          comment,
+          email,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Use token for authorization
+          },
+        }
+      )
+
+      toast.success('Feedback submitted successfully!')
+      setRating('')
+      setComment('')
+      setEmail('')
+      // Clear localStorage after successful submission
+      localStorage.removeItem('feedback_rating')
+      localStorage.removeItem('feedback_comment')
+      localStorage.removeItem('feedback_email')
+    } catch (error) {
+      if (error.response?.status === 401) {
+        toast.error('Unauthorized. Please log in to submit feedback.')
+      } else {
+        toast.error('Failed to submit feedback. Please try again.')
+      }
+    } finally {
+      setIsSubmitting(false) // Remove loading state
+    }
+  }
+
   return (
     <>
       <Navbar />
@@ -127,7 +224,12 @@ const Library = () => {
           </div>
 
           {/* Box */}
-          <form className='p-3 shadow-xl md:p-10 space-y-4 mx-auto'>
+          <form
+            className='p-3 shadow-xl md:p-10 space-y-4 mx-auto'
+            onSubmit={handleFeedbackSubmit}
+            ref={feedbackFormRef}
+            id='form-section'
+          >
             {/* Give us feedback */}
             <h3 className='font-semibold text-2xl'>
               Give us <span className='text-primary'>feedback</span>
@@ -146,14 +248,16 @@ const Library = () => {
                 <input
                   type='radio'
                   id='very-dissatisfied'
-                  name='hosting'
+                  name='rating'
                   value='very-dissatisfied'
-                  className='hidden peer'
+                  className='absolute opacity-0 peer'
+                  checked={rating === 'very-dissatisfied'}
+                  onChange={(e) => setRating(e.target.value)}
                   required
                 />
                 <label
                   htmlFor='very-dissatisfied'
-                  className='inline-flex space-x-1 items-center justify-between w-full p-3 text-black bg-white border border-primary rounded-lg cursor-pointer  peer-checked:bg-primary peer-checked:text-white hover:text-white hover:bg-primary-hover '
+                  className='inline-flex space-x-1 items-center justify-between w-full p-3 text-black bg-white border border-primary rounded-lg cursor-pointer peer-checked:bg-primary peer-checked:text-white hover:text-white hover:bg-primary-hover '
                 >
                   <div className='block'>
                     <div className='w-full text-xs'>Very Dissatisfied</div>
@@ -166,9 +270,11 @@ const Library = () => {
                 <input
                   type='radio'
                   id='dissatisfied'
-                  name='hosting'
+                  name='rating'
                   value='dissatisfied'
-                  className='hidden peer'
+                  className='absolute opacity-0 peer'
+                  checked={rating === 'dissatisfied'}
+                  onChange={(e) => setRating(e.target.value)}
                   required
                 />
                 <label
@@ -186,9 +292,11 @@ const Library = () => {
                 <input
                   type='radio'
                   id='neutral'
-                  name='hosting'
+                  name='rating'
                   value='neutral'
-                  className='hidden peer'
+                  className='absolute opacity-0 peer'
+                  checked={rating === 'neutral'}
+                  onChange={(e) => setRating(e.target.value)}
                   required
                 />
                 <label
@@ -206,9 +314,11 @@ const Library = () => {
                 <input
                   type='radio'
                   id='satisfied'
-                  name='hosting'
+                  name='rating'
                   value='satisfied'
-                  className='hidden peer'
+                  className='absolute opacity-0 peer'
+                  checked={rating === 'satisfied'}
+                  onChange={(e) => setRating(e.target.value)}
                   required
                 />
                 <label
@@ -226,9 +336,11 @@ const Library = () => {
                 <input
                   type='radio'
                   id='very-satisfied'
-                  name='hosting'
+                  name='rating'
                   value='very-satisfied'
-                  className='hidden peer'
+                  className='absolute opacity-0 peer'
+                  checked={rating === 'very-satisfied'}
+                  onChange={(e) => setRating(e.target.value)}
                   required
                 />
                 <label
@@ -255,7 +367,10 @@ const Library = () => {
               </p>
               <textarea
                 className='textarea textarea-bordered w-full'
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
                 placeholder='Type here'
+                required
               ></textarea>
             </div>
 
@@ -267,9 +382,12 @@ const Library = () => {
                 </span>
               </div>
               <input
-                type='text'
-                placeholder='Type here'
+                type='email'
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder='Type your email'
                 className='input input-bordered w-full input-md'
+                required
               />
             </label>
 
@@ -277,8 +395,9 @@ const Library = () => {
               <button
                 type='submit'
                 className='btn bg-primary hover:bg-primary-hover text-white'
+                disabled={isSubmitting}
               >
-                Submit
+                {isSubmitting ? 'Submitting...' : 'Submit'}
               </button>
             </div>
           </form>
@@ -293,6 +412,7 @@ const Library = () => {
           </div>
         </div>
       </div>
+      <div ref={scrollRef}></div>
       <Footer />
     </>
   )

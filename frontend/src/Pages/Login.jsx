@@ -12,15 +12,18 @@ const Login = () => {
   const [password, setPassword] = useState('')
   const [modalVisible, setModalVisible] = useState(false)
   const [isSendingVerification, setIsSendingVerification] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false) // Handle loading state
   const navigate = useNavigate()
 
   // Get the `redirect` query parameter from the URL
+  const location = useLocation()
   const queryParams = new URLSearchParams(location.search)
   const redirectPath = queryParams.get('redirect') || '/' // Default to dashboard if no redirect
 
   const handleLogin = async (e) => {
     e.preventDefault()
     try {
+      setIsSubmitting(true) // Show loading state
       const response = await axios.post(
         'http://localhost:5000/api/auth/login',
         {
@@ -32,9 +35,15 @@ const Login = () => {
       // Save JWT token in localStorage
       localStorage.setItem('token', response.data.token)
 
+      // Retrieve the redirect URL from the query parameters
+      const redirectUrl = queryParams.get('redirect') || '/'
+
+      // Navigate back to the redirect URL (including the #form-section if present)
+      navigate(decodeURIComponent(redirectUrl))
+
       toast.success('Login successful!')
       // Navigate to the previous route or the dashboard after login
-      navigate(redirectPath)
+      // navigate(redirectPath)
     } catch (error) {
       // console.log('test')
       // toast.error(error.response?.data?.message || 'Login failed')
@@ -48,6 +57,8 @@ const Login = () => {
       } else {
         toast.error(error.response.data.message)
       }
+    } finally {
+      setIsSubmitting(false) // Remove loading state
     }
   }
 
@@ -139,8 +150,11 @@ const Login = () => {
               </Link>
             </div>
 
-            <button className='btn w-full bg-primary text-white hover:bg-primary-hover mt-4'>
-              Sign In
+            <button
+              className='btn w-full bg-primary text-white hover:bg-primary-hover mt-4'
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'Sign In...' : 'Sign In'}
             </button>
           </form>
 

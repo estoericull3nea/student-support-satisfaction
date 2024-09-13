@@ -9,7 +9,7 @@ const Navbar = () => {
   const navigate = useNavigate()
 
   const handleLogout = () => {
-    localStorage.removeItem('token') // Remove token from localStorage to log out the user
+    localStorage.clear() // Removes all key-value pairs in localStorage
     toast.success('Logged out') // Show success toast when logged out
     navigate('/login') // Redirect to login page after logging out
   }
