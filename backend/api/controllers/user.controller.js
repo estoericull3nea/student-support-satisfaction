@@ -43,8 +43,9 @@ export const getUserById = async (req, res) => {
   }
 
   try {
-    // Find the user by ID, excluding the password field
-    const user = await User.findById(id).select('-password')
+    const user = await User.findById(id)
+      .select('-password')
+      .populate('feedbacks')
 
     // If user is not found, return a 404 error
     if (!user) {

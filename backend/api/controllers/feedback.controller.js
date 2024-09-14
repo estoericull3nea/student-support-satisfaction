@@ -38,7 +38,7 @@ export const createFeedback = async (req, res) => {
 export const getFeedbackByService = async (req, res) => {
   const { serviceId } = req.params
   try {
-    const feedbacks = await Feedback.find({ _id: serviceId }).populate('user')
+    const feedbacks = await Feedback.find({ _id: serviceId })
     res.status(200).json(feedbacks)
   } catch (error) {
     res.status(500).json({ message: 'Error fetching feedback', error })
@@ -65,8 +65,9 @@ export const getAllFeedbacksByUserId = async (req, res) => {
   const { userId } = req.params // Extract userId from route parameters
 
   try {
-    // Fetch all feedbacks submitted by the user with the provided userId
-    const feedbacks = await Feedback.find({ user: userId })
+    const feedbacks = await Feedback.find({ user: userId }).sort({
+      createdAt: -1,
+    })
 
     if (!feedbacks.length) {
       return res

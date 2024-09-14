@@ -32,14 +32,21 @@ const userSchema = new mongoose.Schema(
       minLength: [8, 'Password must be at least 8 characters long'],
     },
 
+    lastLoginDate: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'LoginHistory',
+      },
+    ],
+
     // Email Verification
     isVerified: { type: Boolean, default: false },
     verificationToken: String,
     verificationTokenExpires: Date,
-    lastVerificationRequest: Date, // Tracks the last request time
+    lastVerificationRequest: Date,
     verificationRequestCount: {
       type: Number,
-      default: 0, // Counts how many times the user requested a verification email
+      default: 0,
     },
     // Email Verification
 
