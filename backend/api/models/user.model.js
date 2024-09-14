@@ -16,6 +16,7 @@ const userSchema = new mongoose.Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Feedback',
+        required: false,
       },
     ],
     email: {

@@ -8,7 +8,6 @@ import { jwtDecode } from 'jwt-decode'
 const Profile = () => {
   const token = localStorage.getItem('token')
   const decoded = token ? jwtDecode(token) : ''
-  const [feedbacks, setFeedbacks] = useState([])
 
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -36,30 +35,6 @@ const Profile = () => {
     }
 
     fetchData()
-  }, [decoded.id, token])
-
-  useEffect(() => {
-    if (!decoded.id) return
-
-    const fetchFeedbacks = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:5000/api/feedbacks/${decoded.id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
-        setFeedbacks(response.data)
-      } catch (err) {
-        setError(err.message)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchFeedbacks()
   }, [decoded.id, token])
 
   console.log(user)
@@ -111,7 +86,7 @@ const Profile = () => {
                     </p>
 
                     <span className='font-bold mt-5 text-4xl'>
-                      {feedbacks.length}
+                      {/* {feedbacks.length} */} 0
                     </span>
                   </div>
                 </div>
@@ -123,7 +98,7 @@ const Profile = () => {
                     </p>
 
                     <span className='font-bold mt-5 text-md text-center'>
-                      {feedbacks[0].serviceName}
+                      {/* {feedbacks[0]?.serviceName} */} No Recent
                     </span>
                   </div>
                 </div>
