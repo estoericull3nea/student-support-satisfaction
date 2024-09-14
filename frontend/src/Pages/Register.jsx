@@ -5,6 +5,7 @@ import ucsLogo from '../assets/images/logo/ucs_logo.png'
 import axios from 'axios'
 import { Link, useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
+import Breadcrumbs from '../components/Breadcrumbs'
 
 const Register = () => {
   const SERVER_URL = `http://localhost:5000/api`
@@ -90,6 +91,8 @@ const Register = () => {
   return (
     <>
       <Navbar />
+      <Breadcrumbs />
+
       <div>
         <div className='container flex items-center justify-center xl:gap-x-10 xl:shadow-2xl shadow-none py-10 xl:py-20'>
           <form className='max-w-[500px] p-5 xl:p-0' onSubmit={handleSubmit}>

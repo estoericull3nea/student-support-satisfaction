@@ -14,11 +14,14 @@ import youth from '../assets/images/icons/youth.png'
 import compliant from '../assets/images/icons/compliant.png'
 import trophy from '../assets/images/icons/trophy.png'
 import businessWorld from '../assets/images/icons/business-world.png'
+import Breadcrumbs from '../components/Breadcrumbs'
 
 const About = () => {
   return (
     <>
       <Navbar />
+      <Breadcrumbs />
+
       <div className=' '>
         {/* <img
           src={ucsLoginRegisterCover}

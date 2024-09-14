@@ -6,6 +6,7 @@ import toast from 'react-hot-toast'
 import ucsLoginRegisterCover from '../assets/images/ucsLoginRegisterCover.jpg'
 import ucsLogo from '../assets/images/logo/ucs_logo.png'
 import { TiArrowLeft } from 'react-icons/ti'
+import Breadcrumbs from '../components/Breadcrumbs'
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('')
@@ -61,6 +62,8 @@ const ForgotPassword = () => {
   return (
     <>
       <Navbar />
+
+      <Breadcrumbs />
 
       <div>
         <div className='container flex items-center justify-center xl:gap-x-10 xl:shadow-2xl shadow-none py-10 xl:py-20'>

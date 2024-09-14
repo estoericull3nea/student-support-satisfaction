@@ -6,6 +6,7 @@ import toast from 'react-hot-toast'
 
 import ucsLoginRegisterCover from '../assets/images/ucsLoginRegisterCover.jpg'
 import ucsLogo from '../assets/images/logo/ucs_logo.png'
+import Breadcrumbs from '../components/Breadcrumbs'
 
 const Login = () => {
   const [email, setEmail] = useState('')
@@ -76,6 +77,8 @@ const Login = () => {
   return (
     <>
       <Navbar />
+
+      <Breadcrumbs />
 
       <div>
         {/* Toaster container */}

@@ -6,6 +6,7 @@ import toast from 'react-hot-toast'
 import { TiArrowLeft } from 'react-icons/ti'
 import ucsLoginRegisterCover from '../assets/images/ucsLoginRegisterCover.jpg'
 import ucsLogo from '../assets/images/logo/ucs_logo.png'
+import Breadcrumbs from '../components/Breadcrumbs'
 
 const ResetPassword = () => {
   const [password, setPassword] = useState('')
@@ -48,6 +49,8 @@ const ResetPassword = () => {
   return (
     <>
       <Navbar />
+
+      <Breadcrumbs />
 
       <div>
         {/* Toaster container */}

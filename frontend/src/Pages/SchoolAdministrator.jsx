@@ -14,6 +14,7 @@ import { BsEmojiFrownFill } from 'react-icons/bs'
 import { BsEmojiNeutralFill } from 'react-icons/bs'
 import { BsFillEmojiSmileFill } from 'react-icons/bs'
 import { BsEmojiGrinFill } from 'react-icons/bs'
+import Breadcrumbs from '../components/Breadcrumbs'
 
 const SchoolAdministrator = () => {
   const [rating, setRating] = useState('')
@@ -117,6 +118,9 @@ const SchoolAdministrator = () => {
   return (
     <>
       <Navbar />
+
+      <Breadcrumbs />
+
       {/* Top */}
       <div>
         <div className='container flex items-center justify-start lg:justify-center   '>

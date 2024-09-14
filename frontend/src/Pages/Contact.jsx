@@ -3,18 +3,18 @@ import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import axios from 'axios'
 import toast from 'react-hot-toast'
-import { jwtDecode } from 'jwt-decode' // Import the jwt-decode library
-
+import { jwtDecode } from 'jwt-decode'
+import Breadcrumbs from '../components/Breadcrumbs'
 const Contact = () => {
-  const [firstName, setFirstName] = useState('') // Store first name
-  const [lastName, setLastName] = useState('') // Store last name
-  const [email, setEmail] = useState('') // Store email
-  const [message, setMessage] = useState('') // Store message
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [email, setEmail] = useState('')
+  const [message, setMessage] = useState('')
   const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [termsAccepted, setTermsAccepted] = useState(false) // Store checkbox state
+  const [termsAccepted, setTermsAccepted] = useState(false)
 
   useEffect(() => {
-    const token = localStorage.getItem('token') // Get the token from localStorage
+    const token = localStorage.getItem('token')
 
     if (token) {
       // Decode the JWT token to get user information
@@ -22,7 +22,6 @@ const Contact = () => {
 
       setIsLoggedIn(true)
 
-      // Assuming the JWT contains user info like firstName, lastName, and email
       setFirstName(decodedToken.firstName || '')
       setLastName(decodedToken.lastName || '')
       setEmail(decodedToken.email || '')
@@ -32,7 +31,7 @@ const Contact = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    const token = localStorage.getItem('token') // Fetch the token inside handleSubmit
+    const token = localStorage.getItem('token')
 
     if (!firstName || !lastName || !email || !message) {
       toast.error('Please fill in all fields.')
@@ -49,7 +48,7 @@ const Contact = () => {
     if (token) {
       // Decode the JWT token to get the userId
       const decodedToken = jwtDecode(token)
-      userId = decodedToken?.id // Assuming the token has userId
+      userId = decodedToken?.id
     }
 
     try {
@@ -59,19 +58,19 @@ const Contact = () => {
         lastName,
         email,
         message,
-        userId, // Only include if userId is present
+        userId,
       })
 
       toast.success('Message sent successfully!')
 
       // Only clear the fields if the user is not logged in
       if (!userId) {
-        setFirstName('') // Clear first name
-        setLastName('') // Clear last name
-        setEmail('') // Clear email
+        setFirstName('')
+        setLastName('')
+        setEmail('')
       }
-      setMessage('') // Always clear the message field
-      setTermsAccepted(false) // Reset terms checkbox
+      setMessage('')
+      setTermsAccepted(false)
     } catch (error) {
       toast.error('Failed to send message. Please try again.')
     }
@@ -80,6 +79,7 @@ const Contact = () => {
   return (
     <>
       <Navbar />
+      <Breadcrumbs />
       <div>
         <div className='container grid grid-cols-1 xl:grid-cols-2 items-center min-h-[calc(100vh-100px)] my-5 '>
           {/* Left */}
@@ -110,7 +110,7 @@ const Contact = () => {
                     type='text'
                     className='input input-bordered input-md w-full'
                     placeholder='First Name'
-                    value={firstName} // Pre-filled from JWT
+                    value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
                     readOnly={isLoggedIn}
                   />
@@ -126,7 +126,7 @@ const Contact = () => {
                     type='text'
                     className='input input-bordered input-md w-full'
                     placeholder='Last Name'
-                    value={lastName} // Pre-filled from JWT
+                    value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
                     readOnly={isLoggedIn}
                   />
@@ -144,7 +144,7 @@ const Contact = () => {
                   type='email'
                   className='input input-bordered input-md w-full'
                   placeholder='Email'
-                  value={email} // Pre-filled from JWT
+                  value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   readOnly={isLoggedIn}
                 />
