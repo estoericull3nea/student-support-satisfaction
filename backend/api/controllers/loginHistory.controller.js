@@ -1,5 +1,5 @@
 import loginHistoryModel from '../models/loginHistory.model.js'
-import { formatLoginTime } from '../utils/formatTime.js'
+import { formatTime } from '../utils/formatTime.js'
 
 import mongoose from 'mongoose'
 
@@ -20,7 +20,7 @@ export const getAllLogins = async (_, res) => {
     // Format the login time before sending the response
     const formattedHistory = loginHistory.map((history) => ({
       ...history.toObject(),
-      loginTime: formatLoginTime(history.loginTime),
+      loginTime: formatTime(history.loginTime),
     }))
 
     res.status(200).json(formattedHistory)
@@ -50,7 +50,7 @@ export const getLoginHistoryById = async (req, res) => {
     // Format the login time before sending the response
     const formattedHistory = {
       ...loginHistory.toObject(),
-      loginTime: formatLoginTime(loginHistory.loginTime),
+      loginTime: formatTime(loginHistory.loginTime),
     }
 
     res.status(200).json(formattedHistory)

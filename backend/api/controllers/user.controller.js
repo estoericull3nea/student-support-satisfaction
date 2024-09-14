@@ -2,6 +2,8 @@ import User from '../models/user.model.js'
 
 import dotenv from 'dotenv'
 import mongoose from 'mongoose'
+import { formatTime } from '../utils/formatTime.js'
+import { formatToMMDDYYYY } from '../utils/formatToMonthDayYear.js'
 
 dotenv.config()
 
@@ -16,10 +18,15 @@ export const getAllUsers = async (_, res) => {
       return res.status(404).json({ message: 'No Users Found' })
     }
 
+    const format = users.map((user) => ({
+      ...user.toObject(),
+      createAt: formatTime(user.createdAt),
+    }))
+
     // Return user data along with count
     return res.status(200).json({
       count: users.length,
-      users,
+      format,
     })
   } catch (error) {
     return res.status(500).json({ message: 'Server Error: ' + error.message })
@@ -44,7 +51,12 @@ export const getUserById = async (req, res) => {
       return res.status(404).json({ message: 'User not found' })
     }
 
-    return res.status(200).json(user)
+    const formatUser = {
+      ...user.toObject(),
+      createdAt: formatToMMDDYYYY(formatTime(user.createdAt)),
+    }
+
+    return res.status(200).json(formatUser)
   } catch (error) {
     return res.status(500).json({ message: 'Server error: ' + error.message })
   }

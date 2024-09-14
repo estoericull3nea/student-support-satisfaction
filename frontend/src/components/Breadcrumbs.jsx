@@ -13,6 +13,7 @@ const pathNames = {
   'office-of-the-school-administrator': 'Office of the School Administrator',
   'office-of-the-registrar': 'Office of the Registrar',
   'forgot-password': 'Forgot Password',
+  profile: 'Profile',
 }
 
 const Breadcrumbs = () => {

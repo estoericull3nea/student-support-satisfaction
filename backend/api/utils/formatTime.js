@@ -1,4 +1,4 @@
-export const formatLoginTime = (date) => {
+export const formatTime = (date) => {
   const options = {
     year: 'numeric',
     month: '2-digit',

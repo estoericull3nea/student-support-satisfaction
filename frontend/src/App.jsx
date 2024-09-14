@@ -16,6 +16,7 @@ import RedirectIfAuthenticated from './components/RedirectIfAuthenticated'
 import { Toaster } from 'react-hot-toast'
 import ForgotPassword from './Pages/ForgotPassword'
 import ResetPassword from './Pages/ResetPassword'
+import Profile from './Pages/Profile'
 
 const App = () => {
   return (
@@ -28,6 +29,14 @@ const App = () => {
       {/* Toaster Component */}
       <Router>
         <Routes>
+          <Route
+            path='/profile'
+            element={
+              <Protect>
+                <Profile />
+              </Protect>
+            }
+          />
           <Route path='/' element={<LandingPage />} />
           <Route
             path='/reset-password/:resetToken'
