@@ -161,13 +161,15 @@ const Navbar = () => {
                 Logout
               </button>
 
-              <div className='avatar placeholder'>
-                <div className='bg-neutral text-neutral-content w-11 rounded-full'>
-                  <span className='font-bold tracking-tighter text-center'>
-                    {`${decoded.firstName[0].toUpperCase()} ${decoded.lastName[0].toUpperCase()}`}
-                  </span>
+              <Link to='/profile'>
+                <div className='avatar placeholder'>
+                  <div className='bg-neutral text-neutral-content w-11 rounded-full'>
+                    <span className='font-bold tracking-tighter text-center text-sm'>
+                      {`${decoded.firstName[0].toUpperCase()} ${decoded.lastName[0].toUpperCase()}`}
+                    </span>
+                  </div>
                 </div>
-              </div>
+              </Link>
             </div>
           ) : (
             <Link to='/login'>

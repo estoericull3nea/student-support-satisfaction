@@ -12,6 +12,12 @@ const userSchema = new mongoose.Schema(
       required: [true, 'Last name is required'],
       trim: true,
     },
+    feedbacks: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Feedback',
+      },
+    ],
     email: {
       type: String,
       required: [true, 'Email is required'],

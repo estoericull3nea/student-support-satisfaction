@@ -1,4 +1,5 @@
 import Feedback from '../models/feedback.model.js'
+import User from '../models/user.model.js'
 
 // ================================== Create Feedback ==================================
 export const createFeedback = async (req, res) => {
@@ -17,6 +18,12 @@ export const createFeedback = async (req, res) => {
       comment,
       email,
     })
+
+    if (req.user.id) {
+      await User.findByIdAndUpdate(req.user.id, {
+        $push: { feedbacks: feedback._id },
+      })
+    }
 
     // Success response
     res
@@ -39,7 +46,7 @@ export const getFeedbackByService = async (req, res) => {
 }
 
 // ================================== Get All Feedbacks ==================================
-export const getAllFeedbacks = async (req, res) => {
+export const getAllFeedbacks = async (_, res) => {
   try {
     const feedbacks = await Feedback.find().populate('user')
 
@@ -75,7 +82,7 @@ export const getAllFeedbacksByUserId = async (req, res) => {
 }
 
 // ================================== Clear All Feedbacks ==================================
-export const clearAllFeedbacks = async (req, res) => {
+export const clearAllFeedbacks = async (_, res) => {
   try {
     const deletedFeedbacks = await Feedback.deleteMany({})
 

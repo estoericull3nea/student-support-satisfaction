@@ -58,17 +58,76 @@ const Profile = () => {
                 </div>
               </div>
 
-              <h1 className='text-3xl font-semibold'>{`${user.firstName} ${user.lastName}`}</h1>
-              <h2 className='text-sm'>{`${user.email}`}</h2>
+              <h1 className='text-2xl font-semibold'>{`${user.firstName} ${user.lastName}`}</h1>
+              <h2 className='text-xs'>{`${user.email}`}</h2>
 
-              <span className='text-[.7rem] absolute bottom-3 right-3 font-medium bg-primary text-white py-1 px-3 rounded-full'>
-                Created At: <span className='font-bold'>{user.createdAt}</span>
+              <span className='text-[.6rem] absolute bottom-3 right-3 font-semibold bg-primary text-white py-1 px-3 rounded-full'>
+                Created At:{' '}
+                <span className='font-bold tracking-wider'>
+                  {user.createdAt}
+                </span>
               </span>
             </div>
           </div>
 
           <div className='right'>
-            <div className='box h-[500px] w-[600px] border shadow-lg rounded-lg'></div>
+            <div className='box h-[370px] w-[600px] border shadow-xl rounded-lg '>
+              <div className='flex justify-between'>
+                <div className='h-40 w-full border m-3 rounded-lg  p-2'>
+                  <p className='text-sm font-semibold'>Your Total Feedbacks</p>
+                </div>
+
+                <div className='h-40 w-full border m-3 rounded-lg  p-2'>
+                  <p className='text-sm font-semibold'>
+                    Recent Service Feedback
+                  </p>
+                </div>
+
+                <div className='h-40 w-full border m-3 rounded-lg  p-2'>
+                  <p className='text-sm font-semibold'>Recent Login</p>
+                </div>
+              </div>
+              <div className='h-40 w-[575px] border m-3 rounded-lg  p-2'>
+                <p className='text-sm font-semibold'>Account Overview</p>
+
+                <div className='overflow-x-auto h-full w-full mt-3'>
+                  <table className='table'>
+                    {/* head */}
+                    <thead>
+                      <tr>
+                        <th>Full Name</th>
+                        <th>Email</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {/* row 1 */}
+                      <tr className='bg-base-200 text-xs'>
+                        <td>{`${user.firstName} ${user.lastName}`}</td>
+                        <td>{`${user.email}`}</td>
+                        <td>
+                          <span
+                            className={
+                              user.isVerified === true
+                                ? 'bg-green-600 text-white p-1 rounded font-semibold text-[.7rem]'
+                                : 'bg-red-600 text-white p-1 rounded font-semibold text-[.7rem]'
+                            }
+                          >{`${
+                            user.isVerified === true ? 'Verified' : 'Unverified'
+                          }`}</span>
+                        </td>
+                        <td>
+                          <button className='btn btn-sm bg-primary hover:bg-primary-hover text-white text-xs'>
+                            View
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
