@@ -3,10 +3,12 @@ import { Link, useNavigate } from 'react-router-dom'
 import ucsLogo from '../assets/images/logo/ucs_logo.png'
 import { services } from '../constants/index'
 import toast from 'react-hot-toast'
+import { jwtDecode } from 'jwt-decode'
 
 const Navbar = () => {
   const token = localStorage.getItem('token')
   const navigate = useNavigate()
+  const decoded = token ? jwtDecode(token) : ''
 
   const handleLogout = () => {
     localStorage.clear()
@@ -151,12 +153,22 @@ const Navbar = () => {
 
           {/* Conditionally render "Sign In" or "Logout" based on token existence */}
           {token ? (
-            <button
-              onClick={handleLogout}
-              className='btn text-xs primary-btn-outline px-[.5rem] md:px-[1rem]'
-            >
-              Logout
-            </button>
+            <div className='space-x-3'>
+              <button
+                onClick={handleLogout}
+                className='btn text-xs primary-btn-outline px-[.5rem] md:px-[1rem]'
+              >
+                Logout
+              </button>
+
+              <div className='avatar placeholder'>
+                <div className='bg-neutral text-neutral-content w-11 rounded-full'>
+                  <span className='font-bold tracking-tighter text-center'>
+                    {`${decoded.firstName[0].toUpperCase()} ${decoded.lastName[0].toUpperCase()}`}
+                  </span>
+                </div>
+              </div>
+            </div>
           ) : (
             <Link to='/login'>
               <button className='btn text-xs primary-btn-outline px-[.5rem] md:px-[1rem]'>
