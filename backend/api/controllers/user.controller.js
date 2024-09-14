@@ -37,27 +37,37 @@ export const getAllUsers = async (_, res) => {
 export const getUserById = async (req, res) => {
   const { id } = req.params
 
-  // Checking if the id is valid for mongodb or not
+  // Check if the ID is valid for MongoDB or not
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(404).json({ message: 'Invalid ID' })
   }
 
   try {
+    // Find the user by ID and populate feedbacks and lastLoginDate
     const user = await User.findById(id)
       .select('-password')
       .populate('feedbacks')
+      .populate({
+        path: 'lastLoginDate',
+        options: { sort: { loginTime: -1 } },
+      })
 
-    // If user is not found, return a 404 error
     if (!user) {
       return res.status(404).json({ message: 'User not found' })
     }
 
-    const formatUser = {
+    const formattedLastLoginDate = user.lastLoginDate.map((login) => ({
+      ...login.toObject(),
+      loginTime: formatTime(login.loginTime),
+    }))
+
+    const formattedUser = {
       ...user.toObject(),
       createdAt: formatToMMDDYYYY(formatTime(user.createdAt)),
+      lastLoginDate: formattedLastLoginDate,
     }
 
-    return res.status(200).json(formatUser)
+    return res.status(200).json(formattedUser)
   } catch (error) {
     return res.status(500).json({ message: 'Server error: ' + error.message })
   }

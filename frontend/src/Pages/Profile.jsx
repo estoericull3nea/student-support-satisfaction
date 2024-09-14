@@ -13,10 +13,6 @@ const Profile = () => {
   const [loadingUser, setUserLoading] = useState(true)
   const [errorUser, setErrorUser] = useState(null)
 
-  const [feedbacks, setFeedbacks] = useState(null)
-  const [loadingFeedbacks, setLoadingFeedbacks] = useState(true)
-  const [errorFeedbacks, setErrorFeedbacks] = useState(null)
-
   useEffect(() => {
     if (!decoded.id) return
 
@@ -42,50 +38,15 @@ const Profile = () => {
     fetchUserWithId()
   }, [decoded.id, token])
 
-  useEffect(() => {
-    if (!decoded.id) return
+  console.log(user)
 
-    const fetchFeedbacksByUserId = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:5000/api/feedbacks/${decoded.id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
-
-        if (response.status === 200 && response.data.length > 0) {
-          setFeedbacks(response.data)
-        } else {
-          setErrorFeedbacks('No recent service feedback')
-        }
-      } catch (err) {
-        if (err.response && err.response.status === 404) {
-          setErrorFeedbacks('No recent service feedback')
-        } else {
-          setErrorFeedbacks('Error fetching feedbacks: ' + err.message)
-        }
-      } finally {
-        setLoadingFeedbacks(false)
-      }
-    }
-
-    fetchFeedbacksByUserId()
-  }, [decoded.id, token])
-
-  if (loadingUser || loadingFeedbacks) {
+  if (loadingUser) {
     return <div className='p-1 text-xs'>Loading...</div>
   }
 
   if (errorUser) {
     return <div>Error: {errorUser}</div>
   }
-
-  // if (errorFeedbacks) {
-  //   return <div>{errorFeedbacks}</div>
-  // }
 
   return (
     <>
@@ -126,7 +87,8 @@ const Profile = () => {
                     </p>
 
                     <span className='font-bold mt-5 text-4xl'>
-                      {feedbacks?.length || 0}
+                      {/* {feedbacks?.length || 0} */}
+                      {user.feedbacks.length}
                     </span>
                   </div>
                 </div>
@@ -138,15 +100,21 @@ const Profile = () => {
                     </p>
 
                     <span className='font-bold mt-5 text-md text-center'>
-                      {feedbacks?.length >= 1
-                        ? feedbacks[0].serviceName
-                        : 'No recent feedback'}
+                      {user.feedbacks.length
+                        ? user.feedbacks[user.feedbacks.length - 1].serviceName
+                        : 'No Recent Feedback'}
                     </span>
                   </div>
                 </div>
 
                 <div className='h-40 w-full border m-3 rounded-lg  p-2'>
-                  <p className='text-sm font-medium'>Recent Login Date</p>
+                  <div className='flex flex-col items-center '>
+                    <p className='text-sm font-medium'>Recent Login Date</p>
+
+                    <span className='font-bold mt-5 text-sm text-center'>
+                      {user.lastLoginDate[0].loginTime}
+                    </span>
+                  </div>
                 </div>
               </div>
               <div className='h-40 w-[575px] border m-3 rounded-lg  p-2'>
