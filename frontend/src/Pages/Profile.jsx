@@ -5,6 +5,7 @@ import Footer from '../components/Footer'
 import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
 import { formatTime } from '../utils'
+import { debounce } from 'lodash'
 
 const Profile = () => {
   const token = localStorage.getItem('token')
@@ -16,6 +17,11 @@ const Profile = () => {
 
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage] = useState(10)
+
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [email, setEmail] = useState('')
+  const [isSaving, setIsSaving] = useState(false)
 
   useEffect(() => {
     if (!decoded.id) return
@@ -32,6 +38,9 @@ const Profile = () => {
         )
 
         setUser(response.data)
+        setFirstName(response.data.firstName)
+        setLastName(response.data.lastName)
+        setEmail(response.data.email)
       } catch (err) {
         setErrorUser(err.message)
       } finally {
@@ -40,9 +49,42 @@ const Profile = () => {
     }
 
     fetchUserWithId()
-  }, [decoded.id, token])
+  }, [decoded.id, token, firstName, lastName, email])
 
-  console.log(user)
+  const debouncedSave = debounce(async (field, value) => {
+    setIsSaving(true)
+
+    try {
+      await axios.put(
+        `http://localhost:5000/api/users/${decoded.id}`,
+        { [field]: value },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+    } catch (err) {
+      console.error('Error updating user:', err)
+    } finally {
+      setIsSaving(false)
+    }
+  }, 100)
+
+  const handleFirstNameChange = (e) => {
+    setFirstName(e.target.value)
+    debouncedSave('firstName', e.target.value)
+  }
+
+  const handleLastNameChange = (e) => {
+    setLastName(e.target.value)
+    debouncedSave('lastName', e.target.value)
+  }
+
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value)
+    debouncedSave('email', e.target.value)
+  }
 
   if (loadingUser) {
     return <div className='p-1 text-xs'>Loading...</div>
@@ -214,7 +256,8 @@ const Profile = () => {
                   <input
                     type='text'
                     className='input input-bordered input-md w-full'
-                    value={user.firstName}
+                    value={firstName}
+                    onChange={handleFirstNameChange}
                   />
                 </label>
 
@@ -228,7 +271,8 @@ const Profile = () => {
                   <input
                     type='text'
                     className='input input-bordered input-md w-full'
-                    value={user.lastName}
+                    value={lastName}
+                    onChange={handleLastNameChange}
                   />
                 </label>
               </div>
@@ -243,9 +287,19 @@ const Profile = () => {
                 <input
                   type='email'
                   className='input input-bordered input-md w-full'
-                  value={user.email}
+                  value={email}
+                  onChange={handleEmailChange}
                 />
               </label>
+
+              {/* Saving Indicator */}
+              {isSaving && (
+                <div className='flex justify-end mt-2'>
+                  <button className='btn btn-sm btn-outline loading'>
+                    Saving...
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 

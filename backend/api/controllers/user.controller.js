@@ -78,27 +78,21 @@ export const updateUserById = async (req, res) => {
   const { id } = req.params
   const { firstName, lastName } = req.body
 
-  // Checking if the id is valid for mongodb or not
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(404).json({ message: 'Invalid ID' })
   }
 
   try {
-    // Find the user by ID
     const user = await User.findById(id)
 
-    // If the user does not exist
     if (!user) {
       return res.status(404).json({ message: 'User not found' })
     }
 
-    // Dynamic Field Updates
-    // Update the first name if provided
     if (firstName) {
       user.firstName = firstName
     }
 
-    // Update the last name if provided
     if (lastName) {
       user.lastName = lastName
     }
