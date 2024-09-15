@@ -15,7 +15,8 @@ const Profile = () => {
   const [loadingUser, setUserLoading] = useState(true)
   const [errorUser, setErrorUser] = useState(null)
 
-  const [currentPage, setCurrentPage] = useState(1)
+  const [currentPageLogin, setCurrentPageLogin] = useState(1)
+  const [currentPageFeedback, setCurrentPageFeedback] = useState(1)
   const [itemsPerPage] = useState(10)
 
   const [firstName, setFirstName] = useState('')
@@ -95,30 +96,60 @@ const Profile = () => {
   }
 
   // Pagination code
-  const indexOfLastItem = currentPage * itemsPerPage
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage
-  const currentItems = user.lastLoginDate.slice(
-    indexOfFirstItem,
-    indexOfLastItem
+  // Pagination code for Login History
+  const indexOfLastItemLogin = currentPageLogin * itemsPerPage
+  const indexOfFirstItemLogin = indexOfLastItemLogin - itemsPerPage
+  const currentLoginItems =
+    user?.lastLoginDate?.slice(indexOfFirstItemLogin, indexOfLastItemLogin) ||
+    []
+
+  const totalPagesLogin = Math.ceil(
+    (user?.lastLoginDate?.length || 0) / itemsPerPage
   )
 
-  const totalPages = Math.ceil(user.lastLoginDate.length / itemsPerPage)
-
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber)
+  const handlePageChangeLogin = (pageNumber) => {
+    setCurrentPageLogin(pageNumber)
   }
 
-  const handlePrevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1)
+  const handlePrevPageLogin = () => {
+    if (currentPageLogin > 1) {
+      setCurrentPageLogin(currentPageLogin - 1)
     }
   }
 
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1)
+  const handleNextPageLogin = () => {
+    if (currentPageLogin < totalPagesLogin) {
+      setCurrentPageLogin(currentPageLogin + 1)
     }
   }
+
+  // Pagination code for Feedback History
+  const indexOfLastItemFeedback = currentPageFeedback * itemsPerPage
+  const indexOfFirstItemFeedback = indexOfLastItemFeedback - itemsPerPage
+  const currentFeedbackItems =
+    user?.feedbacks?.slice(indexOfFirstItemFeedback, indexOfLastItemFeedback) ||
+    []
+
+  const totalPagesFeedback = Math.ceil(
+    (user?.feedbacks?.length || 0) / itemsPerPage
+  )
+
+  const handlePageChangeFeedback = (pageNumber) => {
+    setCurrentPageFeedback(pageNumber)
+  }
+
+  const handlePrevPageFeedback = () => {
+    if (currentPageFeedback > 1) {
+      setCurrentPageFeedback(currentPageFeedback - 1)
+    }
+  }
+
+  const handleNextPageFeedback = () => {
+    if (currentPageFeedback < totalPagesFeedback) {
+      setCurrentPageFeedback(currentPageFeedback + 1)
+    }
+  }
+
   return (
     <>
       <Navbar />
@@ -326,7 +357,7 @@ const Profile = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {user.feedbacks.map((data, index) => (
+                  {currentFeedbackItems.map((data, index) => (
                     <tr key={index} className='text-xs text-center'>
                       <td>{data.serviceName}</td>
                       <td>{data.rating}</td>
@@ -336,6 +367,45 @@ const Profile = () => {
                   ))}
                 </tbody>
               </table>
+            </div>
+
+            {/* Feedback History Pagination Controls */}
+            <div className='flex justify-center mt-4'>
+              <div className='btn-group space-x-2'>
+                <button
+                  className={`btn btn-xs ${
+                    currentPageFeedback === 1 ? 'btn-disabled' : ''
+                  }`}
+                  onClick={handlePrevPageFeedback}
+                  disabled={currentPageFeedback === 1}
+                >
+                  « Prev
+                </button>
+
+                {Array.from({ length: totalPagesFeedback }, (_, i) => (
+                  <button
+                    key={i + 1}
+                    className={`btn btn-xs ${
+                      currentPageFeedback === i + 1 ? 'btn-active' : ''
+                    }`}
+                    onClick={() => handlePageChangeFeedback(i + 1)}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
+
+                <button
+                  className={`btn btn-xs ${
+                    currentPageFeedback === totalPagesFeedback
+                      ? 'btn-disabled'
+                      : ''
+                  }`}
+                  onClick={handleNextPageFeedback}
+                  disabled={currentPageFeedback === totalPagesFeedback}
+                >
+                  Next »
+                </button>
+              </div>
             </div>
           </div>
 
@@ -361,7 +431,7 @@ const Profile = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {currentItems.map((data, index) => (
+                  {currentLoginItems.map((data, index) => (
                     <tr key={index} className='text-xs text-center'>
                       <td>{data.ipAddress}</td>
                       <td>{data.loginTime}</td>
@@ -372,26 +442,26 @@ const Profile = () => {
               </table>
             </div>
 
-            {/* Login History pagination area */}
-            <div className='flex justify-center mt-4 '>
+            {/* Login History Pagination Controls */}
+            <div className='flex justify-center mt-4'>
               <div className='btn-group space-x-2'>
                 <button
                   className={`btn btn-xs ${
-                    currentPage === 1 ? 'btn-disabled' : ''
+                    currentPageLogin === 1 ? 'btn-disabled' : ''
                   }`}
-                  onClick={handlePrevPage}
-                  disabled={currentPage === 1}
+                  onClick={handlePrevPageLogin}
+                  disabled={currentPageLogin === 1}
                 >
                   « Prev
                 </button>
 
-                {Array.from({ length: totalPages }, (_, i) => (
+                {Array.from({ length: totalPagesLogin }, (_, i) => (
                   <button
                     key={i + 1}
                     className={`btn btn-xs ${
-                      currentPage === i + 1 ? 'btn-active' : ''
+                      currentPageLogin === i + 1 ? 'btn-active' : ''
                     }`}
-                    onClick={() => handlePageChange(i + 1)}
+                    onClick={() => handlePageChangeLogin(i + 1)}
                   >
                     {i + 1}
                   </button>
@@ -399,10 +469,10 @@ const Profile = () => {
 
                 <button
                   className={`btn btn-xs ${
-                    currentPage === totalPages ? 'btn-disabled' : ''
+                    currentPageLogin === totalPagesLogin ? 'btn-disabled' : ''
                   }`}
-                  onClick={handleNextPage}
-                  disabled={currentPage === totalPages}
+                  onClick={handleNextPageLogin}
+                  disabled={currentPageLogin === totalPagesLogin}
                 >
                   Next »
                 </button>
