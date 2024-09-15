@@ -87,6 +87,8 @@ const Profile = () => {
     debouncedSave('email', e.target.value)
   }
 
+  console.log(user)
+
   if (loadingUser) {
     return <div className='p-1 text-xs'>Loading...</div>
   }
@@ -96,7 +98,6 @@ const Profile = () => {
   }
 
   // Pagination code
-  // Pagination code for Login History
   const indexOfLastItemLogin = currentPageLogin * itemsPerPage
   const indexOfFirstItemLogin = indexOfLastItemLogin - itemsPerPage
   const currentLoginItems =
@@ -123,7 +124,6 @@ const Profile = () => {
     }
   }
 
-  // Pagination code for Feedback History
   const indexOfLastItemFeedback = currentPageFeedback * itemsPerPage
   const indexOfFirstItemFeedback = indexOfLastItemFeedback - itemsPerPage
   const currentFeedbackItems =
