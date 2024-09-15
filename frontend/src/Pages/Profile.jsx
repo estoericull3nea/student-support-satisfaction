@@ -14,6 +14,9 @@ const Profile = () => {
   const [loadingUser, setUserLoading] = useState(true)
   const [errorUser, setErrorUser] = useState(null)
 
+  const [currentPage, setCurrentPage] = useState(1)
+  const [itemsPerPage] = useState(10)
+
   useEffect(() => {
     if (!decoded.id) return
 
@@ -49,6 +52,31 @@ const Profile = () => {
     return <div>Error: {errorUser}</div>
   }
 
+  // Pagination code
+  const indexOfLastItem = currentPage * itemsPerPage
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage
+  const currentItems = user.lastLoginDate.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  )
+
+  const totalPages = Math.ceil(user.lastLoginDate.length / itemsPerPage)
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber)
+  }
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1)
+    }
+  }
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1)
+    }
+  }
   return (
     <>
       <Navbar />
@@ -168,7 +196,7 @@ const Profile = () => {
             name='my_tabs_2'
             role='tab'
             className='tab'
-            aria-label='Accounts Settings'
+            aria-label='Account Settings'
           />
           <div
             role='tabpanel'
@@ -186,6 +214,7 @@ const Profile = () => {
                   <input
                     type='text'
                     className='input input-bordered input-md w-full'
+                    value={user.firstName}
                   />
                 </label>
 
@@ -199,6 +228,7 @@ const Profile = () => {
                   <input
                     type='text'
                     className='input input-bordered input-md w-full'
+                    value={user.lastName}
                   />
                 </label>
               </div>
@@ -213,6 +243,7 @@ const Profile = () => {
                 <input
                   type='email'
                   className='input input-bordered input-md w-full'
+                  value={user.email}
                 />
               </label>
             </div>
@@ -276,7 +307,7 @@ const Profile = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {user.lastLoginDate.map((data, index) => (
+                  {currentItems.map((data, index) => (
                     <tr key={index} className='text-xs text-center'>
                       <td>{data.ipAddress}</td>
                       <td>{data.loginTime}</td>
@@ -285,6 +316,43 @@ const Profile = () => {
                   ))}
                 </tbody>
               </table>
+            </div>
+
+            {/* Login History pagination area */}
+            <div className='flex justify-center mt-4 '>
+              <div className='btn-group space-x-2'>
+                <button
+                  className={`btn btn-xs ${
+                    currentPage === 1 ? 'btn-disabled' : ''
+                  }`}
+                  onClick={handlePrevPage}
+                  disabled={currentPage === 1}
+                >
+                  « Prev
+                </button>
+
+                {Array.from({ length: totalPages }, (_, i) => (
+                  <button
+                    key={i + 1}
+                    className={`btn btn-xs ${
+                      currentPage === i + 1 ? 'btn-active' : ''
+                    }`}
+                    onClick={() => handlePageChange(i + 1)}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
+
+                <button
+                  className={`btn btn-xs ${
+                    currentPage === totalPages ? 'btn-disabled' : ''
+                  }`}
+                  onClick={handleNextPage}
+                  disabled={currentPage === totalPages}
+                >
+                  Next »
+                </button>
+              </div>
             </div>
           </div>
         </div>
