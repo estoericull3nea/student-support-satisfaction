@@ -21,15 +21,15 @@ const __dirname = path.dirname(__filename)
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const uploadPath = path.join(__dirname, '../uploads/profile-pics/')
-    // C:\Users\cullen\Documents\student-support-satisfaction\backend\api\uploads\profile-pics\ (Upload Path)
+    const uploadPath = path.join(__dirname, '../../uploads/profile-pics/')
     if (!fs.existsSync(uploadPath)) {
       fs.mkdirSync(uploadPath, { recursive: true })
     }
     cb(null, uploadPath)
   },
   filename: (req, file, cb) => {
-    cb(null, `${Date.now()}-${file.originalname}`)
+    const safeFileName = file.originalname.replace(/\s+/g, '-') // Replaces spaces with hyphens
+    cb(null, `${Date.now()}-${safeFileName}`)
   },
 })
 

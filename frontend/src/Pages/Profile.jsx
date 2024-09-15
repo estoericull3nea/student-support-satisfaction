@@ -24,6 +24,9 @@ const Profile = () => {
   const [email, setEmail] = useState('')
   const [isSaving, setIsSaving] = useState(false)
 
+  const [profilePic, setProfilePic] = useState(null)
+  const [uploading, setUploading] = useState(false)
+
   useEffect(() => {
     if (!decoded.id) return
 
@@ -42,6 +45,8 @@ const Profile = () => {
         setFirstName(response.data.firstName)
         setLastName(response.data.lastName)
         setEmail(response.data.email)
+        setProfilePic(`http://localhost:5000/${response.data.profilePic}`)
+        console.log(profilePic)
       } catch (err) {
         setErrorUser(err.message)
       } finally {
@@ -50,7 +55,7 @@ const Profile = () => {
     }
 
     fetchUserWithId()
-  }, [decoded.id, token, firstName, lastName, email])
+  }, [decoded.id, token, firstName, lastName, email, profilePic])
 
   const debouncedSave = debounce(async (field, value) => {
     setIsSaving(true)
@@ -86,8 +91,41 @@ const Profile = () => {
     setEmail(e.target.value)
     debouncedSave('email', e.target.value)
   }
+  const handleProfilePicChange = async (e) => {
+    const file = e.target.files[0]
 
-  console.log(user)
+    if (!file) return
+    if (file.size > 5 * 1024 * 1024) {
+      alert('File size must be less than 5MB')
+      return
+    }
+
+    const formData = new FormData()
+    formData.append('profilePic', file)
+
+    try {
+      setUploading(true)
+      const response = await axios.put(
+        `http://localhost:5000/api/users/${decoded.id}/upload-profile-pic`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      setProfilePic(response.data.profilePic) // Update the profile picture state
+    } catch (err) {
+      console.error('Error uploading profile picture:', err)
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  const triggerFileInput = () => {
+    document.getElementById('profilePicInput').click()
+  }
 
   if (loadingUser) {
     return <div className='p-1 text-xs'>Loading...</div>
@@ -161,8 +199,26 @@ const Profile = () => {
           <div className='left w-full lg:w-auto'>
             <div className='box h-[300px] w-full lg:w-[350px] border shadow-lg rounded-lg flex flex-col justify-center items-center gap-y-2 relative'>
               <div className='avatar'>
-                <div className='w-24 rounded-full'>
-                  <img src='https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp' />
+                <div
+                  className='w-24 rounded-full cursor-pointer'
+                  onClick={triggerFileInput}
+                >
+                  {/* Display the uploaded profile picture */}
+                  <img
+                    src={
+                      profilePic ||
+                      'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
+                    }
+                    alt='Profile'
+                  />
+                  {/* Hidden file input */}
+                  <input
+                    type='file'
+                    id='profilePicInput'
+                    accept='image/png, image/jpeg'
+                    style={{ display: 'none' }}
+                    onChange={handleProfilePicChange}
+                  />
                 </div>
               </div>
 
