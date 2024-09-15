@@ -70,7 +70,7 @@ const Login = () => {
       setModalVisible(false)
     } catch (error) {
       setIsSendingVerification(false)
-      console.error('Error resending verification', error.response.data.message)
+      toast.error(error.response.data.message)
     }
   }
 

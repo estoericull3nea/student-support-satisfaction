@@ -6,6 +6,7 @@ import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
 import { formatTime } from '../utils'
 import { debounce } from 'lodash'
+import { FaCamera } from 'react-icons/fa'
 
 const Profile = () => {
   const token = localStorage.getItem('token')
@@ -45,7 +46,7 @@ const Profile = () => {
         setFirstName(response.data.firstName)
         setLastName(response.data.lastName)
         setEmail(response.data.email)
-        setProfilePic(`http://localhost:5000/${response.data.profilePic}`)
+        setProfilePic(`http://localhost:5000${response.data.profilePic}`)
         console.log(profilePic)
       } catch (err) {
         setErrorUser(err.message)
@@ -198,19 +199,27 @@ const Profile = () => {
           {/* Left Section */}
           <div className='left w-full lg:w-auto'>
             <div className='box h-[300px] w-full lg:w-[350px] border shadow-lg rounded-lg flex flex-col justify-center items-center gap-y-2 relative'>
-              <div className='avatar'>
+              <div className='avatar relative'>
                 <div
-                  className='w-24 rounded-full cursor-pointer'
+                  className='w-24 rounded-full cursor-pointer relative group'
                   onClick={triggerFileInput}
                 >
-                  {/* Display the uploaded profile picture */}
-                  <img
-                    src={
-                      profilePic ||
-                      'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
-                    }
-                    alt='Profile'
-                  />
+                  {profilePic === 'http://localhost:5000' ? (
+                    <div className='avatar placeholder w-full'>
+                      <div className='bg-neutral text-neutral-content w-full rounded-full'>
+                        <span className='font-bold tracking-tighter text-center text-3xl'>
+                          {`${user?.firstName[0].toUpperCase()} ${user?.lastName[0].toUpperCase()}`}
+                        </span>
+                      </div>
+                    </div>
+                  ) : (
+                    <img
+                      src={profilePic}
+                      alt='Profile'
+                      className='w-full h-full rounded-full'
+                    />
+                  )}
+
                   {/* Hidden file input */}
                   <input
                     type='file'
@@ -219,6 +228,11 @@ const Profile = () => {
                     style={{ display: 'none' }}
                     onChange={handleProfilePicChange}
                   />
+
+                  {/* Overlay for hover animation with icon */}
+                  <div className='absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center text-white text-lg font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-full'>
+                    <FaCamera className='text-2xl mb-2' />
+                  </div>
                 </div>
               </div>
 

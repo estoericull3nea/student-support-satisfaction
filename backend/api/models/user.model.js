@@ -55,11 +55,16 @@ const userSchema = new mongoose.Schema(
       default: 0,
     },
     // Email Verification
-
     failedLoginAttempts: { type: Number, default: 0 },
     lockUntil: { type: Date },
     resetPasswordToken: { type: String },
     resetPasswordExpires: { type: Date },
+
+    role: {
+      type: String,
+      enum: ['admin', 'customer'],
+      default: 'customer',
+    },
   },
 
   {

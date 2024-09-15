@@ -13,6 +13,7 @@ import path from 'path'
 import fs from 'fs'
 import { fileURLToPath } from 'url'
 import User from '../models/user.model.js'
+import { roleMiddleware } from '../middlewares/roleMiddleware.js'
 
 const router = express.Router()
 
@@ -74,7 +75,7 @@ router.put(
 )
 
 // router.get('/', protect, getAllUsers) real
-router.get('/', getAllUsers) // testing
+router.get('/', protect, roleMiddleware('admin'), getAllUsers) // testing
 router.get('/:id', protect, getUserById)
 
 // router.delete('/', protect, deleteAllUsers) real

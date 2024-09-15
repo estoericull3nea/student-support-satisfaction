@@ -227,38 +227,32 @@ export const loginUser = async (req, res) => {
   const { email, password } = req.body
 
   try {
-    // All fields are required
     if (!email || !password) {
       return res.status(400).json({ message: 'All fields required' })
     }
 
-    // Find the user by email
     const thisUser = await User.findOne({ email })
 
-    // Check if the user exists
     if (!thisUser) {
       return res.status(404).json({ message: 'User not found with this email' })
     }
 
-    // Check if the user is verified
     if (!thisUser.isVerified) {
       return res
         .status(403)
         .json({ message: 'Please verify your account before logging in.' })
     }
 
-    // Check if the user is locked out
     const isLocked = thisUser.lockUntil && thisUser.lockUntil > Date.now()
     if (isLocked) {
       const lockDuration = Math.ceil(
         (thisUser.lockUntil - Date.now()) / 1000 / 60
-      ) // Time remaining in minutes
+      )
       return res.status(403).json({
         message: `Too many failed login attempts. Try again in ${lockDuration} minutes.`,
       })
     }
 
-    // Compare the password using bcrypt (asynchronously)
     const isPasswordCorrect = await bcrypt.compare(password, thisUser.password)
 
     if (!isPasswordCorrect) {
@@ -290,6 +284,7 @@ export const loginUser = async (req, res) => {
         email: thisUser.email,
         firstName: thisUser.firstName,
         lastName: thisUser.lastName,
+        role: thisUser.role,
       },
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
@@ -319,15 +314,12 @@ export const forgotPassword = async (req, res) => {
   const { email } = req.body
 
   try {
-    // Find the user by email
     const user = await User.findOne({ email })
 
-    // Check if the user exists
     if (!user) {
       return res.status(404).json({ message: 'No user found with this email' })
     }
 
-    // Check if the user is verified
     if (!user.isVerified) {
       return res.status(403).json({
         message:
@@ -335,10 +327,8 @@ export const forgotPassword = async (req, res) => {
       })
     }
 
-    // Generate a secure reset token
     const resetToken = crypto.randomBytes(32).toString('hex')
 
-    // Hash the token before saving it to the database for added security
     const hashedResetToken = crypto
       .createHash('sha256')
       .update(resetToken)
@@ -353,7 +343,6 @@ export const forgotPassword = async (req, res) => {
 
     const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`
 
-    // Send email with nodemailer
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: user.email,
@@ -426,20 +415,17 @@ export const resetPassword = async (req, res) => {
   const { password } = req.body
 
   try {
-    // Validate password length (minimum 8 characters)
     if (password.length < 8) {
       return res
         .status(400)
         .json({ message: 'Password must be at least 8 characters long' })
     }
 
-    // Hash the token received in the URL
     const hashedToken = crypto
       .createHash('sha256')
       .update(resetToken)
       .digest('hex')
 
-    // Find the user by the reset token and check if the token is still valid (not expired)
     const user = await User.findOne({
       resetPasswordToken: hashedToken,
       resetPasswordExpires: { $gt: Date.now() },
@@ -449,10 +435,8 @@ export const resetPassword = async (req, res) => {
       return res.status(400).json({ message: 'Invalid or expired token' })
     }
 
-    // Hash the new password
     const hashedPassword = await bcrypt.hash(password, 10)
 
-    // Update the user's password and clear the reset token fields
     user.password = hashedPassword
     user.resetPasswordToken = undefined
     user.resetPasswordExpires = undefined
