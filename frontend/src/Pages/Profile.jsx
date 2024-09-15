@@ -4,6 +4,7 @@ import Breadcrumbs from '../components/Breadcrumbs'
 import Footer from '../components/Footer'
 import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
+import { formatTime } from '../utils'
 
 const Profile = () => {
   const token = localStorage.getItem('token')
@@ -55,8 +56,9 @@ const Profile = () => {
 
       <div className='container'>
         <div className='my-10 flex flex-wrap justify-center gap-3'>
-          <div className='left'>
-            <div className='box h-[300px] w-[350px] border shadow-lg rounded-lg flex flex-col justify-center items-center gap-y-2 relative'>
+          {/* Left Section */}
+          <div className='left w-full lg:w-auto'>
+            <div className='box h-[300px] w-full lg:w-[350px] border shadow-lg rounded-lg flex flex-col justify-center items-center gap-y-2 relative'>
               <div className='avatar'>
                 <div className='w-24 rounded-full'>
                   <img src='https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp' />
@@ -77,28 +79,26 @@ const Profile = () => {
             </div>
           </div>
 
-          <div className='right'>
-            <div className='box h-[370px] w-[600px] border shadow-xl rounded-lg '>
-              <div className='flex justify-between'>
-                <div className='h-40 w-full border m-3 rounded-lg  p-2'>
-                  <div className='flex flex-col items-center '>
+          {/* Right Section */}
+          <div className='right w-full lg:w-auto'>
+            <div className='box h-auto w-full lg:w-[600px] border shadow-xl rounded-lg p-3'>
+              <div className='flex flex-col lg:flex-row justify-between'>
+                <div className='h-40 w-full lg:w-auto border m-3 rounded-lg p-2'>
+                  <div className='flex flex-col items-center'>
                     <p className='text-sm font-medium'>
                       Total Service Feedback
                     </p>
-
                     <span className='font-bold mt-5 text-4xl'>
-                      {/* {feedbacks?.length || 0} */}
                       {user.feedbacks.length}
                     </span>
                   </div>
                 </div>
 
-                <div className='h-40 w-full border m-3 rounded-lg  p-2'>
-                  <div className='flex flex-col items-center '>
+                <div className='h-40 w-full lg:w-auto border m-3 rounded-lg p-2'>
+                  <div className='flex flex-col items-center'>
                     <p className='text-sm font-medium'>
                       Recent Service Feedback
                     </p>
-
                     <span className='font-bold mt-5 text-md text-center'>
                       {user.feedbacks.length
                         ? user.feedbacks[user.feedbacks.length - 1].serviceName
@@ -107,17 +107,17 @@ const Profile = () => {
                   </div>
                 </div>
 
-                <div className='h-40 w-full border m-3 rounded-lg  p-2'>
-                  <div className='flex flex-col items-center '>
+                <div className='h-40 w-full lg:w-auto border m-3 rounded-lg p-2'>
+                  <div className='flex flex-col items-center'>
                     <p className='text-sm font-medium'>Recent Login Date</p>
-
                     <span className='font-bold mt-5 text-sm text-center'>
                       {user.lastLoginDate[0].loginTime}
                     </span>
                   </div>
                 </div>
               </div>
-              <div className='h-40 w-[575px] border m-3 rounded-lg  p-2'>
+
+              <div className='h-40 w-full border m-3 rounded-lg p-2'>
                 <p className='text-sm font-medium'>Account Overview</p>
 
                 <div className='overflow-x-auto h-full w-full mt-3'>
@@ -161,7 +161,7 @@ const Profile = () => {
 
         <div
           role='tablist'
-          className='tabs tabs-lifted max-w-[1000px] mx-auto mb-10'
+          className='tabs tabs-lifted max-w-full lg:max-w-[800px] mx-auto mb-10 mt-20'
         >
           <input
             type='radio'
@@ -174,7 +174,48 @@ const Profile = () => {
             role='tabpanel'
             className='tab-content bg-base-100 border-base-300 rounded-box p-6'
           >
-            Accounts Settings
+            <div>
+              <div className='flex flex-col md:flex-row gap-3'>
+                {/* First Name */}
+                <label className='form-control w-full'>
+                  <div className='label'>
+                    <span className='label-text'>
+                      First Name <span className='text-red-800'>*</span>
+                    </span>
+                  </div>
+                  <input
+                    type='text'
+                    className='input input-bordered input-md w-full'
+                  />
+                </label>
+
+                {/* Last Name */}
+                <label className='form-control w-full'>
+                  <div className='label'>
+                    <span className='label-text'>
+                      Last Name <span className='text-red-800'>*</span>
+                    </span>
+                  </div>
+                  <input
+                    type='text'
+                    className='input input-bordered input-md w-full'
+                  />
+                </label>
+              </div>
+
+              {/* Email Input */}
+              <label className='form-control w-full mt-4'>
+                <div className='label'>
+                  <span className='label-text'>
+                    Email <span className='text-red-800'>*</span>
+                  </span>
+                </div>
+                <input
+                  type='email'
+                  className='input input-bordered input-md w-full'
+                />
+              </label>
+            </div>
           </div>
 
           <input
@@ -189,7 +230,28 @@ const Profile = () => {
             role='tabpanel'
             className='tab-content bg-base-100 border-base-300 rounded-box p-6'
           >
-            Feedback History
+            <div className='overflow-x-auto'>
+              <table className='table w-full'>
+                <thead>
+                  <tr className='text-center'>
+                    <th>Service Name</th>
+                    <th>Rating</th>
+                    <th>Comment</th>
+                    <th>Commented At</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {user.feedbacks.map((data, index) => (
+                    <tr key={index} className='text-xs text-center'>
+                      <td>{data.serviceName}</td>
+                      <td>{data.rating}</td>
+                      <td>{data.comment}</td>
+                      <td>{formatTime(data.createdAt)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
 
           <input
@@ -204,7 +266,26 @@ const Profile = () => {
             role='tabpanel'
             className='tab-content bg-base-100 border-base-300 rounded-box p-6'
           >
-            Login History
+            <div className='overflow-x-auto'>
+              <table className='table w-full'>
+                <thead>
+                  <tr className='text-center'>
+                    <th>IP Address</th>
+                    <th>Login Date & Time</th>
+                    <th>User Agent</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {user.lastLoginDate.map((data, index) => (
+                    <tr key={index} className='text-xs text-center'>
+                      <td>{data.ipAddress}</td>
+                      <td>{data.loginTime}</td>
+                      <td className='max-w-[200px]'>{data.userAgent}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
