@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Sidebar from './components/Sidebar'
-import MainContent from './components/MainContent'
+import DashboardPage from './pages/DashboardPage'
+import ManageUsersPage from './pages/ManageUsersPage'
+import SettingsPage from './pages/SettingsPage'
+import InactiveUsersPage from './pages/InactiveUsersPage'
 
 const AdminApp = () => {
   const [isSidebarCollapsed, setSidebarCollapsed] = useState(false)
@@ -17,7 +21,7 @@ const AdminApp = () => {
 
   useEffect(() => {
     window.addEventListener('resize', handleResize)
-    handleResize() // Initialize the state based on current screen size
+    handleResize() // Set initial state based on current screen size
 
     return () => {
       window.removeEventListener('resize', handleResize)
@@ -27,7 +31,15 @@ const AdminApp = () => {
   return (
     <div className='flex h-screen'>
       <Sidebar isCollapsed={isSidebarCollapsed} toggleSidebar={toggleSidebar} />
-      <MainContent isSidebarCollapsed={isSidebarCollapsed} />
+      <div className='flex-1 p-6'>
+        <Routes>
+          <Route path='/' element={<DashboardPage />} />
+          <Route path='/dashboard' element={<DashboardPage />} />
+          <Route path='/manage-users' element={<ManageUsersPage />} />
+          <Route path='/settings' element={<SettingsPage />} />
+          <Route path='/inactive-users' element={<InactiveUsersPage />} />
+        </Routes>
+      </div>
     </div>
   )
 }

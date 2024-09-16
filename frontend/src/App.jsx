@@ -33,7 +33,8 @@ const App = () => {
       <Router>
         <Routes>
           {/* Admin Panel */}
-          <Route path='/admin' element={<AdminApp />} />
+          <Route path='/admin/*' element={<AdminApp />} />
+
           {/* End of Admin Panel */}
 
           <Route

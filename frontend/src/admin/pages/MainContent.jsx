@@ -1,8 +1,8 @@
 import React from 'react'
 
-const MainContent = ({ isSidebarCollapsed }) => {
+const MainContent = () => {
   return (
-    <div className={`flex-1 p-6 transition-all`}>
+    <div className='flex-1 p-6 transition-all'>
       <h1 className='text-2xl font-bold'>Admin Dashboard</h1>
       <div className='mt-4'>
         <p className='text-gray-600'>
