@@ -18,6 +18,9 @@ import ForgotPassword from './Pages/ForgotPassword'
 import ResetPassword from './Pages/ResetPassword'
 import Profile from './Pages/Profile'
 
+// Admin Panel
+import AdminApp from './admin/AdminApp'
+
 const App = () => {
   return (
     <>
@@ -29,6 +32,10 @@ const App = () => {
       {/* Toaster Component */}
       <Router>
         <Routes>
+          {/* Admin Panel */}
+          <Route path='/admin' element={<AdminApp />} />
+          {/* End of Admin Panel */}
+
           <Route
             path='/profile'
             element={

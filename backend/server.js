@@ -25,7 +25,6 @@ const app = express()
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
-console.log(__dirname)
 // http://localhost:5000/api/uploads/profile-pics/1726394178484-Screenshot-(254).png
 
 app.use(cors({ origin: 'http://localhost:5173' }))
