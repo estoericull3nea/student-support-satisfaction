@@ -84,7 +84,7 @@ router.get('/:id', protect, getUserById)
 // router.delete('/', protect, deleteAllUsers) real
 router.delete('/', deleteAllUsers) // testing
 
-router.put('/:id', protect, updateUserById)
+router.put('/:id', updateUserById)
 
 router.patch('/:id/inactive', makeUserInactive)
 router.patch('/:id/status', toggleActive)
