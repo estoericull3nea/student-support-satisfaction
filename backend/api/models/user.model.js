@@ -65,6 +65,11 @@ const userSchema = new mongoose.Schema(
       enum: ['admin', 'customer'],
       default: 'customer',
     },
+
+    active: {
+      type: Boolean,
+      default: true,
+    },
   },
 
   {

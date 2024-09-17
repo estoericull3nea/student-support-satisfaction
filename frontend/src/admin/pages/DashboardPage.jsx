@@ -1,32 +1,94 @@
 import React, { useState, useEffect } from 'react'
+import axios from 'axios'
 
 import Group from '../../assets/images/icons/group.png'
 import ActiveUser from '../../assets/images/icons/active-user.png'
 import InactiveUser from '../../assets/images/icons/inactive-user.png'
-import Feedback from '../../assets/images/icons/feedback.png'
-import Registerd from '../../assets/images/icons/registered.png'
+import FeedbackIcon from '../../assets/images/icons/feedback.png'
+import Registered from '../../assets/images/icons/registered.png'
 import SignIn from '../../assets/images/icons/log-out.png'
+import { formatTime } from '../../utils.js'
 
-const RealTimeClock = () => {
+const DashboardPage = () => {
   const [time, setTime] = useState(new Date())
+  const [topTenServiceFeedback, setTopTenServiceFeedback] = useState([])
+  const [topTenRecentRegisteredUsers, setTopTenRecentRegisteredUsers] =
+    useState([])
+  const [stats, setStats] = useState({
+    totalUsers: 0,
+    activeUsers: 0,
+    inactiveUsers: 0,
+    totalFeedbacks: 0,
+    recentRegisteredUsers: [],
+    recentSigninUsers: [],
+  })
 
   useEffect(() => {
     const timer = setInterval(() => {
       setTime(new Date())
     }, 1000)
 
-    // Cleanup the interval on component unmount
     return () => clearInterval(timer)
   }, [])
 
-  // Get the current hours, minutes, and seconds
-  const hours = String(time.getHours()).padStart(2, '0')
-  const minutes = String(time.getMinutes()).padStart(2, '0')
-  const seconds = String(time.getSeconds()).padStart(2, '0')
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const response = await axios.get(
+          'http://localhost:5000/api/count/stats'
+        )
+        setStats(response.data.data)
+      } catch (error) {
+        console.error('Error fetching stats:', error)
+      }
+    }
 
-  // Get the current day, month, and year
+    fetchStats()
+  }, [])
+
+  useEffect(() => {
+    const fetchTopTenMostRatedService = async () => {
+      try {
+        const response = await axios.get(
+          'http://localhost:5000/api/count/top-service-feedbacks'
+        )
+        setTopTenServiceFeedback(response.data.data)
+      } catch (error) {
+        console.error('Error fetching top services:', error)
+      }
+    }
+
+    fetchTopTenMostRatedService()
+  }, [])
+
+  useEffect(() => {
+    const fetchTopTenRecentRegisteredUsers = async () => {
+      try {
+        const response = await axios.get(
+          'http://localhost:5000/api/count/top-ten-users'
+        )
+        setTopTenRecentRegisteredUsers(response.data.data)
+      } catch (error) {
+        console.error('Error fetching top services:', error)
+      }
+    }
+
+    fetchTopTenRecentRegisteredUsers()
+    console.log(topTenRecentRegisteredUsers)
+  }, [])
+
+  const getFormattedTime = (time) => {
+    let hours = time.getHours()
+    const minutes = String(time.getMinutes()).padStart(2, '0')
+    const seconds = String(time.getSeconds()).padStart(2, '0')
+    const ampm = hours >= 12 ? 'PM' : 'AM'
+    hours = hours % 12 || 12
+
+    return `${hours}:${minutes}:${seconds} ${ampm}`
+  }
+
   const day = String(time.getDate()).padStart(2, '0')
-  const month = String(time.getMonth() + 1).padStart(2, '0') // Months are zero-indexed
+  const month = String(time.getMonth() + 1).padStart(2, '0')
   const year = time.getFullYear()
 
   return (
@@ -35,17 +97,15 @@ const RealTimeClock = () => {
         <div className='text-sm font-medium'>
           {month}/{day}/{year}
         </div>
-        <div className='text-sm font-medium'>
-          {hours}:{minutes}:{seconds}
-        </div>
+        <div className='text-sm font-medium'>{getFormattedTime(time)}</div>
       </div>
 
-      <div className='flex flex-wrap gap-3'>
+      <div className='flex flex-wrap gap-3 items-center justify-center xl:justify-between'>
         <div className='mt-10'>
           <div className='w-[200px] p-3 bg-base-100 shadow flex items-start gap-x-2 flex-col gap-y-3'>
             <p className='text-xs text-gray-500'>Users</p>
             <div className='w-full flex justify-between items-center'>
-              <h1 className='text-4xl font-bold'>5k</h1>
+              <h1 className='text-4xl font-bold'>{stats.totalUsers}</h1>
               <img src={Group} alt='Manage Users Icon' className='w-6 h-6' />
             </div>
           </div>
@@ -55,10 +115,10 @@ const RealTimeClock = () => {
           <div className='w-[200px] p-3 bg-base-100 shadow flex items-start gap-x-2 flex-col gap-y-3'>
             <p className='text-xs text-gray-500'>Active Users</p>
             <div className='w-full flex justify-between items-center'>
-              <h1 className='text-4xl font-bold'>5k</h1>
+              <h1 className='text-4xl font-bold'>{stats.activeUsers}</h1>
               <img
                 src={ActiveUser}
-                alt='Manage Users Icon'
+                alt='Active Users Icon'
                 className='w-6 h-6'
               />
             </div>
@@ -69,10 +129,10 @@ const RealTimeClock = () => {
           <div className='w-[200px] p-3 bg-base-100 shadow flex items-start gap-x-2 flex-col gap-y-3'>
             <p className='text-xs text-gray-500'>Inactive Users</p>
             <div className='w-full flex justify-between items-center'>
-              <h1 className='text-4xl font-bold'>5k</h1>
+              <h1 className='text-4xl font-bold'>{stats.inactiveUsers}</h1>
               <img
                 src={InactiveUser}
-                alt='Manage Users Icon'
+                alt='Inactive Users Icon'
                 className='w-6 h-6'
               />
             </div>
@@ -83,8 +143,8 @@ const RealTimeClock = () => {
           <div className='w-[200px] p-3 bg-base-100 shadow flex items-start gap-x-2 flex-col gap-y-3'>
             <p className='text-xs text-gray-500'>Total Feedbacks</p>
             <div className='w-full flex justify-between items-center'>
-              <h1 className='text-4xl font-bold'>5k</h1>
-              <img src={Feedback} alt='Manage Users Icon' className='w-6 h-6' />
+              <h1 className='text-4xl font-bold'>{stats.totalFeedbacks}</h1>
+              <img src={FeedbackIcon} alt='Feedback Icon' className='w-6 h-6' />
             </div>
           </div>
         </div>
@@ -93,10 +153,12 @@ const RealTimeClock = () => {
           <div className='w-[200px] p-3 bg-base-100 shadow flex items-start gap-x-2 flex-col gap-y-3'>
             <p className='text-xs text-gray-500'>Recent Registered User</p>
             <div className='w-full flex justify-between items-center'>
-              <h1 className='text-4xl font-bold'>5k</h1>
+              <h1 className='text-4xl font-bold'>
+                {stats.recentRegisteredUsers[0]?.firstName || 'N/A'}
+              </h1>
               <img
-                src={Registerd}
-                alt='Manage Users Icon'
+                src={Registered}
+                alt='Registered User Icon'
                 className='w-6 h-6'
               />
             </div>
@@ -107,8 +169,80 @@ const RealTimeClock = () => {
           <div className='w-[200px] p-3 bg-base-100 shadow flex items-start gap-x-2 flex-col gap-y-3'>
             <p className='text-xs text-gray-500'>Recent Sign In User</p>
             <div className='w-full flex justify-between items-center'>
-              <h1 className='text-4xl font-bold'>5k</h1>
-              <img src={SignIn} alt='Manage Users Icon' className='w-6 h-6' />
+              <h1 className='text-4xl font-bold'>
+                {stats.recentSigninUsers[0]?.firstName || 'N/A'}
+              </h1>
+              <img src={SignIn} alt='Sign In Icon' className='w-6 h-6' />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className='grid grid-cols-1 lg:grid-cols-2 gap-5 mt-5'>
+        <div className='shadow-lg p-3  bg-base-100 w-full'>
+          <div className='w-full mt-10'>
+            <h2 className='text-sm font-medium mb-4'>
+              Top 10 Most Rated Feedback Services
+            </h2>
+            <div className='overflow-x-auto'>
+              <table className='table w-full text-xs'>
+                <thead>
+                  <tr>
+                    <th>Service Name</th>
+                    <th>Total Feedback</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {topTenServiceFeedback.map((service, index) => (
+                    <tr key={index}>
+                      <td>{service._id}</td>
+                      <td>{service.totalCount}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div className='shadow-lg p-3  bg-base-100 w-full'>
+          <div className='w-full mt-10'>
+            <h2 className='text-sm font-medium mb-4'>
+              Top 10 Recent Registered Users
+            </h2>
+            <div className='overflow-x-auto'>
+              <table className='table w-full text-xs'>
+                <thead>
+                  <tr>
+                    <th>Full Name</th>
+                    <th>Email</th>
+                    <th>Is Verified</th>
+                    <th>Role</th>
+                    <th>CreatedAt</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {topTenRecentRegisteredUsers.map((data, index) => (
+                    <tr key={index}>
+                      <td>
+                        {data.firstName} {data.lastName}
+                      </td>
+                      <td>{data.email}</td>
+                      <td
+                        className={
+                          data.isVerified
+                            ? 'text-green-700 font-bold'
+                            : 'text-red-700 font-bold'
+                        }
+                      >
+                        {data.isVerified ? 'Verified' : 'Not Verified'}
+                      </td>
+                      <td>{data.role}</td>
+                      <td>{formatTime(data.createdAt)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -117,4 +251,4 @@ const RealTimeClock = () => {
   )
 }
 
-export default RealTimeClock
+export default DashboardPage

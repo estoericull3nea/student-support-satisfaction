@@ -39,7 +39,7 @@ app.use('/api/auth', authRouter)
 app.use('/api/feedbacks', feedbackRouter)
 app.use('/api/contacts', contactRouter)
 app.use('/api/logins/history', loginHistoryRouter)
-app.use('/api/count', loginHistoryRouter)
+app.use('/api/count', counterController)
 
 // ================================== Connection to MongoDB ==================================
 connectDB()
