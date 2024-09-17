@@ -75,7 +75,8 @@ router.put(
 )
 
 // router.get('/', protect, getAllUsers) real
-router.get('/', protect, roleMiddleware('customer'), getAllUsers) // testing
+// router.get('/', protect, roleMiddleware('customer'), getAllUsers) // testing
+router.get('/', getAllUsers) // testing
 router.get('/:id', protect, getUserById)
 
 // router.delete('/', protect, deleteAllUsers) real
