@@ -5,6 +5,7 @@ import {
   getAllUsers,
   getUserById,
   makeUserInactive,
+  searchAnythingOnUser,
   toggleActive,
   updateUserById,
 } from '../controllers/user.controller.js'
@@ -90,5 +91,7 @@ router.patch('/:id/inactive', makeUserInactive)
 router.patch('/:id/status', toggleActive)
 
 router.delete('/:id', protect, deleteUserById)
+
+router.get('/search/q', searchAnythingOnUser)
 
 export default router

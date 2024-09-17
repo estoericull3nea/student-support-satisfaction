@@ -200,3 +200,51 @@ export const deleteAllUsers = async (_, res) => {
     return res.status(500).json({ message: 'Server error: ' + error.message })
   }
 }
+
+export const searchAnythingOnUser = async (req, res) => {
+  const { query } = req.query // Capture the search query from the URL
+
+  if (!query) {
+    return res.status(400).json({ message: 'Search query is required' })
+  }
+
+  try {
+    // Handle specific queries like 'isVerified' or 'active' (interpreted as boolean)
+    let booleanFilters = {}
+    if (query.toLowerCase() === 'isverified') {
+      booleanFilters.isVerified = true
+    } else if (query.toLowerCase() === 'active') {
+      booleanFilters.active = true
+    } else if (query.toLowerCase() === 'notverified') {
+      booleanFilters.isVerified = false
+    } else if (query.toLowerCase() === 'inactive') {
+      booleanFilters.active = false
+    }
+
+    // Build a search condition for text-based fields like firstName, lastName, and email
+    const textSearchCondition = {
+      $or: [
+        { firstName: { $regex: query, $options: 'i' } }, // Case-insensitive search
+        { lastName: { $regex: query, $options: 'i' } },
+        { email: { $regex: query, $options: 'i' } },
+        { role: { $regex: query, $options: 'i' } },
+      ],
+    }
+
+    // Combine text search with boolean filters, if any
+    const users = await User.find({
+      ...textSearchCondition,
+      ...booleanFilters, // Add boolean filters only when they are relevant
+    })
+
+    // Check if no users were found
+    if (users.length === 0) {
+      return res.status(404).json({ message: 'No Data Found' })
+    }
+
+    // Return the matched users
+    res.status(200).json(users)
+  } catch (error) {
+    res.status(500).json({ error: 'Error searching users' })
+  }
+}

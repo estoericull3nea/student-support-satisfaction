@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
 import { formatTime } from '../../utils.js'
+import { toast } from 'react-hot-toast'
 
 const UsersTable = () => {
   const [users, setUsers] = useState([]) // Initialize users as an empty array
@@ -16,6 +17,32 @@ const UsersTable = () => {
 
   const [loading, setLoading] = useState(false) // Global loading state
   const [buttonLoading, setButtonLoading] = useState(null) // Loading state for individual buttons
+
+  const [searchTerm, setSearchTerm] = useState('') // Search term for real-time search
+
+  const fetchUsers = async () => {
+    setLoading(true)
+    try {
+      const response = await axios.get(
+        'http://localhost:5000/api/users/search/q',
+        {
+          params: { query: searchTerm }, // Send search query to the backend
+        }
+      )
+      setUsers(response.data)
+      console.log(response.data.length)
+      toast.success(`${response.data.length} user(s) found`)
+    } catch (error) {
+      if (error.response.data.message === 'No Data Found') {
+        toast.error('No Data Found')
+      }
+
+      if (error.response.data.message === 'Search query is required') {
+        toast.error('Search query is required')
+      }
+    }
+    setLoading(false)
+  }
 
   // Fetch all users
   useEffect(() => {
@@ -79,6 +106,7 @@ const UsersTable = () => {
       // Close the update modal
       setIsUpdateModalOpen(false)
       setSelectedUser(null)
+      toast.success('Update Successfully')
     } catch (error) {
       console.error('Error updating user:', error)
     } finally {
@@ -107,6 +135,8 @@ const UsersTable = () => {
           user._id === id ? { ...user, active: !currentStatus } : user
         )
       )
+
+      toast.success(`${currentStatus === false ? 'Active' : 'Inactive'}`)
     } catch (error) {
       console.error('Error setting user active/inactive:', error)
     } finally {
@@ -115,86 +145,104 @@ const UsersTable = () => {
   }
 
   return (
-    <div className='block overflow-x-auto'>
+    <div className='block overflow-x-auto shadow-2xl rounded-xl'>
       {/* Loading spinner for table fetch */}
       {loading ? (
         <div className='flex justify-center items-center py-10'>
           <div className='btn btn-square loading'></div> {/* DaisyUI spinner */}
         </div>
       ) : (
-        <table className='table table-auto w-full whitespace-nowrap'>
-          <thead>
-            <tr>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>Email</th>
-              <th>Verified</th>
-              <th>Active</th>
-              <th>Role</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((user) => (
-              <tr
-                key={user._id}
-                className='cursor-pointer hover:bg-primary hover:text-white transition duration-300'
-                onClick={() => handleRowClick(user)}
-              >
-                <td>{user.firstName}</td>
-                <td>{user.lastName}</td>
-                <td>{user.email}</td>
-                <td
-                  className={
-                    user.isVerified
-                      ? 'text-green-500 font-bold'
-                      : 'text-red-500 font-bold'
-                  }
-                >
-                  {user.isVerified ? 'Verified' : 'Not Verified'}
-                </td>
-                <td
-                  className={
-                    user.active
-                      ? 'text-green-500 font-bold'
-                      : 'text-red-500 font-bold'
-                  }
-                >
-                  {user.active ? 'Active' : 'Inactive'}
-                </td>
-                <td>{user.role}</td>
-                <td className='flex flex-wrap'>
-                  <button
-                    className={`btn btn-sm btn-primary mr-2 ${
-                      buttonLoading === 'update' ? 'loading' : ''
-                    }`}
-                    onClick={(e) => {
-                      e.stopPropagation() // Prevent triggering row click
-                      handleUpdateClick(user)
-                    }}
-                    disabled={buttonLoading === 'update'} // Disable during loading
-                  >
-                    Update
-                  </button>
-                  <button
-                    className={`btn btn-sm ${
-                      user.active ? 'btn-error' : 'btn-success'
-                    } text-white ${
-                      buttonLoading === user._id ? 'loading' : ''
-                    }`}
-                    onClick={(e) => {
-                      e.stopPropagation() // Prevent triggering row click
-                      handleSetInactive(user._id, user.active)
-                    }}
-                    disabled={buttonLoading === user._id} // Disable during loading
-                  >
-                    {user.active ? 'Inactive' : 'Make Active'}
-                  </button>
-                </td>
+        <div>
+          <div className='p-4 flex space-x-4'>
+            <input
+              type='text'
+              className='input input-bordered w-full'
+              placeholder='Search users...'
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)} // Update search term
+            />
+            <button
+              className='btn btn-primary'
+              onClick={fetchUsers} // Trigger search on button click
+            >
+              Search
+            </button>
+          </div>
+
+          <table className='table table-auto w-full whitespace-nowrap '>
+            <thead>
+              <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Verified</th>
+                <th>Active</th>
+                <th>Role</th>
+                <th>Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {users.map((user) => (
+                <tr
+                  key={user._id}
+                  className='cursor-pointer hover:bg-primary hover:text-white transition duration-300'
+                  onClick={() => handleRowClick(user)}
+                >
+                  <td>{user.firstName}</td>
+                  <td>{user.lastName}</td>
+                  <td>{user.email}</td>
+                  <td
+                    className={
+                      user.isVerified
+                        ? 'text-green-500 font-bold'
+                        : 'text-red-500 font-bold'
+                    }
+                  >
+                    {user.isVerified ? 'Verified' : 'Not Verified'}
+                  </td>
+                  <td
+                    className={
+                      user.active
+                        ? 'text-green-500 font-bold'
+                        : 'text-red-500 font-bold'
+                    }
+                  >
+                    {user.active ? 'Active' : 'Inactive'}
+                  </td>
+                  <td>{user.role}</td>
+                  <td className='flex flex-wrap'>
+                    <button
+                      className={`btn btn-sm btn-primary mr-2 ${
+                        buttonLoading === 'update' ? 'loading' : ''
+                      }`}
+                      onClick={(e) => {
+                        e.stopPropagation() // Prevent triggering row click
+                        handleUpdateClick(user)
+                      }}
+                      disabled={buttonLoading === 'update'} // Disable during loading
+                    >
+                      Update
+                    </button>
+                    <button
+                      className={`btn btn-sm ${
+                        user.active ? 'btn-error' : 'btn-success'
+                      } text-white ${
+                        buttonLoading === user._id ? 'loading' : ''
+                      }`}
+                      onClick={(e) => {
+                        e.stopPropagation() // Prevent triggering row click
+                        handleSetInactive(user._id, user.active)
+                      }}
+                      disabled={buttonLoading === user._id} // Disable during loading
+                    >
+                      {user.active ? 'Inactive' : 'Make Active'}
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
 
       {/* Daisy UI Modal for Viewing */}
