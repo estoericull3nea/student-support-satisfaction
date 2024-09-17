@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Sidebar from './components/Sidebar'
 import DashboardPage from './pages/DashboardPage'
-import ManageUsersPage from './pages/ManageUsersPage'
+import ActiveUsersPage from './pages/ActiveUsersPage'
 import SettingsPage from './pages/SettingsPage'
 import InactiveUsersPage from './pages/InactiveUsersPage'
 
@@ -35,7 +35,7 @@ const AdminApp = () => {
         <Routes>
           <Route path='/' element={<DashboardPage />} />
           <Route path='/dashboard' element={<DashboardPage />} />
-          <Route path='/manage-users' element={<ManageUsersPage />} />
+          <Route path='/active-users' element={<ActiveUsersPage />} />
           <Route path='/settings' element={<SettingsPage />} />
           <Route path='/inactive-users' element={<InactiveUsersPage />} />
         </Routes>

@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import Dashboard from '../../assets/images/icons/dashboard.png'
 import Group from '../../assets/images/icons/group.png'
 import Settings from '../../assets/images/icons/settings.png'
+import ActiveUser from '../../assets/images/icons/add-friend.png'
 import App from '../../assets/images/icons/app.png'
 
 const Sidebar = ({ isCollapsed, toggleSidebar }) => {
@@ -31,29 +32,47 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
           </Link>
         </li>
 
-        <li>
-          <Link to='/admin/manage-users'>
-            <div className='flex items-center gap-5 justify-start px-0 md:py-2'>
-              <img src={Group} alt='Manage Users Icon' className='w-6 h-6' />
-              {!isCollapsed && <span>Manage Users</span>}
-            </div>
-          </Link>
-        </li>
+        <div
+          tabIndex={0}
+          className='collapse collapse-arrow border-base-300 bg-base-200 border'
+        >
+          <div className='collapse-title text-sm font-medium p-0 text-center flex items-center justify-between px-10'>
+            <img src={Group} alt='Manage Users Icon' className='w-6 h-6' />
+            Manage Users
+          </div>
+          <div className='collapse-content'>
+            <li>
+              <Link to='/admin/active-users'>
+                <div className='flex items-center gap-5 justify-start px-0 md:py-2'>
+                  <img
+                    src={ActiveUser}
+                    alt='Inactive Users Icon'
+                    className='w-6 h-6'
+                  />
+                  {!isCollapsed && <span>Active Users</span>}
+                </div>
+              </Link>
+            </li>
+            <li>
+              <Link to='/admin/inactive-users'>
+                <div className='flex items-center gap-5 justify-start px-0 md:py-2'>
+                  <img
+                    src={App}
+                    alt='Inactive Users Icon'
+                    className='w-6 h-6'
+                  />
+                  {!isCollapsed && <span>Inactive Users</span>}
+                </div>
+              </Link>
+            </li>
+          </div>
+        </div>
 
         <li>
           <Link to='/admin/settings'>
             <div className='flex items-center gap-5 justify-start px-0 md:py-2'>
               <img src={Settings} alt='Settings Icon' className='w-6 h-6' />
               {!isCollapsed && <span>Settings</span>}
-            </div>
-          </Link>
-        </li>
-
-        <li>
-          <Link to='/admin/inactive-users'>
-            <div className='flex items-center gap-5 justify-start px-0 md:py-2'>
-              <img src={App} alt='Inactive Users Icon' className='w-6 h-6' />
-              {!isCollapsed && <span>Inactive Users</span>}
             </div>
           </Link>
         </li>

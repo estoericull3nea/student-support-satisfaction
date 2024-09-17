@@ -2,8 +2,10 @@ import express from 'express'
 import {
   deleteAllUsers,
   deleteUserById,
+  getAllInactiveUser,
   getAllUsers,
   getUserById,
+  makeUserActive,
   makeUserInactive,
   searchAnythingOnUser,
   toggleActive,
@@ -76,22 +78,15 @@ router.put(
     }
   }
 )
-
-// router.get('/', protect, getAllUsers) real
-// router.get('/', protect, roleMiddleware('customer'), getAllUsers) // testing
-router.get('/', getAllUsers) // testing
+router.get('/not-active-users', getAllInactiveUser)
+router.patch('/:id/activate', makeUserActive)
+router.get('/', getAllUsers)
 router.get('/:id', protect, getUserById)
-
-// router.delete('/', protect, deleteAllUsers) real
-router.delete('/', deleteAllUsers) // testing
-
+router.delete('/', deleteAllUsers)
 router.put('/:id', updateUserById)
-
 router.patch('/:id/inactive', makeUserInactive)
 router.patch('/:id/status', toggleActive)
-
 router.delete('/:id', protect, deleteUserById)
-
 router.get('/search/q', searchAnythingOnUser)
 
 export default router

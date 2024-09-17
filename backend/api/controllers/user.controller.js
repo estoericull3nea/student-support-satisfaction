@@ -202,10 +202,10 @@ export const deleteAllUsers = async (_, res) => {
 }
 
 export const searchAnythingOnUser = async (req, res) => {
-  const { query = '', sortField, sortOrder } = req.query // Default query to an empty string if not provided
+  const { query = '', sortField, sortOrder, page = 1, limit = 10 } = req.query
 
   try {
-    // Handle specific queries like 'isVerified' or 'active' (interpreted as boolean)
+    // Handle specific queries like 'isVerified' or 'active'
     let booleanFilters = {}
     if (query.toLowerCase() === 'isverified') {
       booleanFilters.isVerified = true
@@ -217,41 +217,89 @@ export const searchAnythingOnUser = async (req, res) => {
       booleanFilters.active = false
     }
 
-    // Build a search condition for text-based fields like firstName, lastName, and email
+    // Build a search condition for text-based fields
     const textSearchCondition = query
       ? {
           $or: [
-            { firstName: { $regex: query, $options: 'i' } }, // Case-insensitive search
+            { firstName: { $regex: query, $options: 'i' } },
             { lastName: { $regex: query, $options: 'i' } },
             { email: { $regex: query, $options: 'i' } },
             { role: { $regex: query, $options: 'i' } },
           ],
         }
-      : {} // If query is empty, no text search condition
+      : {}
 
-    // Combine text search with boolean filters, if any
     const filters = {
       ...textSearchCondition,
-      ...booleanFilters, // Add boolean filters only when they are relevant
+      ...booleanFilters,
     }
 
-    // Determine sorting order (default is ascending)
+    // Determine sorting
     const sortOptions = {}
     if (sortField) {
-      sortOptions[sortField] = sortOrder === 'desc' ? -1 : 1 // Set sorting order: -1 for descending, 1 for ascending
+      sortOptions[sortField] = sortOrder === 'desc' ? -1 : 1
     }
 
-    // Query the database with filters and sorting
-    const users = await User.find(filters).sort(sortOptions)
+    // Convert page and limit to integers
+    const skip = (parseInt(page) - 1) * parseInt(limit)
+    const userLimit = parseInt(limit)
 
-    // Check if no users were found
-    if (users.length === 0) {
-      return res.status(404).json({ message: 'No Data Found' })
-    }
+    // Query the database with filters, sorting, pagination
+    const users = await User.find(filters)
+      .sort(sortOptions)
+      .skip(skip)
+      .limit(userLimit)
 
-    // Return the matched users
-    res.status(200).json(users)
+    // Count the total number of matching documents
+    const totalUsers = await User.countDocuments(filters)
+
+    // Return paginated users with total count
+    res.status(200).json({
+      users,
+      totalUsers,
+      totalPages: Math.ceil(totalUsers / limit),
+      currentPage: parseInt(page),
+    })
   } catch (error) {
     res.status(500).json({ error: 'Error searching users' })
   }
 }
+
+export const getAllInactiveUser = async (req, res) => {
+  try {
+    const inactiveUsers = await User.find({ active: false })
+
+    if (inactiveUsers.length === 0) {
+      return res.status(404).json({ message: 'No inactive users found' })
+    }
+
+    res.status(200).json(inactiveUsers)
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching inactive users', error })
+  }
+}
+
+export const makeUserActive = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const user = await User.findByIdAndUpdate(id, { active: true }, { new: true });
+    console.log(user);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'User has been made active',
+      data: user,
+    });
+  } catch (error) {
+    console.error('Error making user active:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'An error occurred while making the user active',
+    });
+  }
+};
