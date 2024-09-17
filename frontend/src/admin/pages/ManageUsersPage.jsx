@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
-
 import { formatTime } from '../../utils.js'
 
 const UsersTable = () => {
@@ -35,6 +34,26 @@ const UsersTable = () => {
     setSelectedUser(null) // Clear the selected user
   }
 
+  // Handle toggling user active/inactive status
+  const handleToggleActiveStatus = async (id, currentStatus) => {
+    try {
+      // Call the API to toggle the user's active status
+      const newStatus = !currentStatus
+      await axios.patch(`http://localhost:5000/api/users/${id}/status`, {
+        active: newStatus,
+      })
+
+      // Update the user in the frontend to reflect the new active status
+      setUsers((prevUsers) =>
+        prevUsers.map((user) =>
+          user._id === id ? { ...user, active: newStatus } : user
+        )
+      )
+    } catch (error) {
+      console.error('Error toggling user status:', error)
+    }
+  }
+
   return (
     <div className='overflow-x-auto'>
       <table className='table w-full'>
@@ -44,7 +63,9 @@ const UsersTable = () => {
             <th>Last Name</th>
             <th>Email</th>
             <th>Verified</th>
+            <th>Active</th>
             <th>Role</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -66,7 +87,27 @@ const UsersTable = () => {
               >
                 {user.isVerified ? 'Verified' : 'Not Verified'}
               </td>
+              <td
+                className={
+                  user.active
+                    ? 'text-green-500 font-bold'
+                    : 'text-red-500 font-bold'
+                }
+              >
+                {user.active ? 'Active' : 'Inactive'}
+              </td>
               <td>{user.role}</td>
+              <td>
+                <button
+                  className={`btn ${user.active ? 'btn-error' : 'btn-success'}`}
+                  onClick={(e) => {
+                    e.stopPropagation() // Prevent triggering row click
+                    handleToggleActiveStatus(user._id, user.active)
+                  }}
+                >
+                  {user.active ? 'Inactive' : 'Active'}
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -81,6 +122,9 @@ const UsersTable = () => {
             </h3>
             <hr className='mt-3' />
             <p className='py-1 mt-3'>
+              <strong>User ID:</strong> {selectedUser._id}
+            </p>
+            <p className='py-1'>
               <strong>First Name:</strong> {selectedUser.firstName}
             </p>
             <p className='py-1'>
@@ -92,6 +136,9 @@ const UsersTable = () => {
             <p className='py-1'>
               <strong>Verified:</strong>{' '}
               {selectedUser.isVerified ? 'Yes' : 'No'}
+            </p>
+            <p className='py-1'>
+              <strong>Active:</strong> {selectedUser.active ? 'Yes' : 'No'}
             </p>
             <p className='py-1'>
               <strong>Role:</strong> {selectedUser.role}
@@ -111,8 +158,6 @@ const UsersTable = () => {
             <p className='py-1'>
               <strong>Updated At:</strong> {formatTime(selectedUser.updatedAt)}
             </p>
-
-            {/* Add any other fields you want to display */}
 
             <div className='modal-action'>
               <button

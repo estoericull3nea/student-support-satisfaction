@@ -4,6 +4,8 @@ import {
   deleteUserById,
   getAllUsers,
   getUserById,
+  makeUserInactive,
+  toggleActive,
   updateUserById,
 } from '../controllers/user.controller.js'
 import { protect } from '../middlewares/authMiddleware.js'
@@ -83,6 +85,9 @@ router.get('/:id', protect, getUserById)
 router.delete('/', deleteAllUsers) // testing
 
 router.put('/:id', protect, updateUserById)
+
+router.patch('/:id/inactive', makeUserInactive)
+router.patch('/:id/status', toggleActive)
 
 router.delete('/:id', protect, deleteUserById)
 
