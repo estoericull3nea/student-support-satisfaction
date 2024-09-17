@@ -202,11 +202,7 @@ export const deleteAllUsers = async (_, res) => {
 }
 
 export const searchAnythingOnUser = async (req, res) => {
-  const { query } = req.query // Capture the search query from the URL
-
-  if (!query) {
-    return res.status(400).json({ message: 'Search query is required' })
-  }
+  const { query = '', sortField, sortOrder } = req.query // Default query to an empty string if not provided
 
   try {
     // Handle specific queries like 'isVerified' or 'active' (interpreted as boolean)
@@ -222,20 +218,31 @@ export const searchAnythingOnUser = async (req, res) => {
     }
 
     // Build a search condition for text-based fields like firstName, lastName, and email
-    const textSearchCondition = {
-      $or: [
-        { firstName: { $regex: query, $options: 'i' } }, // Case-insensitive search
-        { lastName: { $regex: query, $options: 'i' } },
-        { email: { $regex: query, $options: 'i' } },
-        { role: { $regex: query, $options: 'i' } },
-      ],
-    }
+    const textSearchCondition = query
+      ? {
+          $or: [
+            { firstName: { $regex: query, $options: 'i' } }, // Case-insensitive search
+            { lastName: { $regex: query, $options: 'i' } },
+            { email: { $regex: query, $options: 'i' } },
+            { role: { $regex: query, $options: 'i' } },
+          ],
+        }
+      : {} // If query is empty, no text search condition
 
     // Combine text search with boolean filters, if any
-    const users = await User.find({
+    const filters = {
       ...textSearchCondition,
       ...booleanFilters, // Add boolean filters only when they are relevant
-    })
+    }
+
+    // Determine sorting order (default is ascending)
+    const sortOptions = {}
+    if (sortField) {
+      sortOptions[sortField] = sortOrder === 'desc' ? -1 : 1 // Set sorting order: -1 for descending, 1 for ascending
+    }
+
+    // Query the database with filters and sorting
+    const users = await User.find(filters).sort(sortOptions)
 
     // Check if no users were found
     if (users.length === 0) {

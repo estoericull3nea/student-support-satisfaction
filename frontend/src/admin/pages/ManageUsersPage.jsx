@@ -20,28 +20,64 @@ const UsersTable = () => {
 
   const [searchTerm, setSearchTerm] = useState('') // Search term for real-time search
 
+  const [sortField, setSortField] = useState('') // Field to sort by
+  const [sortOrder, setSortOrder] = useState('asc') // Sorting order ('asc' or 'desc')
+
   const fetchUsers = async () => {
     setLoading(true)
     try {
       const response = await axios.get(
         'http://localhost:5000/api/users/search/q',
         {
-          params: { query: searchTerm }, // Send search query to the backend
+          params: {
+            query: searchTerm, // Search term
+            sortField, // Field to sort by
+            sortOrder, // Sorting order (asc or desc)
+          },
         }
       )
       setUsers(response.data)
-      console.log(response.data.length)
       toast.success(`${response.data.length} user(s) found`)
     } catch (error) {
-      if (error.response.data.message === 'No Data Found') {
+      if (error.response?.data.message === 'No Data Found') {
         toast.error('No Data Found')
-      }
-
-      if (error.response.data.message === 'Search query is required') {
+      } else if (error.response?.data.message === 'Search query is required') {
         toast.error('Search query is required')
       }
     }
     setLoading(false)
+  }
+
+  // Search users
+  const searchUsers = async () => {
+    setLoading(true)
+    try {
+      const response = await axios.get(
+        'http://localhost:5000/api/users/search/q',
+        {
+          params: { query: searchTerm },
+        }
+      )
+      setUsers(response.data)
+      toast.success(`${response.data.length} user(s) found`)
+    } catch (error) {
+      if (error.response?.data.message === 'No Data Found') {
+        toast.error('No Data Found')
+      } else if (error.response?.data.message === 'Search query is required') {
+        toast.error('Search query is required')
+      }
+    }
+    setLoading(false)
+  }
+
+  // Sort users
+  const sortUsers = (field) => {
+    const isAsc = sortField === field && sortOrder === 'asc'
+    setSortField(field)
+    setSortOrder(isAsc ? 'desc' : 'asc')
+
+    // Fetch sorted users after updating sortField and sortOrder
+    fetchUsers() // Make sure to call fetchUsers() after setting sorting options
   }
 
   // Fetch all users
@@ -161,10 +197,7 @@ const UsersTable = () => {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)} // Update search term
             />
-            <button
-              className='btn btn-primary'
-              onClick={fetchUsers} // Trigger search on button click
-            >
+            <button className='btn btn-primary' onClick={searchUsers}>
               Search
             </button>
           </div>
@@ -172,15 +205,51 @@ const UsersTable = () => {
           <table className='table table-auto w-full whitespace-nowrap '>
             <thead>
               <tr>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Email</th>
-                <th>Verified</th>
-                <th>Active</th>
-                <th>Role</th>
+                <th>
+                  <button onClick={() => sortUsers('firstName')}>
+                    First Name{' '}
+                    {sortField === 'firstName' &&
+                      (sortOrder === 'asc' ? '▲' : '▼')}
+                  </button>
+                </th>
+                <th>
+                  <button onClick={() => sortUsers('lastName')}>
+                    Last Name{' '}
+                    {sortField === 'lastName' &&
+                      (sortOrder === 'asc' ? '▲' : '▼')}
+                  </button>
+                </th>
+                <th>
+                  <button onClick={() => sortUsers('email')}>
+                    Email{' '}
+                    {sortField === 'email' && (sortOrder === 'asc' ? '▲' : '▼')}
+                  </button>
+                </th>
+                <th>
+                  <button onClick={() => sortUsers('isVerified')}>
+                    Verified{' '}
+                    {sortField === 'isVerified' &&
+                      (sortOrder === 'asc' ? '▲' : '▼')}
+                  </button>
+                </th>
+                <th>
+                  <button onClick={() => sortUsers('active')}>
+                    Active{' '}
+                    {sortField === 'active' &&
+                      (sortOrder === 'asc' ? '▲' : '▼')}
+                  </button>
+                </th>
+                <th>
+                  <button onClick={() => sortUsers('createdAt')}>
+                    Created At{' '}
+                    {sortField === 'createdAt' &&
+                      (sortOrder === 'asc' ? '▲' : '▼')}
+                  </button>
+                </th>
                 <th>Action</th>
               </tr>
             </thead>
+
             <tbody>
               {users.map((user) => (
                 <tr
