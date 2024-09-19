@@ -6,6 +6,13 @@ import Dashboard from '../../assets/images/icons/dashboard.png'
 import Group from '../../assets/images/icons/group.png'
 import Settings from '../../assets/images/icons/settings.png'
 import ActiveUser from '../../assets/images/icons/add-friend.png'
+import Building from '../../assets/images/icons/building.png'
+import Book from '../../assets/images/icons/book.png'
+import Principal from '../../assets/images/icons/principal.png'
+import Blogger from '../../assets/images/icons/blogger.png'
+import People from '../../assets/images/icons/people.png'
+import Query from '../../assets/images/icons/query.png'
+import User from '../../assets/images/icons/user.png'
 import App from '../../assets/images/icons/app.png'
 
 const Sidebar = ({ isCollapsed, toggleSidebar }) => {
@@ -65,8 +72,87 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
                 </div>
               </Link>
             </li>
+            <li>
+              <Link to='/admin/dashboard'>
+                <div className='flex items-center gap-5 justify-start px-0 md:py-2'>
+                  <img src={User} alt='Dashboard Icon' className='w-6 h-6' />
+                  {!isCollapsed && <span>Admins</span>}
+                </div>
+              </Link>
+            </li>
           </div>
         </div>
+
+        <div
+          tabIndex={0}
+          className='collapse collapse-arrow border-base-300 bg-base-200 border'
+        >
+          <div className='collapse-title  font-medium  text-center flex items-center justify-start gap-3 text-xs'>
+            <img src={Building} alt='Manage Users Icon' className='w-6 h-6' />
+            Services
+          </div>
+          <div className='collapse-content'>
+            <li>
+              <Link to='/admin/active-users'>
+                <div className='flex items-center gap-5 justify-start px-0 md:py-2'>
+                  <img
+                    src={Book}
+                    alt='Inactive Users Icon'
+                    className='w-6 h-6'
+                  />
+                  {!isCollapsed && <span>Library</span>}
+                </div>
+              </Link>
+            </li>
+            <li>
+              <Link to='/admin/inactive-users'>
+                <div className='flex items-center gap-5 justify-start px-0 md:py-2'>
+                  <img
+                    src={Principal}
+                    alt='Inactive Users Icon'
+                    className='w-6 h-6'
+                  />
+                  {!isCollapsed && <span>Office of the School Principal</span>}
+                </div>
+              </Link>
+            </li>
+            <li>
+              <Link to='/admin/inactive-users'>
+                <div className='flex items-center gap-5 justify-start px-0 md:py-2'>
+                  <img
+                    src={Blogger}
+                    alt='Inactive Users Icon'
+                    className='w-6 h-6'
+                  />
+                  {!isCollapsed && (
+                    <span>Office of the School Administrator</span>
+                  )}
+                </div>
+              </Link>
+            </li>
+            <li>
+              <Link to='/admin/inactive-users'>
+                <div className='flex items-center gap-5 justify-start px-0 md:py-2'>
+                  <img
+                    src={People}
+                    alt='Inactive Users Icon'
+                    className='w-6 h-6'
+                  />
+                  {!isCollapsed && <span>Office of the School Registrar</span>}
+                </div>
+              </Link>
+            </li>
+          </div>
+        </div>
+
+        <li>
+          <Link to='/admin/dashboard'>
+            <div className='flex items-center gap-5 justify-start px-0 md:py-2'>
+              <img src={Query} alt='Dashboard Icon' className='w-6 h-6' />
+              {!isCollapsed && <span>Students Query</span>}
+            </div>
+          </Link>
+        </li>
 
         <li>
           <Link to='/admin/settings'>
