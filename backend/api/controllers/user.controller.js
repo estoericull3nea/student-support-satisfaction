@@ -76,7 +76,7 @@ export const getUserById = async (req, res) => {
 // ================================== Update User ==================================
 export const updateUserById = async (req, res) => {
   const { id } = req.params
-  const { firstName, lastName } = req.body
+  const { firstName, lastName, password, active, isVerified } = req.body
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(404).json({ message: 'Invalid ID' })
@@ -89,13 +89,12 @@ export const updateUserById = async (req, res) => {
       return res.status(404).json({ message: 'User not found' })
     }
 
-    if (firstName) {
-      user.firstName = firstName
-    }
-
-    if (lastName) {
-      user.lastName = lastName
-    }
+    // Update fields
+    if (firstName) user.firstName = firstName
+    if (lastName) user.lastName = lastName
+    if (password) user.password = await bcrypt.hash(password, 10)
+    if (active !== undefined) user.active = active
+    if (isVerified !== undefined) user.isVerified = isVerified
 
     const updatedUser = await user.save()
 
