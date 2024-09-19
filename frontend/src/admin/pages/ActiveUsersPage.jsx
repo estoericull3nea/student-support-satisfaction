@@ -26,7 +26,57 @@ const ActiveUsersPage = () => {
     isVerified: false,
   })
 
+  const [isAddUserDialogVisible, setIsAddUserDialogVisible] = useState(false)
+  const [newUserDetails, setNewUserDetails] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    active: false,
+    isVerified: false,
+  })
+
   const errorShownRef = useRef(false)
+
+  // Function to open "Add User" dialog
+  const openAddUserDialog = () => {
+    setIsAddUserDialogVisible(true)
+  }
+
+  // Function to handle adding a user
+  const handleAddUser = async () => {
+    if (
+      !newUserDetails.firstName ||
+      !newUserDetails.lastName ||
+      !newUserDetails.email ||
+      !newUserDetails.password
+    ) {
+      toast.error('All fields are required')
+      return
+    }
+
+    try {
+      const response = await axios.post(
+        'http://localhost:5000/api/users/add-user',
+        newUserDetails
+      )
+      const addedUser = response.data.newUser
+      setInactiveUsers((prevUsers) => [...prevUsers, addedUser])
+      toast.success('User added successfully')
+      setIsAddUserDialogVisible(false)
+      setNewUserDetails({
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: '',
+        active: false,
+        isVerified: false,
+      })
+    } catch (error) {
+      console.error('Error adding user:', error)
+      toast.error('Failed to add user')
+    }
+  }
 
   const fetchActiveUsers = async () => {
     try {
@@ -159,17 +209,26 @@ const ActiveUsersPage = () => {
           <li>
             <Link to='/admin'>Admin</Link>
           </li>
-          <li>Active Users</li>
+          <li>Active Student</li>
         </ul>
       </div>
 
+      {/* Add User Button */}
+      <div className='text-end'>
+        <Button
+          label='Add Student'
+          icon='pi pi-plus'
+          className='p-button-success my-3 border text-sm p-2 rounded'
+          onClick={openAddUserDialog}
+        />
+      </div>
+
       <div className='p-inputgroup my-3'>
-        <span className='p-inputgroup-addon'>Search</span>
         <InputText
           value={globalFilter}
           onChange={onGlobalFilterChange}
-          placeholder='Search...'
-          className='text-xs'
+          placeholder='Search anything on the users...'
+          className='text-xs border p-3'
         />
       </div>
 
@@ -253,6 +312,142 @@ const ActiveUsersPage = () => {
             </p>
           </div>
         )}
+      </Dialog>
+
+      {/* Add User Dialog */}
+      <Dialog
+        header='Add New User'
+        visible={isAddUserDialogVisible}
+        style={{ width: '400px' }}
+        modal
+        onHide={() => setIsAddUserDialogVisible(false)}
+      >
+        <div className='p-fluid'>
+          {/* First Name */}
+          <div className='p-field'>
+            <div className='label'>
+              <label htmlFor='firstName'>First Name</label>
+            </div>
+            <InputText
+              id='firstName'
+              value={newUserDetails.firstName}
+              className='input input-bordered w-full input-sm'
+              placeholder='Type here'
+              onChange={(e) =>
+                setNewUserDetails({
+                  ...newUserDetails,
+                  firstName: e.target.value,
+                })
+              }
+              required
+            />
+          </div>
+
+          {/* Last Name */}
+          <div className='p-field'>
+            <div className='label'>
+              <label htmlFor='lastName'>Last Name</label>
+            </div>
+            <InputText
+              id='lastName'
+              value={newUserDetails.lastName}
+              className='input input-bordered w-full input-sm'
+              placeholder='Type here'
+              onChange={(e) =>
+                setNewUserDetails({
+                  ...newUserDetails,
+                  lastName: e.target.value,
+                })
+              }
+              required
+            />
+          </div>
+
+          {/* Email */}
+          <div className='p-field'>
+            <div className='label'>
+              <label htmlFor='email'>Email</label>
+            </div>
+            <InputText
+              id='email'
+              type='email'
+              value={newUserDetails.email}
+              className='input input-bordered w-full input-sm'
+              placeholder='Type here'
+              onChange={(e) =>
+                setNewUserDetails({ ...newUserDetails, email: e.target.value })
+              }
+              required
+            />
+          </div>
+
+          {/* Password */}
+          <div className='p-field'>
+            <div className='label'>
+              <label htmlFor='password'>Password</label>
+            </div>
+
+            <InputText
+              id='password'
+              type='password'
+              className='input input-bordered w-full input-sm'
+              placeholder='Type here'
+              value={newUserDetails.password}
+              onChange={(e) =>
+                setNewUserDetails({
+                  ...newUserDetails,
+                  password: e.target.value,
+                })
+              }
+              required
+            />
+          </div>
+
+          {/* Active Checkbox */}
+          <div className='p-field-checkbox flex items-center'>
+            <div className='label'>
+              <label htmlFor='active'>Active</label>
+            </div>
+            <input
+              type='checkbox'
+              id='active'
+              checked={newUserDetails.active}
+              onChange={(e) =>
+                setNewUserDetails({
+                  ...newUserDetails,
+                  active: e.target.checked,
+                })
+              }
+            />
+          </div>
+
+          {/* Verified Checkbox */}
+          <div className='p-field-checkbox flex items-center'>
+            <div className='label'>
+              <label htmlFor='isVerified'>Verified</label>
+            </div>
+            <input
+              type='checkbox'
+              id='isVerified'
+              checked={newUserDetails.isVerified}
+              onChange={(e) =>
+                setNewUserDetails({
+                  ...newUserDetails,
+                  isVerified: e.target.checked,
+                })
+              }
+            />
+          </div>
+
+          {/* Submit Button */}
+          <div className='p-field'>
+            <Button
+              label='Add Student'
+              onClick={handleAddUser}
+              className='border mt-3 py-2 bg-primary hover:bg-primary-hover text-white rounded'
+            />
+          </div>
+        </div>
       </Dialog>
 
       {/* Update User Dialog */}

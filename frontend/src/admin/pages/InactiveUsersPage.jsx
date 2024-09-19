@@ -80,7 +80,7 @@ const InactiveUsersTable = () => {
         <Button
           label='View'
           icon='pi pi-eye'
-          className='p-button-info'
+          className='p-button-info border p-2 text-[.7rem] rounded'
           onClick={() => viewUserDetails(rowData)}
           style={{ marginRight: '.5em' }}
         />
@@ -89,7 +89,7 @@ const InactiveUsersTable = () => {
           <Button
             label='Make Active'
             icon='pi pi-check'
-            className='p-button-success'
+            className='p-button-success border p-2 text-[.7rem] rounded'
             onClick={() => makeUserActive(rowData._id)}
           />
         )}
@@ -107,17 +107,16 @@ const InactiveUsersTable = () => {
           <li>
             <Link to='/admin'>Admin</Link>
           </li>
-          <li>Inactive Users</li>
+          <li>Inactive Students</li>
         </ul>
       </div>
 
       <div className='p-inputgroup my-3'>
-        <span className='p-inputgroup-addon'>Search</span>
         <InputText
           value={globalFilter}
           onChange={onGlobalFilterChange}
-          placeholder='Search...'
-          className='text-xs'
+          placeholder='Search anything on the users...'
+          className='text-xs p-3 border'
         />
       </div>
 

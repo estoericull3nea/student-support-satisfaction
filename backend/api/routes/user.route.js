@@ -1,5 +1,6 @@
 import express from 'express'
 import {
+  addUserFromAdmin,
   deleteAllUsers,
   deleteUserById,
   getAllActiveUser,
@@ -81,6 +82,7 @@ router.put(
 )
 router.get('/not-active-users', getAllInactiveUser)
 router.get('/active-users', getAllActiveUser)
+router.get('/add-user', addUserFromAdmin)
 router.patch('/:id/activate', makeUserActive)
 router.patch('/:id/inactive', makeUserInactive)
 router.get('/', getAllUsers)
