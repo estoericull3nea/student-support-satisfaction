@@ -15,7 +15,7 @@ import 'primereact/resources/primereact.min.css'
 import 'primeicons/primeicons.css'
 import { formatTime } from '../../utils'
 
-const StudentsQueryPage = () => {
+const NonStudentsQueryPage = () => {
   const [studentsQuery, setStudentsQuery] = useState([])
   const [globalFilter, setGlobalFilter] = useState('')
   const [selectedUser, setSelectedUser] = useState(null)
@@ -26,7 +26,7 @@ const StudentsQueryPage = () => {
   const fetchStudentsQueries = async () => {
     try {
       const response = await axios.get(
-        'http://localhost:5000/api/contacts/users'
+        'http://localhost:5000/api/contacts/guest'
       )
       setStudentsQuery(response.data)
     } catch (error) {
@@ -193,37 +193,6 @@ const StudentsQueryPage = () => {
               <strong>Date Message:</strong>{' '}
               {formatTime(selectedUser.createdAt)}
             </p>
-            <br />
-            <h1 className='font-medium'>Student Details</h1>
-            <hr className='mt-1' />
-            <p>
-              <strong>Student ID:</strong> {selectedUser.userId._id}
-            </p>
-            <p>
-              <strong>First Name:</strong> {selectedUser.firstName}
-            </p>
-            <p>
-              <strong>Last Name:</strong> {selectedUser.lastName}
-            </p>
-            <p>
-              <strong>Email:</strong> {selectedUser.email}
-            </p>
-            <p>
-              <strong>Active:</strong>{' '}
-              {selectedUser.userId.active ? 'Active' : 'Not Active'}
-            </p>
-            <p>
-              <strong>Verified:</strong>{' '}
-              {selectedUser.userId.isVerified ? 'Verified' : 'Not Verified'}
-            </p>
-            <p>
-              <strong>Registered At:</strong>{' '}
-              {new Date(selectedUser.userId.createdAt).toLocaleString()}
-            </p>
-            <p>
-              <strong>Updated At:</strong>{' '}
-              {new Date(selectedUser.userId.updatedAt).toLocaleString()}
-            </p>
           </div>
         )}
       </Dialog>
@@ -231,4 +200,4 @@ const StudentsQueryPage = () => {
   )
 }
 
-export default StudentsQueryPage
+export default NonStudentsQueryPage

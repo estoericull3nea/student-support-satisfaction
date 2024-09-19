@@ -115,7 +115,7 @@ const InactiveUsersTable = () => {
         <InputText
           value={globalFilter}
           onChange={onGlobalFilterChange}
-          placeholder='Search anything on the students...'
+          placeholder='Search anything...'
           className='text-xs p-3 border'
         />
       </div>

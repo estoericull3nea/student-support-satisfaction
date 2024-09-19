@@ -6,6 +6,7 @@ import ActiveUsersPage from './pages/ActiveUsersPage'
 import SettingsPage from './pages/SettingsPage'
 import InactiveUsersPage from './pages/InactiveUsersPage'
 import StudentsQueryPage from './pages/StudentsQueryPage'
+import NonStudentsQueryPage from './pages/NonStudentsQueryPage'
 
 const AdminApp = () => {
   const [isSidebarCollapsed, setSidebarCollapsed] = useState(false)
@@ -37,6 +38,10 @@ const AdminApp = () => {
           <Route path='/' element={<DashboardPage />} />
           <Route path='/dashboard' element={<DashboardPage />} />
           <Route path='/student-queries' element={<StudentsQueryPage />} />
+          <Route
+            path='/non-student-quries'
+            element={<NonStudentsQueryPage />}
+          />
           <Route path='/active-users' element={<ActiveUsersPage />} />
           <Route path='/settings' element={<SettingsPage />} />
           <Route path='/inactive-users' element={<InactiveUsersPage />} />

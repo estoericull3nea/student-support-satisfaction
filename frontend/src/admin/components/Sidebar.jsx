@@ -169,7 +169,7 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
               </Link>
             </li>
             <li>
-              <Link to='/admin/inactive-users'>
+              <Link to='/admin/non-student-quries'>
                 <div className='flex items-center gap-5 justify-start px-0 md:py-2'>
                   <img
                     src={NotStudent}
