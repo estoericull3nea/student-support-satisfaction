@@ -13,6 +13,8 @@ import Blogger from '../../assets/images/icons/blogger.png'
 import People from '../../assets/images/icons/people.png'
 import Query from '../../assets/images/icons/query.png'
 import User from '../../assets/images/icons/user.png'
+import NotStudent from '../../assets/images/icons/not-student.png'
+import Students from '../../assets/images/icons/students.png'
 import App from '../../assets/images/icons/app.png'
 
 const Sidebar = ({ isCollapsed, toggleSidebar }) => {
@@ -145,14 +147,41 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
           </div>
         </div>
 
-        <li>
-          <Link to='/admin/dashboard'>
-            <div className='flex items-center gap-5 justify-start px-0 md:py-2'>
-              <img src={Query} alt='Dashboard Icon' className='w-6 h-6' />
-              {!isCollapsed && <span>Students Query</span>}
-            </div>
-          </Link>
-        </li>
+        <div
+          tabIndex={0}
+          className='collapse collapse-arrow border-base-300 bg-base-200 border'
+        >
+          <div className='collapse-title  font-medium  text-center flex items-center justify-start gap-3 text-xs'>
+            <img src={Query} alt='Manage Users Icon' className='w-6 h-6' />
+            Queries
+          </div>
+          <div className='collapse-content'>
+            <li>
+              <Link to='/admin/student-queries'>
+                <div className='flex items-center gap-5 justify-start px-0 md:py-2'>
+                  <img
+                    src={Students}
+                    alt='Inactive Users Icon'
+                    className='w-6 h-6'
+                  />
+                  {!isCollapsed && <span>Student Queries</span>}
+                </div>
+              </Link>
+            </li>
+            <li>
+              <Link to='/admin/inactive-users'>
+                <div className='flex items-center gap-5 justify-start px-0 md:py-2'>
+                  <img
+                    src={NotStudent}
+                    alt='Inactive Users Icon'
+                    className='w-6 h-6'
+                  />
+                  {!isCollapsed && <span>Non-Student Queries</span>}
+                </div>
+              </Link>
+            </li>
+          </div>
+        </div>
 
         <li>
           <Link to='/admin/settings'>
