@@ -26,7 +26,6 @@ export const getAllContacts = async (req, res) => {
   try {
     const contacts = await Contact.find().populate('userId')
 
-    // Check if no users were found
     if (!contacts.length) {
       return res.status(404).json({ message: 'No contacts Found' })
     }

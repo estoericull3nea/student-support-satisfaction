@@ -6,35 +6,36 @@ import { InputText } from 'primereact/inputtext'
 import { Button } from 'primereact/button'
 import { Dialog } from 'primereact/dialog'
 import { toast } from 'react-hot-toast'
+import { Calendar } from 'primereact/calendar'
 
 import { Link } from 'react-router-dom'
 
 import 'primereact/resources/themes/saga-blue/theme.css'
 import 'primereact/resources/primereact.min.css'
 import 'primeicons/primeicons.css'
+import { formatTime } from '../../utils'
 
 const StudentsQueryPage = () => {
-  const [inactiveUsers, setInactiveUsers] = useState([])
+  const [studentsQuery, setStudentsQuery] = useState([])
   const [globalFilter, setGlobalFilter] = useState('')
   const [selectedUser, setSelectedUser] = useState(null)
   const [isDialogVisible, setIsDialogVisible] = useState(false)
 
   const errorShownRef = useRef(false)
 
-  const fetchInactiveUsers = async () => {
+  const fetchStudentsQueries = async () => {
     try {
       const response = await axios.get(
-        'http://localhost:5000/api/users/not-active-users'
+        'http://localhost:5000/api/contacts/users'
       )
-      setInactiveUsers(response.data)
-      errorShownRef.current = false
+      setStudentsQuery(response.data)
     } catch (error) {
       if (error.response && error.response.status === 404) {
         if (!errorShownRef.current) {
           toast.error('No inactive users found.')
           errorShownRef.current = true
         }
-        setInactiveUsers([])
+        setStudentsQuery([])
       } else {
         toast.error(error.response?.data?.message || 'An error occurred')
       }
@@ -42,31 +43,11 @@ const StudentsQueryPage = () => {
   }
 
   useEffect(() => {
-    fetchInactiveUsers()
+    fetchStudentsQueries()
   }, [])
 
   const onGlobalFilterChange = (e) => {
     setGlobalFilter(e.target.value)
-  }
-
-  const makeUserActive = async (id) => {
-    try {
-      const response = await axios.patch(
-        `http://localhost:5000/api/users/${id}/activate`
-      )
-      const updatedUser = response.data.data
-
-      setInactiveUsers((prevUsers) =>
-        prevUsers.map((user) =>
-          user._id === updatedUser._id ? updatedUser : user
-        )
-      )
-
-      toast.success('Updated')
-      fetchInactiveUsers()
-    } catch (error) {
-      console.error('Error making user active:', error)
-    }
   }
 
   const viewUserDetails = (rowData) => {
@@ -84,16 +65,37 @@ const StudentsQueryPage = () => {
           onClick={() => viewUserDetails(rowData)}
           style={{ marginRight: '.5em' }}
         />
-
-        {!rowData.active && (
-          <Button
-            label='Make Active'
-            icon='pi pi-check'
-            className='p-button-success border p-2 text-[.7rem] rounded'
-            onClick={() => makeUserActive(rowData._id)}
-          />
-        )}
       </div>
+    )
+  }
+
+  const dateBodyTemplate = (rowData) => {
+    return formatTime(rowData.createdAt)
+  }
+
+  const dateFilterTemplate = (options) => {
+    return (
+      <Calendar
+        value={options.value}
+        onChange={(e) => options.filterCallback(e.value)}
+        dateFormat='yy-mm-dd' // Ensures user picks only the date, not time
+        placeholder='Filter by Date Commented'
+        className='text-xs p-2'
+      />
+    )
+  }
+
+  const filterDate = (value, filter) => {
+    if (!filter) return true // No filter applied, show all records
+
+    const filterDate = new Date(filter) // Date from the Calendar (user selection)
+    const valueDate = new Date(value) // Date from the record (createdAt)
+
+    // Strip out the time and compare only the date portion in UTC
+    return (
+      valueDate.getUTCFullYear() === filterDate.getUTCFullYear() &&
+      valueDate.getUTCMonth() === filterDate.getUTCMonth() &&
+      valueDate.getUTCDate() === filterDate.getUTCDate()
     )
   }
 
@@ -107,7 +109,7 @@ const StudentsQueryPage = () => {
           <li>
             <Link to='/admin'>Admin</Link>
           </li>
-          <li>Inactive Students</li>
+          <li>Students Queries</li>
         </ul>
       </div>
 
@@ -115,13 +117,13 @@ const StudentsQueryPage = () => {
         <InputText
           value={globalFilter}
           onChange={onGlobalFilterChange}
-          placeholder='Search anything on the users...'
+          placeholder='Search anything on the students queries...'
           className='text-xs p-3 border'
         />
       </div>
 
       <DataTable
-        value={inactiveUsers}
+        value={studentsQuery}
         paginator
         rows={10}
         globalFilter={globalFilter}
@@ -149,18 +151,29 @@ const StudentsQueryPage = () => {
           filterPlaceholder='Filter by Email'
         />
         <Column
-          field='isVerified'
-          header='Is Verified'
+          field='message'
+          header='Message'
           sortable
           filter
-          filterPlaceholder='Filter by Status'
+          filterPlaceholder='Filter by Comment'
+        />
+        <Column
+          field='createdAt'
+          header='Date Message'
+          sortable
+          filter
+          filterMatchMode='custom'
+          filterFunction={filterDate}
+          filterElement={dateFilterTemplate}
+          body={dateBodyTemplate} // Display formatted date
+          filterPlaceholder='Filter by Date Commented'
         />
 
         <Column header='Actions' body={actionBodyTemplate} />
       </DataTable>
 
       <Dialog
-        header='User Details'
+        header='Query Details'
         visible={isDialogVisible}
         style={{ width: '400px' }}
         modal
@@ -168,8 +181,23 @@ const StudentsQueryPage = () => {
       >
         {selectedUser && (
           <div>
+            <h1 className='font-medium'>Message Details</h1>
+            <hr className='mt-1' />
             <p>
-              <strong>ID:</strong> {selectedUser._id}
+              <strong>Message ID:</strong> {selectedUser._id}
+            </p>
+            <p>
+              <strong>Message:</strong> {selectedUser.message}
+            </p>
+            <p>
+              <strong>Date Message:</strong>{' '}
+              {formatTime(selectedUser.createdAt)}
+            </p>
+            <br />
+            <h1 className='font-medium'>Student Details</h1>
+            <hr className='mt-1' />
+            <p>
+              <strong>Student ID:</strong> {selectedUser.userId._id}
             </p>
             <p>
               <strong>First Name:</strong> {selectedUser.firstName}
@@ -181,23 +209,20 @@ const StudentsQueryPage = () => {
               <strong>Email:</strong> {selectedUser.email}
             </p>
             <p>
-              <strong>Role:</strong> {selectedUser.role}
-            </p>
-            <p>
               <strong>Active:</strong>{' '}
-              {selectedUser.active ? 'Active' : 'Not Active'}
+              {selectedUser.userId.active ? 'Active' : 'Not Active'}
             </p>
             <p>
               <strong>Verified:</strong>{' '}
-              {selectedUser.isVerified ? 'Verified' : 'Not Verified'}
+              {selectedUser.userId.isVerified ? 'Verified' : 'Not Verified'}
             </p>
             <p>
               <strong>Registered At:</strong>{' '}
-              {new Date(selectedUser.createdAt).toLocaleString()}
+              {new Date(selectedUser.userId.createdAt).toLocaleString()}
             </p>
             <p>
               <strong>Updated At:</strong>{' '}
-              {new Date(selectedUser.updatedAt).toLocaleString()}
+              {new Date(selectedUser.userId.updatedAt).toLocaleString()}
             </p>
           </div>
         )}

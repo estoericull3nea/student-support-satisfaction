@@ -227,7 +227,7 @@ const ActiveUsersPage = () => {
         <InputText
           value={globalFilter}
           onChange={onGlobalFilterChange}
-          placeholder='Search anything on the users...'
+          placeholder='Search anything on the students...'
           className='text-xs border p-3'
         />
       </div>
