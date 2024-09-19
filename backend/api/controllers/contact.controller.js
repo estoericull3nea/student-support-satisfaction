@@ -2,16 +2,13 @@ import Contact from '../models/contact.model.js'
 
 export const createContact = async (req, res) => {
   const { firstName, lastName, email, message, userId } = req.body
-
   try {
-    // const userId = req.user ? req.user.id : null
-
     const newContact = new Contact({
       firstName,
       lastName,
       email,
       message,
-      userId,
+      owner: userId,
     })
 
     await newContact.save()
@@ -24,7 +21,7 @@ export const createContact = async (req, res) => {
 
 export const getAllContacts = async (req, res) => {
   try {
-    const contacts = await Contact.find().populate('userId')
+    const contacts = await Contact.find().populate('owner')
 
     if (!contacts.length) {
       return res.status(404).json({ message: 'No contacts Found' })
@@ -38,7 +35,7 @@ export const getAllContacts = async (req, res) => {
 
 export const getAllContactsWithNoUser = async (_, res) => {
   try {
-    const contacts = await Contact.find({ userId: null }, '-userId')
+    const contacts = await Contact.find({ owner: null }, '-owner')
 
     res.status(200).json(contacts)
   } catch (error) {
@@ -50,8 +47,8 @@ export const getAllContactsWithNoUser = async (_, res) => {
 
 export const getAllContactsWithUser = async (_, res) => {
   try {
-    const contacts = await Contact.find({ userId: { $ne: null } }).populate(
-      'userId'
+    const contacts = await Contact.find({ owner: { $ne: null } }).populate(
+      'owner'
     )
 
     res.status(200).json(contacts)
@@ -103,7 +100,7 @@ export const clearAllContacts = async (_, res) => {
 
 export const clearContactsWithoutUser = async (_, res) => {
   try {
-    await Contact.deleteMany({ userId: null })
+    await Contact.deleteMany({ owner: null })
 
     res.status(200).json({
       message: 'All contacts without a user have been cleared successfully',
@@ -117,7 +114,9 @@ export const clearContactsWithoutUser = async (_, res) => {
 
 export const clearContactsWithUser = async (_, res) => {
   try {
-    await Contact.deleteMany({ userId: { $ne: null } })
+    await Contact.deleteMany({
+      owner: { $exists: true, $ne: null },
+    })
 
     res.status(200).json({
       message: 'All contacts with a user have been cleared successfully',

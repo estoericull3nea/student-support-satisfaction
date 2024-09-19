@@ -18,13 +18,13 @@ router.post('/', createContact)
 router.get('/', getAllContacts)
 router.delete('/', clearAllContacts)
 router.delete('/:contactId', deleteSingleContact)
+router.delete('/users/clear', clearContactsWithUser)
 
 router.get('/guest', getAllContactsWithNoUser)
-router.delete('/guest', clearContactsWithoutUser)
+router.delete('/guest/clear', clearContactsWithoutUser)
 router.get('/guest/:contactId', getContactById)
 
 router.get('/users', getAllContactsWithUser)
-router.delete('/users', clearContactsWithUser)
 router.get('/users/:userId', getContactsByUserId)
 
 export default router

@@ -20,6 +20,7 @@ const StudentsQueryPage = () => {
   const [globalFilter, setGlobalFilter] = useState('')
   const [selectedUser, setSelectedUser] = useState(null)
   const [isDialogVisible, setIsDialogVisible] = useState(false)
+  const [showConfirm, setShowConfirm] = useState(false)
 
   const errorShownRef = useRef(false)
 
@@ -65,6 +66,13 @@ const StudentsQueryPage = () => {
           onClick={() => viewUserDetails(rowData)}
           style={{ marginRight: '.5em' }}
         />
+
+        <Button
+          label='Delete'
+          icon='pi pi-trash'
+          className='p-button-danger border p-2 text-[.7rem] rounded'
+          onClick={() => deleteContact(rowData._id)}
+        />
       </div>
     )
   }
@@ -78,7 +86,7 @@ const StudentsQueryPage = () => {
       <Calendar
         value={options.value}
         onChange={(e) => options.filterCallback(e.value)}
-        dateFormat='yy-mm-dd' // Ensures user picks only the date, not time
+        dateFormat='yy-mm-dd'
         placeholder='Filter by Date Commented'
         className='text-xs p-2'
       />
@@ -86,17 +94,46 @@ const StudentsQueryPage = () => {
   }
 
   const filterDate = (value, filter) => {
-    if (!filter) return true // No filter applied, show all records
+    if (!filter) return true
 
-    const filterDate = new Date(filter) // Date from the Calendar (user selection)
-    const valueDate = new Date(value) // Date from the record (createdAt)
+    const filterDate = new Date(filter)
+    const valueDate = new Date(value)
 
-    // Strip out the time and compare only the date portion in UTC
     return (
       valueDate.getUTCFullYear() === filterDate.getUTCFullYear() &&
       valueDate.getUTCMonth() === filterDate.getUTCMonth() &&
       valueDate.getUTCDate() === filterDate.getUTCDate()
     )
+  }
+
+  const deleteContact = async (contactId) => {
+    try {
+      await axios.delete(`http://localhost:5000/api/contacts/${contactId}`)
+      toast.success('Contact deleted successfully')
+      fetchStudentsQueries()
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Error deleting contact')
+    }
+  }
+
+  // Clear all contacts function
+  const clearAllContacts = async () => {
+    try {
+      await axios.delete('http://localhost:5000/api/contacts/users/clear')
+      toast.success('All contacts cleared successfully')
+      fetchStudentsQueries()
+      setShowConfirm(false)
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Error clearing contacts')
+    }
+  }
+
+  const handleConfirmClear = () => {
+    setShowConfirm(true)
+  }
+
+  const hideModal = () => {
+    setShowConfirm(false)
   }
 
   return (
@@ -112,6 +149,41 @@ const StudentsQueryPage = () => {
           <li>Students Queries</li>
         </ul>
       </div>
+
+      <div className='text-end'>
+        <Button
+          label='Clear All Students Messages'
+          icon='pi pi-trash'
+          className='p-button-danger my-3 border text-sm p-2 rounded'
+          onClick={handleConfirmClear}
+        />
+      </div>
+
+      {/* Modal Confirmation */}
+      <Dialog
+        header='Confirm Clear'
+        visible={showConfirm}
+        style={{ width: '350px' }}
+        footer={
+          <div className='space-x-2'>
+            <Button
+              label='No'
+              icon='pi pi-times'
+              className='p-button-text border p-2 text-[.7rem] rounded'
+              onClick={hideModal}
+            />
+            <Button
+              label='Yes'
+              icon='pi pi-check'
+              className='p-button-danger border p-2 text-[.7rem] rounded'
+              onClick={clearAllContacts}
+            />
+          </div>
+        }
+        onHide={hideModal}
+      >
+        <p>Are you sure you want to clear all students' messages?</p>
+      </Dialog>
 
       <div className='p-inputgroup my-3'>
         <InputText
@@ -165,7 +237,7 @@ const StudentsQueryPage = () => {
           filterMatchMode='custom'
           filterFunction={filterDate}
           filterElement={dateFilterTemplate}
-          body={dateBodyTemplate} // Display formatted date
+          body={dateBodyTemplate}
           filterPlaceholder='Filter by Date Commented'
         />
 
@@ -197,7 +269,7 @@ const StudentsQueryPage = () => {
             <h1 className='font-medium'>Student Details</h1>
             <hr className='mt-1' />
             <p>
-              <strong>Student ID:</strong> {selectedUser.userId._id}
+              <strong>Student ID:</strong> {selectedUser.owner._id}
             </p>
             <p>
               <strong>First Name:</strong> {selectedUser.firstName}
@@ -210,19 +282,19 @@ const StudentsQueryPage = () => {
             </p>
             <p>
               <strong>Active:</strong>{' '}
-              {selectedUser.userId.active ? 'Active' : 'Not Active'}
+              {selectedUser.owner.active ? 'Active' : 'Not Active'}
             </p>
             <p>
               <strong>Verified:</strong>{' '}
-              {selectedUser.userId.isVerified ? 'Verified' : 'Not Verified'}
+              {selectedUser.owner.isVerified ? 'Verified' : 'Not Verified'}
             </p>
             <p>
               <strong>Registered At:</strong>{' '}
-              {new Date(selectedUser.userId.createdAt).toLocaleString()}
+              {new Date(selectedUser.owner.createdAt).toLocaleString()}
             </p>
             <p>
               <strong>Updated At:</strong>{' '}
-              {new Date(selectedUser.userId.updatedAt).toLocaleString()}
+              {new Date(selectedUser.owner.updatedAt).toLocaleString()}
             </p>
           </div>
         )}

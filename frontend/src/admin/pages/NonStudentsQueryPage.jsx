@@ -21,6 +21,8 @@ const NonStudentsQueryPage = () => {
   const [selectedUser, setSelectedUser] = useState(null)
   const [isDialogVisible, setIsDialogVisible] = useState(false)
 
+  const [showConfirm, setShowConfirm] = useState(false)
+
   const errorShownRef = useRef(false)
 
   const fetchStudentsQueries = async () => {
@@ -29,6 +31,7 @@ const NonStudentsQueryPage = () => {
         'http://localhost:5000/api/contacts/guest'
       )
       setStudentsQuery(response.data)
+      console.log(response.data)
     } catch (error) {
       if (error.response && error.response.status === 404) {
         if (!errorShownRef.current) {
@@ -55,6 +58,36 @@ const NonStudentsQueryPage = () => {
     setIsDialogVisible(true)
   }
 
+  // Clear all contacts function
+  const clearAllContacts = async () => {
+    try {
+      await axios.delete('http://localhost:5000/api/contacts/guest/clear')
+      toast.success('All contacts cleared successfully')
+      fetchStudentsQueries()
+      setShowConfirm(false)
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Error clearing contacts')
+    }
+  }
+
+  const handleConfirmClear = () => {
+    setShowConfirm(true)
+  }
+
+  const hideModal = () => {
+    setShowConfirm(false)
+  }
+
+  const deleteContact = async (contactId) => {
+    try {
+      await axios.delete(`http://localhost:5000/api/contacts/${contactId}`)
+      toast.success('Contact deleted successfully')
+      fetchStudentsQueries()
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Error deleting contact')
+    }
+  }
+
   const actionBodyTemplate = (rowData) => {
     return (
       <div>
@@ -64,6 +97,13 @@ const NonStudentsQueryPage = () => {
           className='p-button-info border p-2 text-[.7rem] rounded'
           onClick={() => viewUserDetails(rowData)}
           style={{ marginRight: '.5em' }}
+        />
+
+        <Button
+          label='Delete'
+          icon='pi pi-trash'
+          className='p-button-danger border p-2 text-[.7rem] rounded'
+          onClick={() => deleteContact(rowData._id)}
         />
       </div>
     )
@@ -109,9 +149,44 @@ const NonStudentsQueryPage = () => {
           <li>
             <Link to='/admin'>Admin</Link>
           </li>
-          <li>Students Queries</li>
+          <li>Non-Students Queries</li>
         </ul>
       </div>
+
+      <div className='text-end'>
+        <Button
+          label='Clear All Non-Students Messages'
+          icon='pi pi-trash'
+          className='p-button-danger my-3 border text-sm p-2 rounded'
+          onClick={handleConfirmClear}
+        />
+      </div>
+
+      {/* Modal Confirmation */}
+      <Dialog
+        header='Confirm Clear'
+        visible={showConfirm}
+        style={{ width: '350px' }}
+        footer={
+          <div className='space-x-2'>
+            <Button
+              label='No'
+              icon='pi pi-times'
+              className='p-button-text border p-2 text-[.7rem] rounded'
+              onClick={hideModal}
+            />
+            <Button
+              label='Yes'
+              icon='pi pi-check'
+              className='p-button-danger border p-2 text-[.7rem] rounded'
+              onClick={clearAllContacts}
+            />
+          </div>
+        }
+        onHide={hideModal}
+      >
+        <p>Are you sure you want to clear all non-students' messages?</p>
+      </Dialog>
 
       <div className='p-inputgroup my-3'>
         <InputText
