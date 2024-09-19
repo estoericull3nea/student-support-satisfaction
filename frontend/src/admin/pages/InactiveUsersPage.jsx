@@ -19,7 +19,6 @@ const InactiveUsersTable = () => {
   const [selectedUser, setSelectedUser] = useState(null)
   const [isDialogVisible, setIsDialogVisible] = useState(false)
 
-  // useRef to track if the 404 error has been shown
   const errorShownRef = useRef(false)
 
   const fetchInactiveUsers = async () => {
@@ -28,16 +27,14 @@ const InactiveUsersTable = () => {
         'http://localhost:5000/api/users/not-active-users'
       )
       setInactiveUsers(response.data)
-      // Reset the errorShownRef if data is successfully fetched
       errorShownRef.current = false
     } catch (error) {
       if (error.response && error.response.status === 404) {
-        // Only show the error toast if it hasn't been shown before
         if (!errorShownRef.current) {
           toast.error('No inactive users found.')
-          errorShownRef.current = true // Mark that the error has been shown
+          errorShownRef.current = true
         }
-        setInactiveUsers([]) // Clear the table
+        setInactiveUsers([])
       } else {
         toast.error(error.response?.data?.message || 'An error occurred')
       }
@@ -120,6 +117,7 @@ const InactiveUsersTable = () => {
           value={globalFilter}
           onChange={onGlobalFilterChange}
           placeholder='Search...'
+          className='text-xs'
         />
       </div>
 
@@ -128,6 +126,7 @@ const InactiveUsersTable = () => {
         paginator
         rows={10}
         globalFilter={globalFilter}
+        className='text-xs'
       >
         <Column
           field='firstName'

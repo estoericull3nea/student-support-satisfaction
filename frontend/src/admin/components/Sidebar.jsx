@@ -22,7 +22,7 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
         </button>
       </div>
 
-      <ul className='menu p-4'>
+      <ul className='menu p-4 text-xs'>
         <li>
           <Link to='/admin/dashboard'>
             <div className='flex items-center gap-5 justify-start px-0 md:py-2'>
@@ -36,7 +36,7 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
           tabIndex={0}
           className='collapse collapse-arrow border-base-300 bg-base-200 border'
         >
-          <div className='collapse-title text-sm font-medium p-0 text-center flex items-center justify-between px-10'>
+          <div className='collapse-title  font-medium  text-center flex items-center justify-start gap-3 text-xs'>
             <img src={Group} alt='Manage Users Icon' className='w-6 h-6' />
             Manage Users
           </div>

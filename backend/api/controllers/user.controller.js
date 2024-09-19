@@ -137,7 +137,6 @@ export const makeUserInactive = async (req, res) => {
     const { id } = req.params
 
     const user = await User.findByIdAndUpdate(id, { active: false })
-    console.log(user)
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' })
@@ -281,25 +280,43 @@ export const getAllInactiveUser = async (req, res) => {
 
 export const makeUserActive = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id } = req.params
 
-    const user = await User.findByIdAndUpdate(id, { active: true }, { new: true });
-    console.log(user);
+    const user = await User.findByIdAndUpdate(
+      id,
+      { active: true },
+      { new: true }
+    )
+    console.log(user)
 
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: 'User not found' })
     }
 
     return res.status(200).json({
       success: true,
       message: 'User has been made active',
       data: user,
-    });
+    })
   } catch (error) {
-    console.error('Error making user active:', error);
+    console.error('Error making user active:', error)
     return res.status(500).json({
       success: false,
       message: 'An error occurred while making the user active',
-    });
+    })
   }
-};
+}
+
+export const getAllActiveUser = async (req, res) => {
+  try {
+    const activeUsers = await User.find({ active: true })
+
+    if (activeUsers.length === 0) {
+      return res.status(404).json({ message: 'No active users found' })
+    }
+
+    res.status(200).json(activeUsers)
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching inactive users', error })
+  }
+}

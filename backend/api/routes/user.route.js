@@ -2,6 +2,7 @@ import express from 'express'
 import {
   deleteAllUsers,
   deleteUserById,
+  getAllActiveUser,
   getAllInactiveUser,
   getAllUsers,
   getUserById,
@@ -79,12 +80,13 @@ router.put(
   }
 )
 router.get('/not-active-users', getAllInactiveUser)
+router.get('/active-users', getAllActiveUser)
 router.patch('/:id/activate', makeUserActive)
+router.patch('/:id/inactive', makeUserInactive)
 router.get('/', getAllUsers)
 router.get('/:id', protect, getUserById)
 router.delete('/', deleteAllUsers)
 router.put('/:id', updateUserById)
-router.patch('/:id/inactive', makeUserInactive)
 router.patch('/:id/status', toggleActive)
 router.delete('/:id', protect, deleteUserById)
 router.get('/search/q', searchAnythingOnUser)
