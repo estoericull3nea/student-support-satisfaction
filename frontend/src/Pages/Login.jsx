@@ -8,6 +8,8 @@ import ucsLoginRegisterCover from '../assets/images/ucsLoginRegisterCover.jpg'
 import ucsLogo from '../assets/images/logo/ucs_logo.png'
 import Breadcrumbs from '../components/Breadcrumbs'
 
+import { jwtDecode } from 'jwt-decode'
+
 const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -25,6 +27,7 @@ const Login = () => {
     e.preventDefault()
     try {
       setIsSubmitting(true)
+
       const response = await axios.post(
         'http://localhost:5000/api/auth/login',
         {
@@ -33,26 +36,30 @@ const Login = () => {
         }
       )
 
-      // Save JWT token in localStorage
-      localStorage.setItem('token', response.data.token)
+      const token = response.data.token
+      localStorage.setItem('token', token)
 
-      // Retrieve the redirect URL from the query parameters
-      const redirectUrl = queryParams.get('redirect') || '/'
+      const decodedToken = jwtDecode(token)
 
-      // Navigate back to the redirect URL (including the #form-section if present)
-      navigate(decodeURIComponent(redirectUrl))
+      if (decodedToken.role === 'admin') {
+        toast.success('Login successful!')
+        navigate('/admin')
+      } else {
+        const queryParams = new URLSearchParams(window.location.search)
+        const redirectUrl = queryParams.get('redirect') || '/'
 
-      toast.success('Login successful!')
+        navigate(decodeURIComponent(redirectUrl))
+        toast.success('Login successful!')
+      }
     } catch (error) {
       if (
         error.response &&
         error.response.data.message ===
           'Please verify your account before logging in.'
       ) {
-        // Show the modal if verification is needed
         setModalVisible(true)
       } else {
-        toast.error(error.response.data.message)
+        toast.error(error.response?.data?.message || 'Login failed')
       }
     } finally {
       setIsSubmitting(false)
@@ -106,7 +113,7 @@ const Login = () => {
                 </span>
               </div>
               <input
-                type='email'
+                type='text'
                 className='input input-bordered input-md w-full '
                 placeholder='Type here...'
                 onChange={(e) => setEmail(e.target.value)}

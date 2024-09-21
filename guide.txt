@@ -1,7 +1,5 @@
 https://github.com/estoericull3nea/student-support-satisfaction.git
 
-bug in admin router, when i put its displaying error
-
 cd frontend && npm run dev
 cd backend && npm run dev
 

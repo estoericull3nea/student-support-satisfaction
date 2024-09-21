@@ -17,6 +17,8 @@ import { Toaster } from 'react-hot-toast'
 import ForgotPassword from './Pages/ForgotPassword'
 import ResetPassword from './Pages/ResetPassword'
 import Profile from './Pages/Profile'
+import Unauthorized from './components/Unauthorized'
+import ProtectedRoute from './components/ProtectedRoute'
 
 // Admin Panel
 import AdminApp from './admin/AdminApp'
@@ -29,13 +31,16 @@ const App = () => {
         reverseOrder={false}
         containerClassName='text-xs'
       />
-      {/* Toaster Component */}
       <Router>
         <Routes>
-          {/* Admin Panel */}
-          <Route path='/admin/*' element={<AdminApp />} />
+          {/* <Route path='/admin/*' element={<AdminApp />} /> */}
 
-          {/* End of Admin Panel */}
+          <Route
+            path='/admin/*'
+            element={
+              <ProtectedRoute allowedRoles={['admin']} element={<AdminApp />} />
+            }
+          />
 
           <Route
             path='/profile'
@@ -45,7 +50,13 @@ const App = () => {
               </Protect>
             }
           />
-          <Route path='/' element={<LandingPage />} />
+
+          <Route
+            path='/'
+            element={<ProtectedRoute element={<LandingPage />} />}
+          />
+
+          {/* <Route path='/' element={<LandingPage />} /> */}
           <Route
             path='/reset-password/:resetToken'
             element={<ResetPassword />}
@@ -55,7 +66,6 @@ const App = () => {
           <Route
             path='/register'
             element={
-              // Check if the user is already logged in then he/she can't access the login page anymore, unless he/she logged out
               <RedirectIfAuthenticated>
                 <Register />
               </RedirectIfAuthenticated>
@@ -64,7 +74,6 @@ const App = () => {
           <Route
             path='/login'
             element={
-              // Check if the user is already logged in then he/she can't access the login page anymore, unless he/she logged out
               <RedirectIfAuthenticated>
                 <Login />
               </RedirectIfAuthenticated>
@@ -85,7 +94,17 @@ const App = () => {
           />
           <Route path='/contact-us' element={<Contact />} />
 
-          {/* Protected Route */}
+          {/* USER BASED ROUTE */}
+          {/* <Route
+            path='/contact-us'
+            element={
+              <ProtectedRoute
+                allowedRoles={['customer']}
+                element={<Contact />}
+              />
+            }
+          /> */}
+
           <Route
             path='/about-us'
             element={
@@ -95,6 +114,7 @@ const App = () => {
             }
           />
           <Route path='/verify' element={<VerifyEmail />} />
+          <Route path='/unauthorized' element={<Unauthorized />} />
           <Route path='*' element={<NotFound />} />
         </Routes>
       </Router>

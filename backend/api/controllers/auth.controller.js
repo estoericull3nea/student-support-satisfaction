@@ -1,5 +1,6 @@
 import Blacklist from '../models/blacklist.model.js'
 import User from '../models/user.model.js'
+import Admin from '../models/admin.model.js'
 
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
@@ -28,7 +29,6 @@ const transporter = nodemailer.createTransport({
 
 // ================================== Function to Register User ==================================
 export const registerUser = async (req, res) => {
-  // Check for validation errors
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() })
@@ -37,28 +37,23 @@ export const registerUser = async (req, res) => {
   const { firstName, lastName, email, password } = req.body
 
   try {
-    // Check if the user already exists
     const existingUser = await User.findOne({ email })
     if (existingUser) {
       return res.status(409).json({ message: 'User Already Exists' })
     }
 
-    // Validate password length (minimum 8 characters)
     if (password.length < 8) {
       return res
         .status(400)
         .json({ message: 'Password must be at least 8 characters long' })
     }
 
-    // Hash the password asynchronously
     const hashedPassword = await bcrypt.hash(password, 10)
 
-    // Generate a JWT token for email verification
     const verificationToken = jwt.sign({ email }, process.env.JWT_SECRET, {
       expiresIn: '15m',
     })
 
-    // Create user
     const newUser = new User({
       firstName,
       lastName,
@@ -73,7 +68,6 @@ export const registerUser = async (req, res) => {
 
     await newUser.save()
 
-    // Send verification email
     const verificationUrl = `http://localhost:5173/verify?token=${verificationToken}`
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
@@ -89,7 +83,6 @@ export const registerUser = async (req, res) => {
         `,
     })
 
-    // Return success response
     return res.status(201).json({
       message: 'User Registered Successfully. Verification email sent.',
       tokenREST: verificationToken,
@@ -224,88 +217,129 @@ export const resendVerificationEmail = async (req, res) => {
 
 // ================================== Function to Login User ==================================
 export const loginUser = async (req, res) => {
-  const { email, password } = req.body
-
-  try {
-    if (!email || !password) {
-      return res.status(400).json({ message: 'All fields required' })
-    }
-
-    const thisUser = await User.findOne({ email })
-
-    if (!thisUser) {
-      return res.status(404).json({ message: 'User not found with this email' })
-    }
-
-    if (!thisUser.isVerified) {
-      return res
-        .status(403)
-        .json({ message: 'Please verify your account before logging in.' })
-    }
-
-    const isLocked = thisUser.lockUntil && thisUser.lockUntil > Date.now()
-    if (isLocked) {
-      const lockDuration = Math.ceil(
-        (thisUser.lockUntil - Date.now()) / 1000 / 60
-      )
-      return res.status(403).json({
-        message: `Too many failed login attempts. Try again in ${lockDuration} minutes.`,
-      })
-    }
-
-    const isPasswordCorrect = await bcrypt.compare(password, thisUser.password)
-
-    if (!isPasswordCorrect) {
-      thisUser.failedLoginAttempts += 1
-
-      if (thisUser.failedLoginAttempts >= MAX_FAILED_ATTEMPTS) {
-        thisUser.lockUntil = Date.now() + LOCK_TIME // Lock the account for 15 minutes
+  if (req.body.email.startsWith('admin')) {
+    try {
+      const adminExist = await Admin.findOne({ username: req.body.email })
+      if (!adminExist) {
+        return res
+          .status(404)
+          .json({ message: 'User not found with this email' })
       }
 
+      const isPasswordCorrect = await bcrypt.compare(
+        req.body.password,
+        adminExist.password
+      )
+
+      if (!isPasswordCorrect) {
+        return res.status(400).json({ message: 'Invalid credentials' })
+      }
+
+      // Generate a JWT token
+      const token = jwt.sign(
+        {
+          id: adminExist._id,
+          role: adminExist.role,
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: '1h' }
+      )
+
+      return res.status(200).json({
+        message: 'Login successful',
+        token,
+      })
+    } catch (error) {
+      console.log(error.message)
+    }
+  } else {
+    const { email, password } = req.body
+
+    try {
+      if (!email || !password) {
+        return res.status(400).json({ message: 'All fields required' })
+      }
+
+      const thisUser = await User.findOne({ email })
+
+      if (!thisUser) {
+        return res
+          .status(404)
+          .json({ message: 'User not found with this email' })
+      }
+
+      if (!thisUser.isVerified) {
+        return res
+          .status(403)
+          .json({ message: 'Please verify your account before logging in.' })
+      }
+
+      const isLocked = thisUser.lockUntil && thisUser.lockUntil > Date.now()
+      if (isLocked) {
+        const lockDuration = Math.ceil(
+          (thisUser.lockUntil - Date.now()) / 1000 / 60
+        )
+        return res.status(403).json({
+          message: `Too many failed login attempts. Try again in ${lockDuration} minutes.`,
+        })
+      }
+
+      const isPasswordCorrect = await bcrypt.compare(
+        password,
+        thisUser.password
+      )
+
+      if (!isPasswordCorrect) {
+        thisUser.failedLoginAttempts += 1
+
+        if (thisUser.failedLoginAttempts >= MAX_FAILED_ATTEMPTS) {
+          thisUser.lockUntil = Date.now() + LOCK_TIME // Lock the account for 15 minutes
+        }
+
+        await thisUser.save()
+
+        return res.status(401).json({
+          message:
+            thisUser.failedLoginAttempts >= MAX_FAILED_ATTEMPTS
+              ? `Too many login attempts. Try again after 15 minutes.`
+              : 'Incorrect email or password.',
+        })
+      }
+
+      thisUser.failedLoginAttempts = 0
+      thisUser.lockUntil = undefined
       await thisUser.save()
 
-      return res.status(401).json({
-        message:
-          thisUser.failedLoginAttempts >= MAX_FAILED_ATTEMPTS
-            ? `Too many login attempts. Try again after 15 minutes.`
-            : 'Incorrect email or password.',
+      // Generate a JWT token
+      const token = jwt.sign(
+        {
+          id: thisUser._id,
+          email: thisUser.email,
+          firstName: thisUser.firstName,
+          lastName: thisUser.lastName,
+          role: thisUser.role,
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: '1h' }
+      )
+
+      // Loger
+      await logLogin(req, thisUser._id)
+
+      // Return a success message and user info (without password)
+      return res.status(200).json({
+        message: 'Login successful',
+        token,
+        user: {
+          id: thisUser._id,
+          firstName: thisUser.firstName,
+          lastName: thisUser.lastName,
+          email: thisUser.email,
+        },
       })
+    } catch (error) {
+      return res.status(500).json({ message: 'Server error: ' + error.message })
     }
-
-    // Reset failed login attempts on successful login
-    thisUser.failedLoginAttempts = 0
-    thisUser.lockUntil = undefined
-    await thisUser.save()
-
-    // Generate a JWT token
-    const token = jwt.sign(
-      {
-        id: thisUser._id,
-        email: thisUser.email,
-        firstName: thisUser.firstName,
-        lastName: thisUser.lastName,
-        role: thisUser.role,
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' }
-    )
-
-    // Loger
-    await logLogin(req, thisUser._id)
-
-    // Return a success message and user info (without password)
-    return res.status(200).json({
-      message: 'Login successful',
-      token,
-      user: {
-        id: thisUser._id,
-        firstName: thisUser.firstName,
-        lastName: thisUser.lastName,
-        email: thisUser.email,
-      },
-    })
-  } catch (error) {
-    return res.status(500).json({ message: 'Server error: ' + error.message })
   }
 }
 
