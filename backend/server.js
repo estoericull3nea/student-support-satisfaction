@@ -11,7 +11,8 @@ import authRouter from './api/routes/auth.route.js'
 import loginHistoryRouter from './api/routes/loginHistory.route.js'
 import feedbackRouter from './api/routes/feedback.route.js'
 import contactRouter from './api/routes/contact.route.js'
-import counterController from './api/routes/counter.route.js'
+import counterRouter from './api/routes/counter.route.js'
+import adminRouter from './api/routes/admin.route.js'
 import connectDB from './api/utils/connectDB.js'
 
 // Cleaning of expired token every hour
@@ -39,7 +40,8 @@ app.use('/api/auth', authRouter)
 app.use('/api/feedbacks', feedbackRouter)
 app.use('/api/contacts', contactRouter)
 app.use('/api/logins/history', loginHistoryRouter)
-app.use('/api/count', counterController)
+app.use('/api/count', counterRouter)
+app.use('/api/admin', adminRouter)
 
 // ================================== Connection to MongoDB ==================================
 connectDB()
