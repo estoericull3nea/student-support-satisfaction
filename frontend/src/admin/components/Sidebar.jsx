@@ -75,7 +75,7 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
               </Link>
             </li>
             <li>
-              <Link to='/admin/dashboard'>
+              <Link to='/admin/admins'>
                 <div className='flex items-center gap-5 justify-start px-0 md:py-2'>
                   <img src={User} alt='Dashboard Icon' className='w-6 h-6' />
                   {!isCollapsed && <span>Admins</span>}

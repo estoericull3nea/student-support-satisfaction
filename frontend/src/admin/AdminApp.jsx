@@ -7,6 +7,7 @@ import SettingsPage from './pages/SettingsPage'
 import InactiveUsersPage from './pages/InactiveUsersPage'
 import StudentsQueryPage from './pages/StudentsQueryPage'
 import NonStudentsQueryPage from './pages/NonStudentsQueryPage'
+import AdminsPage from './pages/AdminsPage'
 
 const AdminApp = () => {
   const [isSidebarCollapsed, setSidebarCollapsed] = useState(false)
@@ -36,7 +37,9 @@ const AdminApp = () => {
       <div className='flex-1 p-6'>
         <Routes>
           <Route path='/' element={<DashboardPage />} />
+
           <Route path='/dashboard' element={<DashboardPage />} />
+          <Route path='/admins' element={<AdminsPage />} />
           <Route path='/student-queries' element={<StudentsQueryPage />} />
           <Route
             path='/non-student-quries'
