@@ -13,83 +13,67 @@ import 'primereact/resources/primereact.min.css'
 import 'primeicons/primeicons.css'
 
 const AdminsPage = () => {
-  const [inactiveUsers, setInactiveUsers] = useState([])
+  const [fetchAdmin, setFetchAdmin] = useState([])
   const [globalFilter, setGlobalFilter] = useState('')
-  const [selectedUser, setSelectedUser] = useState(null)
+  const [selectedAdmin, setSelectedAdmin] = useState(null)
   const [isDialogVisible, setIsDialogVisible] = useState(false)
   const [isUpdateDialogVisible, setIsUpdateDialogVisible] = useState(false)
-  const [updatedUserDetails, setUpdatedUserDetails] = useState({
-    firstName: '',
-    lastName: '',
+  const [updatedAdminDetails, setUpdatedAdminDetails] = useState({
+    username: '',
     password: '',
-    active: false,
-    isVerified: false,
   })
 
-  const [isAddUserDialogVisible, setIsAddUserDialogVisible] = useState(false)
-  const [newUserDetails, setNewUserDetails] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
+  const [isAddAdminDialogVisible, setIsAddAdminDialogVisible] = useState(false)
+  const [newAdminDetails, setNewAdminDetails] = useState({
+    username: '',
     password: '',
-    active: false,
-    isVerified: false,
   })
 
   const errorShownRef = useRef(false)
 
-  const openAddUserDialog = () => {
-    setIsAddUserDialogVisible(true)
+  const openRegisterAdminModal = () => {
+    setIsAddAdminDialogVisible(true)
   }
 
-  const handleAddUser = async () => {
-    if (
-      !newUserDetails.firstName ||
-      !newUserDetails.lastName ||
-      !newUserDetails.email ||
-      !newUserDetails.password
-    ) {
-      toast.error('All fields are required')
+  const handleAddAdmin = async () => {
+    if (!newAdminDetails.username) {
+      toast.error('Username is required')
       return
     }
 
     try {
       const response = await axios.post(
-        'http://localhost:5000/api/users/add-user',
-        newUserDetails
+        'http://localhost:5000/api/admin/register',
+        newAdminDetails
       )
-      const addedUser = response.data.newUser
-      setInactiveUsers((prevUsers) => [...prevUsers, addedUser])
-      toast.success('User added successfully')
-      setIsAddUserDialogVisible(false)
-      setNewUserDetails({
-        firstName: '',
-        lastName: '',
-        email: '',
+      const addedAdmin = response.data.newAdmin
+      console.log(response.data)
+      setFetchAdmin((prevAdmin) => [...prevAdmin, addedAdmin])
+      toast.success('Admin added successfully')
+      setIsAddAdminDialogVisible(false)
+      setNewAdminDetails({
+        username: '',
         password: '',
-        active: false,
-        isVerified: false,
       })
     } catch (error) {
-      console.error('Error adding user:', error)
-      toast.error('Failed to add user')
+      toast.error(error.response.data.message)
     }
   }
 
-  const fetchActiveUsers = async () => {
+  const fetchAdmins = async () => {
     try {
       const response = await axios.get(
-        'http://localhost:5000/api/users/active-users'
+        'http://localhost:5000/api/admin/get-all-admins'
       )
-      setInactiveUsers(response.data)
+      setFetchAdmin(response.data)
       errorShownRef.current = false
     } catch (error) {
       if (error.response && error.response.status === 404) {
         if (!errorShownRef.current) {
-          toast.error('No active users found.')
+          toast.error('No Admins found.')
           errorShownRef.current = true
         }
-        setInactiveUsers([])
+        setFetchAdmin([])
       } else {
         toast.error(error.response?.data?.message || 'An error occurred')
       }
@@ -97,72 +81,48 @@ const AdminsPage = () => {
   }
 
   useEffect(() => {
-    fetchActiveUsers()
+    fetchAdmins()
   }, [])
 
   const onGlobalFilterChange = (e) => {
     setGlobalFilter(e.target.value)
   }
 
-  const makeUserInactive = async (id) => {
-    try {
-      const response = await axios.patch(
-        `http://localhost:5000/api/users/${id}/inactive`
-      )
-      const updatedUser = response.data.data
-      setInactiveUsers((prevUsers) =>
-        prevUsers.map((user) =>
-          user._id === updatedUser._id ? updatedUser : user
-        )
-      )
-      toast.success('Updated')
-      fetchActiveUsers()
-    } catch (error) {
-      console.error('Error making user active:', error)
-    }
-  }
-
   const viewUserDetails = (rowData) => {
-    setSelectedUser(rowData)
+    setSelectedAdmin(rowData)
     setIsDialogVisible(true)
   }
 
   const openUpdateDialog = (rowData) => {
-    setSelectedUser(rowData)
-    setUpdatedUserDetails({
-      firstName: rowData.firstName,
-      lastName: rowData.lastName,
+    setSelectedAdmin(rowData)
+    setUpdatedAdminDetails({
+      username: rowData.username,
       password: '',
-      active: rowData.active,
-      isVerified: rowData.isVerified,
     })
     setIsUpdateDialogVisible(true)
   }
 
-  const handleUpdateUser = async () => {
-    if (!updatedUserDetails.firstName || !updatedUserDetails.lastName) {
-      toast.error('All fields required')
+  const handleUpdateAdmin = async () => {
+    if (!updatedAdminDetails.username) {
+      toast.error('Username is required')
       return
     }
 
     try {
-      const { _id } = selectedUser
+      console.log(updatedAdminDetails)
+      const { _id } = selectedAdmin
       const response = await axios.put(
-        `http://localhost:5000/api/users/${_id}`,
-        updatedUserDetails
+        `http://localhost:5000/api/admin/update-admin/${_id}`,
+        updatedAdminDetails
       )
-      const updatedUser = response.data.updatedUser
-      setInactiveUsers((prevUsers) =>
-        prevUsers.map((user) =>
-          user._id === updatedUser._id ? updatedUser : user
-        )
-      )
-      toast.success('User updated successfully')
+      toast.success('Admin updated successfully')
       setIsUpdateDialogVisible(false)
-      fetchActiveUsers()
+      fetchAdmins()
     } catch (error) {
-      console.error('Error updating user:', error)
-      toast.error('Failed to update user')
+      console.log(error.response)
+      if (error.response.data.message === 'Username already exists') {
+        toast.error('Username already exists')
+      }
     }
   }
 
@@ -176,16 +136,6 @@ const AdminsPage = () => {
           onClick={() => viewUserDetails(rowData)}
           style={{ marginRight: '.5em' }}
         />
-
-        {rowData.active && (
-          <Button
-            label='Make Inactive'
-            icon='pi pi-times'
-            className='p-button-danger border p-2 text-[.7rem] rounded'
-            onClick={() => makeUserInactive(rowData._id)}
-            style={{ marginRight: '.5em' }}
-          />
-        )}
 
         <Button
           label='Update'
@@ -211,13 +161,13 @@ const AdminsPage = () => {
         </ul>
       </div>
 
-      {/* Add User Button */}
+      {/* Add Admin Button */}
       <div className='text-end'>
         <Button
-          label='Add Student'
+          label='Register Admin'
           icon='pi pi-plus'
           className='p-button-success my-3 border text-sm p-2 rounded'
-          onClick={openAddUserDialog}
+          onClick={openRegisterAdminModal}
         />
       </div>
 
@@ -231,39 +181,36 @@ const AdminsPage = () => {
       </div>
 
       <DataTable
-        value={inactiveUsers}
+        value={fetchAdmin}
         paginator
         rows={10}
         globalFilter={globalFilter}
         className='text-xs'
+        stateStorage='session'
+        stateKey='dt-state-demo-session'
       >
         <Column
-          field='firstName'
-          header='First Name'
+          field='username'
+          header='Username'
           sortable
           filter
-          filterPlaceholder='Filter by First Name'
+          filterPlaceholder='Filter by Username'
         />
+
         <Column
-          field='lastName'
-          header='Last Name'
+          field='role'
+          header='Role'
           sortable
           filter
-          filterPlaceholder='Filter by Last Name'
+          filterPlaceholder='Filter by Role'
         />
+
         <Column
-          field='email'
-          header='Email'
+          field='createdAt'
+          header='Registered At'
           sortable
           filter
-          filterPlaceholder='Filter by Email'
-        />
-        <Column
-          field='isVerified'
-          header='Is Verified'
-          sortable
-          filter
-          filterPlaceholder='Filter by Status'
+          filterPlaceholder='Filter by Registered At'
         />
         <Column header='Actions' body={actionBodyTemplate} />
       </DataTable>
@@ -275,173 +222,84 @@ const AdminsPage = () => {
         modal
         onHide={() => setIsDialogVisible(false)}
       >
-        {selectedUser && (
+        {selectedAdmin && (
           <div>
             <p>
-              <strong>ID:</strong> {selectedUser._id}
+              <strong>ID:</strong> {selectedAdmin._id}
             </p>
             <p>
-              <strong>First Name:</strong> {selectedUser.firstName}
+              <strong>Username:</strong> {selectedAdmin.username}
             </p>
             <p>
-              <strong>Last Name:</strong> {selectedUser.lastName}
-            </p>
-            <p>
-              <strong>Email:</strong> {selectedUser.email}
-            </p>
-            <p>
-              <strong>Role:</strong> {selectedUser.role}
-            </p>
-            <p>
-              <strong>Active:</strong>{' '}
-              {selectedUser.active ? 'Active' : 'Not Active'}
-            </p>
-            <p>
-              <strong>Verified:</strong>{' '}
-              {selectedUser.isVerified ? 'Verified' : 'Not Verified'}
+              <strong>Role:</strong> {selectedAdmin.role}
             </p>
             <p>
               <strong>Registered At:</strong>{' '}
-              {new Date(selectedUser.createdAt).toLocaleString()}
+              {new Date(selectedAdmin.createdAt).toLocaleString()}
             </p>
             <p>
               <strong>Updated At:</strong>{' '}
-              {new Date(selectedUser.updatedAt).toLocaleString()}
+              {new Date(selectedAdmin.updatedAt).toLocaleString()}
             </p>
           </div>
         )}
       </Dialog>
 
-      {/* Add User Dialog */}
+      {/* Add Admin Dialog */}
       <Dialog
-        header='Add New User'
-        visible={isAddUserDialogVisible}
+        header='Add New Admin'
+        visible={isAddAdminDialogVisible}
         style={{ width: '400px' }}
         modal
-        onHide={() => setIsAddUserDialogVisible(false)}
+        onHide={() => setIsAddAdminDialogVisible(false)}
       >
         <div className='p-fluid'>
-          {/* First Name */}
-          <div className='p-field'>
-            <div className='label'>
-              <label htmlFor='firstName'>First Name</label>
-            </div>
-            <InputText
-              id='firstName'
-              value={newUserDetails.firstName}
-              className='input input-bordered w-full input-sm'
-              placeholder='Type here'
-              onChange={(e) =>
-                setNewUserDetails({
-                  ...newUserDetails,
-                  firstName: e.target.value,
-                })
-              }
-              required
-            />
-          </div>
-
-          {/* Last Name */}
-          <div className='p-field'>
-            <div className='label'>
-              <label htmlFor='lastName'>Last Name</label>
-            </div>
-            <InputText
-              id='lastName'
-              value={newUserDetails.lastName}
-              className='input input-bordered w-full input-sm'
-              placeholder='Type here'
-              onChange={(e) =>
-                setNewUserDetails({
-                  ...newUserDetails,
-                  lastName: e.target.value,
-                })
-              }
-              required
-            />
-          </div>
-
-          {/* Email */}
-          <div className='p-field'>
-            <div className='label'>
-              <label htmlFor='email'>Email</label>
-            </div>
-            <InputText
-              id='email'
-              type='email'
-              value={newUserDetails.email}
-              className='input input-bordered w-full input-sm'
-              placeholder='Type here'
-              onChange={(e) =>
-                setNewUserDetails({ ...newUserDetails, email: e.target.value })
-              }
-              required
-            />
-          </div>
-
-          {/* Password */}
-          <div className='p-field'>
-            <div className='label'>
-              <label htmlFor='password'>Password</label>
+          <div className='flex gap-x-3'>
+            <div className='p-field'>
+              <div className='label'>
+                <label htmlFor='username'>Username</label>
+              </div>
+              <InputText
+                id='firstName'
+                value={newAdminDetails.username}
+                className='input input-bordered w-full input-sm'
+                placeholder='Type here'
+                onChange={(e) =>
+                  setNewAdminDetails({
+                    ...newAdminDetails,
+                    username: e.target.value,
+                  })
+                }
+                required
+              />
             </div>
 
-            <InputText
-              id='password'
-              type='password'
-              className='input input-bordered w-full input-sm'
-              placeholder='Type here'
-              value={newUserDetails.password}
-              onChange={(e) =>
-                setNewUserDetails({
-                  ...newUserDetails,
-                  password: e.target.value,
-                })
-              }
-              required
-            />
-          </div>
+            <div className='p-field'>
+              <div className='label'>
+                <label htmlFor='password'>Password</label>
+              </div>
 
-          {/* Active Checkbox */}
-          <div className='p-field-checkbox flex items-center'>
-            <div className='label'>
-              <label htmlFor='active'>Active</label>
+              <InputText
+                id='password'
+                type='password'
+                className='input input-bordered w-full input-sm'
+                placeholder='Type here'
+                value={newAdminDetails.password}
+                onChange={(e) =>
+                  setNewAdminDetails({
+                    ...newAdminDetails,
+                    password: e.target.value,
+                  })
+                }
+                required
+              />
             </div>
-            <input
-              type='checkbox'
-              id='active'
-              checked={newUserDetails.active}
-              onChange={(e) =>
-                setNewUserDetails({
-                  ...newUserDetails,
-                  active: e.target.checked,
-                })
-              }
-            />
           </div>
 
-          {/* Verified Checkbox */}
-          <div className='p-field-checkbox flex items-center'>
-            <div className='label'>
-              <label htmlFor='isVerified'>Verified</label>
-            </div>
-            <input
-              type='checkbox'
-              id='isVerified'
-              checked={newUserDetails.isVerified}
-              onChange={(e) =>
-                setNewUserDetails({
-                  ...newUserDetails,
-                  isVerified: e.target.checked,
-                })
-              }
-            />
-          </div>
-
-          {/* Submit Button */}
           <div className='p-field'>
             <Button
-              label='Add Student'
-              onClick={handleAddUser}
+              label='Register Admin'
+              onClick={handleAddAdmin}
               className='border mt-3 py-2 bg-primary hover:bg-primary-hover text-white rounded'
             />
           </div>
@@ -450,7 +308,7 @@ const AdminsPage = () => {
 
       {/* Update User Dialog */}
       <Dialog
-        header='Update User'
+        header='Update Admin'
         visible={isUpdateDialogVisible}
         style={{ width: '400px' }}
         modal
@@ -458,47 +316,24 @@ const AdminsPage = () => {
         className='text-sm'
       >
         <div className='p-fluid'>
-          <div className='flex gap-x-2'>
-            <div className='p-field'>
-              <div className='label'>
-                <label htmlFor='firstName'>First Name</label>
-              </div>
-              <input
-                type='text'
-                placeholder='Type here'
-                className='input input-bordered w-full max-w-xs input-sm'
-                id='firstName'
-                value={updatedUserDetails.firstName}
-                onChange={(e) =>
-                  setUpdatedUserDetails({
-                    ...updatedUserDetails,
-                    firstName: e.target.value,
-                  })
-                }
-                required
-              />
+          <div className='p-field'>
+            <div className='label'>
+              <label htmlFor='username'>Username</label>
             </div>
-            <div className='p-field'>
-              <label className='form-control w-full max-w-xs'>
-                <div className='label'>
-                  <label htmlFor='lastName'>Last Name</label>
-                </div>
-                <input
-                  type='text'
-                  placeholder='Type here'
-                  className='input input-bordered w-full max-w-xs input-sm'
-                  id='lastName'
-                  value={updatedUserDetails.lastName}
-                  onChange={(e) =>
-                    setUpdatedUserDetails({
-                      ...updatedUserDetails,
-                      lastName: e.target.value,
-                    })
-                  }
-                  required
-                />
-              </label>
-            </div>
+            <input
+              type='text'
+              placeholder='Type here'
+              className='input input-bordered w-full  input-sm'
+              id='username'
+              value={updatedAdminDetails.username}
+              onChange={(e) =>
+                setUpdatedAdminDetails({
+                  ...updatedAdminDetails,
+                  username: e.target.value,
+                })
+              }
+              required
+            />
           </div>
 
           <div className='p-field'>
@@ -511,28 +346,11 @@ const AdminsPage = () => {
               placeholder='Enter new password'
               className='input input-bordered w-full  input-sm'
               id='lastName'
-              value={updatedUserDetails.password}
+              value={updatedAdminDetails.password}
               onChange={(e) =>
-                setUpdatedUserDetails({
-                  ...updatedUserDetails,
+                setUpdatedAdminDetails({
+                  ...updatedAdminDetails,
                   password: e.target.value,
-                })
-              }
-            />
-          </div>
-
-          <div className='p-field-checkbox flex'>
-            <div className='label'>
-              <label htmlFor='isVerified'>Verified</label>
-            </div>
-            <input
-              type='checkbox'
-              id='isVerified'
-              checked={updatedUserDetails.isVerified}
-              onChange={(e) =>
-                setUpdatedUserDetails({
-                  ...updatedUserDetails,
-                  isVerified: e.target.checked,
                 })
               }
             />
@@ -541,7 +359,7 @@ const AdminsPage = () => {
           <div className='p-field'>
             <Button
               label='Update'
-              onClick={handleUpdateUser}
+              onClick={handleUpdateAdmin}
               className='border mt-3 py-2 bg-primary hover:bg-primary-hover text-white rounded'
             />
           </div>

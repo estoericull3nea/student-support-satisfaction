@@ -2,7 +2,7 @@ import Admin from '../models/admin.model.js'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 
-const registerAdmin = async (req, res) => {
+export const registerAdmin = async (req, res) => {
   try {
     const { username, password } = req.body
 
@@ -19,13 +19,15 @@ const registerAdmin = async (req, res) => {
     })
 
     await newAdmin.save()
-    return res.status(201).json({ message: 'Admin registered successfully' })
+    return res
+      .status(201)
+      .json({ message: 'Admin registered successfully', newAdmin })
   } catch (error) {
     return res.status(500).json({ message: 'Server error', error })
   }
 }
 
-const loginAdmin = async (req, res) => {
+export const loginAdmin = async (req, res) => {
   try {
     const { username, password } = req.body
 
@@ -49,7 +51,7 @@ const loginAdmin = async (req, res) => {
   }
 }
 
-const getAllAdmins = async (req, res) => {
+export const getAllAdmins = async (req, res) => {
   try {
     const admins = await Admin.find()
     return res.status(200).json(admins)
@@ -58,7 +60,7 @@ const getAllAdmins = async (req, res) => {
   }
 }
 
-const getAdmin = async (req, res) => {
+export const getAdmin = async (req, res) => {
   try {
     const { id } = req.params
     const admin = await Admin.findById(id)
@@ -71,17 +73,23 @@ const getAdmin = async (req, res) => {
   }
 }
 
-const updateAdmin = async (req, res) => {
+export const updateAdmin = async (req, res) => {
   try {
     const { id } = req.params
     const updatedData = req.body
 
-    if (updatedData.password) {
-      updatedData.password = await bcrypt.hash(updatedData.password, 10)
+    if (updatedData.username) {
+      const existingAdmin = await Admin.findOne({
+        username: updatedData.username,
+        _id: { $ne: id },
+      })
+      if (existingAdmin) {
+        return res.status(400).json({ message: 'Username already exists' })
+      }
     }
 
-    if (updatedData.username) {
-      updatedData.username = updateAdmin.username
+    if (updatedData.password) {
+      updatedData.password = await bcrypt.hash(updatedData.password, 10)
     }
 
     const updatedAdmin = await Admin.findByIdAndUpdate(id, updatedData, {
@@ -98,7 +106,7 @@ const updateAdmin = async (req, res) => {
   }
 }
 
-const deleteAdmin = async (req, res) => {
+export const deleteAdmin = async (req, res) => {
   try {
     const { id } = req.params
     const deletedAdmin = await Admin.findByIdAndDelete(id)
@@ -113,11 +121,12 @@ const deleteAdmin = async (req, res) => {
   }
 }
 
-module.exports = {
-  registerAdmin,
-  loginAdmin,
-  getAllAdmins,
-  getAdmin,
-  updateAdmin,
-  deleteAdmin,
+export const clearAdmin = async (req, res) => {
+  try {
+    await Admin.deleteMany({})
+
+    return res.status(200).json({ message: 'All admins have been cleared' })
+  } catch (error) {
+    return res.status(500).json({ message: 'Server error', error })
+  }
 }
