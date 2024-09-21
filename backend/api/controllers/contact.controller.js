@@ -63,7 +63,9 @@ export const getContactsByUserId = async (req, res) => {
   const { userId } = req.params
 
   try {
-    const contacts = await Contact.find({ userId }).populate('userId')
+    const contacts = await Contact.find({ owner: userId })
+      .populate('owner')
+      .sort({ createdAt: -1 })
 
     res.status(200).json(contacts)
   } catch (error) {

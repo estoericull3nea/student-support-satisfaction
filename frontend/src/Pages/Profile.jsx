@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useId, useState } from 'react'
 import Navbar from '../components/Navbar'
 import Breadcrumbs from '../components/Breadcrumbs'
 import Footer from '../components/Footer'
@@ -28,6 +28,8 @@ const Profile = () => {
   const [profilePic, setProfilePic] = useState(null)
   const [uploading, setUploading] = useState(false)
 
+  const [fetchContacts, setFetchContacts] = useState([])
+
   useEffect(() => {
     if (!decoded.id) return
 
@@ -47,7 +49,6 @@ const Profile = () => {
         setLastName(response.data.lastName)
         setEmail(response.data.email)
         setProfilePic(`http://localhost:5000${response.data.profilePic}`)
-        console.log(profilePic)
       } catch (err) {
         setErrorUser(err.message)
       } finally {
@@ -57,6 +58,26 @@ const Profile = () => {
 
     fetchUserWithId()
   }, [decoded.id, token, firstName, lastName, email, profilePic])
+
+  useEffect(() => {
+    const fetchContactsQuery = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5000/api/contacts/users/${decoded.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        setFetchContacts(response.data || [])
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    fetchContactsQuery()
+  }, [])
 
   const debouncedSave = debounce(async (field, value) => {
     setIsSaving(true)
@@ -250,7 +271,6 @@ const Profile = () => {
             </div>
           </div>
 
-          {/* Right Section */}
           <div className='right w-full lg:w-auto'>
             <div className='box h-auto w-full lg:w-[600px] border shadow-xl rounded-lg p-3'>
               <div className='flex flex-col lg:flex-row justify-between'>
@@ -298,7 +318,6 @@ const Profile = () => {
                         <th>Full Name</th>
                         <th>Email</th>
                         <th>Status</th>
-                        <th>Action</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -315,11 +334,6 @@ const Profile = () => {
                           >
                             {user?.isVerified ? 'Verified' : 'Unverified'}
                           </span>
-                        </td>
-                        <td>
-                          <button className='btn btn-sm bg-primary hover:bg-primary-hover text-white text-xs'>
-                            View
-                          </button>
                         </td>
                       </tr>
                     </tbody>
@@ -548,6 +562,77 @@ const Profile = () => {
                 </button>
               </div>
             </div>
+          </div>
+
+          {/* new tab */}
+
+          <input
+            type='radio'
+            name='my_tabs_2'
+            role='tab'
+            className='tab'
+            aria-label='Queries History'
+          />
+
+          <div
+            role='tabpanel'
+            className='tab-content bg-base-100 border-base-300 rounded-box p-6'
+          >
+            <div className='overflow-x-auto'>
+              <table className='table w-full'>
+                <thead>
+                  <tr className='text-center'>
+                    <th>Message</th>
+                    <th>Message At</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {fetchContacts.map((data, index) => (
+                    <tr key={index} className='text-xs text-center'>
+                      <td>{data.message}</td>
+                      <td>{formatTime(data.createdAt)}</td>
+                      {/* <td className='max-w-[200px]'>{data.userAgent}</td> */}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* <div className='flex justify-center mt-4'>
+              <div className='btn-group space-x-2'>
+                <button
+                  className={`btn btn-xs ${
+                    currentPageLogin === 1 ? 'btn-disabled' : ''
+                  }`}
+                  onClick={handlePrevPageLogin}
+                  disabled={currentPageLogin === 1}
+                >
+                  « Prev
+                </button>
+
+                {Array.from({ length: totalPagesLogin }, (_, i) => (
+                  <button
+                    key={i + 1}
+                    className={`btn btn-xs ${
+                      currentPageLogin === i + 1 ? 'btn-active' : ''
+                    }`}
+                    onClick={() => handlePageChangeLogin(i + 1)}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
+
+                <button
+                  className={`btn btn-xs ${
+                    currentPageLogin === totalPagesLogin ? 'btn-disabled' : ''
+                  }`}
+                  onClick={handleNextPageLogin}
+                  disabled={currentPageLogin === totalPagesLogin}
+                >
+                  Next »
+                </button>
+              </div>
+            </div> */}
           </div>
         </div>
       </div>
