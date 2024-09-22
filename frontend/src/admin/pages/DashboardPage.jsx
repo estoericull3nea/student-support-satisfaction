@@ -10,6 +10,7 @@ import SignIn from '../../assets/images/icons/log-out.png'
 import { formatTime } from '../../utils.js'
 import FeedbacksAnalytics from '../components/feedbacksAnalytics.jsx'
 import StudentRegistersAnalytics from '../components/StudentRegistersAnalytics.jsx'
+import ServiceAnalytics from '../components/Services/ServiceAnalytics.jsx'
 
 const DashboardPage = () => {
   const [time, setTime] = useState(new Date())
@@ -250,9 +251,16 @@ const DashboardPage = () => {
         </div>
       </div>
 
-      <div className='grid grid-cols-2'>
+      <div className='grid grid-cols-1 xl:grid-cols-2 mt-10'>
         <FeedbacksAnalytics />
         <StudentRegistersAnalytics />
+      </div>
+
+      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 justify-center items-start gap-4 mt-10'>
+        <ServiceAnalytics serviceName='Library' />
+        <ServiceAnalytics serviceName='Office of the School Principal' />
+        <ServiceAnalytics serviceName='Office of the School Administrator' />
+        <ServiceAnalytics serviceName='Office of the Registrar' />
       </div>
     </>
   )

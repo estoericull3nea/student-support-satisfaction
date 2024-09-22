@@ -60,10 +60,8 @@ export const getUserRegistrationStats = async (req, res) => {
   }
 }
 
-// Get average feedbacks per day, week, and month
 export const getFeedbackStats = async (req, res) => {
   try {
-    // Group feedbacks by day
     const dailyFeedbacks = await Feedback.aggregate([
       {
         $group: {
@@ -78,7 +76,6 @@ export const getFeedbackStats = async (req, res) => {
       },
     ])
 
-    // Group feedbacks by week using $isoWeek and $isoWeekYear
     const weeklyFeedbacks = await Feedback.aggregate([
       {
         $group: {
@@ -94,7 +91,6 @@ export const getFeedbackStats = async (req, res) => {
       },
     ])
 
-    // Group feedbacks by month
     const monthlyFeedbacks = await Feedback.aggregate([
       {
         $group: {
@@ -109,7 +105,6 @@ export const getFeedbackStats = async (req, res) => {
       },
     ])
 
-    // Format weekly results for easier display
     const formattedWeeklyFeedbacks = weeklyFeedbacks.map((w) => ({
       _id: `${w._id.isoWeekYear}-W${w._id.isoWeek}`,
       count: w.count,
@@ -123,5 +118,79 @@ export const getFeedbackStats = async (req, res) => {
   } catch (error) {
     console.error(error)
     res.status(500).json({ error: 'Failed to fetch feedback stats' })
+  }
+}
+
+// Get feedbacks for a specific service (e.g., "Library") grouped by day, week, and month
+export const getFeedbackStatsByService = async (req, res) => {
+  try {
+    const { serviceName } = req.params
+
+    // Validate serviceName
+    if (
+      ![
+        'Library',
+        'Office of the School Principal',
+        'Office of the School Administrator',
+        'Office of the Registrar',
+      ].includes(serviceName)
+    ) {
+      return res.status(400).json({ error: 'Invalid service name' })
+    }
+
+    // Filter and group feedbacks by day
+    const dailyFeedbacks = await Feedback.aggregate([
+      { $match: { serviceName } },
+      {
+        $group: {
+          _id: {
+            $dateToString: { format: '%Y-%m-%d', date: '$createdAt' },
+          },
+          count: { $sum: 1 },
+        },
+      },
+      { $sort: { _id: 1 } },
+    ])
+
+    // Filter and group feedbacks by week
+    const weeklyFeedbacks = await Feedback.aggregate([
+      { $match: { serviceName } },
+      {
+        $group: {
+          _id: {
+            isoWeekYear: { $isoWeekYear: '$createdAt' },
+            isoWeek: { $isoWeek: '$createdAt' },
+          },
+          count: { $sum: 1 },
+        },
+      },
+      { $sort: { '_id.isoWeekYear': 1, '_id.isoWeek': 1 } },
+    ])
+
+    // Filter and group feedbacks by month
+    const monthlyFeedbacks = await Feedback.aggregate([
+      { $match: { serviceName } },
+      {
+        $group: {
+          _id: {
+            $dateToString: { format: '%Y-%m', date: '$createdAt' },
+          },
+          count: { $sum: 1 },
+        },
+      },
+      { $sort: { _id: 1 } },
+    ])
+
+    res.json({
+      daily: dailyFeedbacks,
+      weekly: weeklyFeedbacks.map((w) => ({
+        _id: `${w._id.isoWeekYear}-W${w._id.isoWeek}`, // Week format for display
+        count: w.count,
+      })),
+      monthly: monthlyFeedbacks,
+    })
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ error: 'Failed to fetch feedback stats by service' })
   }
 }
