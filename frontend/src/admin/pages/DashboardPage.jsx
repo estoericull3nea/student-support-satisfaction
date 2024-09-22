@@ -8,6 +8,8 @@ import FeedbackIcon from '../../assets/images/icons/feedback.png'
 import Registered from '../../assets/images/icons/registered.png'
 import SignIn from '../../assets/images/icons/log-out.png'
 import { formatTime } from '../../utils.js'
+import FeedbacksAnalytics from '../components/feedbacksAnalytics.jsx'
+import StudentRegistersAnalytics from '../components/StudentRegistersAnalytics.jsx'
 
 const DashboardPage = () => {
   const [time, setTime] = useState(new Date())
@@ -246,6 +248,11 @@ const DashboardPage = () => {
             </div>
           </div>
         </div>
+      </div>
+
+      <div className='grid grid-cols-2'>
+        <FeedbacksAnalytics />
+        <StudentRegistersAnalytics />
       </div>
     </>
   )

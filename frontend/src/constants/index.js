@@ -71,7 +71,7 @@ export const servicesData = [
       'https://images.pexels.com/photos/4144222/pexels-photo-4144222.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
       'https://images.pexels.com/photos/7156103/pexels-photo-7156103.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
     ],
-    link: '/office-of-the-school-registrar',
+    link: '/office-of-the-registrar',
   },
 ]
 
