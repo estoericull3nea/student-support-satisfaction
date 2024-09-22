@@ -108,9 +108,10 @@ const App = () => {
           <Route
             path='/about-us'
             element={
-              <Protect>
-                <About />
-              </Protect>
+              // <Protect>
+              //   <About />
+              // </Protect>
+              <About />
             }
           />
           <Route path='/verify' element={<VerifyEmail />} />
