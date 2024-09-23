@@ -1,20 +1,45 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import ucsLogo from '../assets/images/logo/ucs_logo.png'
 import { services } from '../constants/index'
 import toast from 'react-hot-toast'
+import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
 
 const Navbar = () => {
   const token = localStorage.getItem('token')
   const navigate = useNavigate()
   const decoded = token ? jwtDecode(token) : ''
+  const userId = decoded.id
+
+  const [user, setUser] = useState({})
 
   const handleLogout = () => {
     localStorage.clear()
     toast.success('Logged out')
     navigate('/login')
   }
+
+  useEffect(() => {
+    const fetchActiveUsers = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5000/api/users/${userId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        setUser(response.data)
+        console.log(response.data)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    fetchActiveUsers()
+  }, [user])
 
   return (
     <div className='container z-10 '>
@@ -153,7 +178,7 @@ const Navbar = () => {
 
           {/* Conditionally render "Sign In" or "Logout" based on token existence */}
           {token ? (
-            <div className='space-x-3'>
+            <div className='space-x-3 flex items-center '>
               <button
                 onClick={handleLogout}
                 className='btn text-xs primary-btn-outline px-[.5rem] md:px-[1rem]'
@@ -165,7 +190,11 @@ const Navbar = () => {
                 <div className='avatar placeholder'>
                   <div className='bg-neutral text-neutral-content w-11 rounded-full'>
                     <span className='font-bold tracking-tighter text-center text-sm'>
-                      {`${decoded.firstName[0].toUpperCase()} ${decoded.lastName[0].toUpperCase()}`}
+                      {/* {`${decoded.firstName[0].toUpperCase()} ${decoded.lastName[0].toUpperCase()}`} */}
+                      <img
+                        src={`http://localhost:5000${user.profilePic}`}
+                        alt=''
+                      />
                     </span>
                   </div>
                 </div>
