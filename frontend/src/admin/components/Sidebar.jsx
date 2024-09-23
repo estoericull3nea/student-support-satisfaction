@@ -18,6 +18,7 @@ import NotStudent from '../../assets/images/icons/not-student.png'
 import Students from '../../assets/images/icons/students.png'
 import Logout from '../../assets/images/icons/logout.png'
 import Graduation from '../../assets/images/icons/graduation.png'
+import Feedback from '../../assets/images/icons/feedback.png'
 import App from '../../assets/images/icons/app.png'
 
 const Sidebar = ({ isCollapsed, toggleSidebar }) => {
@@ -48,6 +49,15 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
             <div className='flex items-center gap-5 justify-start px-0 md:py-2'>
               <img src={Dashboard} alt='Dashboard Icon' className='w-6 h-6' />
               {!isCollapsed && <span>Dashboard</span>}
+            </div>
+          </Link>
+        </li>
+
+        <li>
+          <Link to='/admin/feedbacks'>
+            <div className='flex items-center gap-5 justify-start px-0 md:py-2'>
+              <img src={Feedback} alt='Dashboard Icon' className='w-6 h-6' />
+              {!isCollapsed && <span>Feedbacks</span>}
             </div>
           </Link>
         </li>

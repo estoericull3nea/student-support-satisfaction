@@ -107,7 +107,7 @@ const DashboardPage = () => {
       <div className='flex flex-wrap gap-3 items-center justify-center my-10'>
         <div className='mt-10'>
           <div className='w-[200px] p-3 bg-base-100 shadow flex items-start gap-x-2 flex-col gap-y-3 relative'>
-            <p className='text-xs text-gray-500'>Users</p>
+            <p className='text-xs text-gray-500'>All Students Registered</p>
             <div className='w-full flex justify-between items-center'>
               <h1 className='text-4xl font-bold'>{stats.totalUsers}</h1>
               <img src={Group} alt='Manage Users Icon' className='w-6 h-6' />
@@ -162,11 +162,16 @@ const DashboardPage = () => {
         </div>
 
         <div className='mt-10'>
-          <div className='w-[200px] p-3 bg-base-100 shadow flex items-start gap-x-2 flex-col gap-y-3'>
+          <div className='w-[200px] p-3 bg-base-100 shadow flex items-start gap-x-2 flex-col gap-y-3 relative'>
             <p className='text-xs text-gray-500'>Total Feedbacks</p>
             <div className='w-full flex justify-between items-center'>
               <h1 className='text-4xl font-bold'>{stats.totalFeedbacks}</h1>
               <img src={FeedbackIcon} alt='Feedback Icon' className='w-6 h-6' />
+            </div>
+            <div className='text-end w-full absolute top-1 right-3'>
+              <Link to='/admin/feedbacks' className='text-[.6rem] underline'>
+                View
+              </Link>
             </div>
           </div>
         </div>
