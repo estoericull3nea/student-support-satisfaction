@@ -104,7 +104,7 @@ const DashboardPage = () => {
         <div className='text-sm font-medium'>{getFormattedTime(time)}</div>
       </div>
 
-      <div className='flex flex-wrap gap-3 items-center justify-center my-10'>
+      <div className='flex flex-wrap gap-3 items-center justify-center lg:justify-between my-10'>
         <div className='mt-10'>
           <div className='w-[200px] p-3 bg-base-100 shadow flex items-start gap-x-2 flex-col gap-y-3 relative'>
             <p className='text-xs text-gray-500'>All Students Registered</p>
@@ -113,7 +113,10 @@ const DashboardPage = () => {
               <img src={Group} alt='Manage Users Icon' className='w-6 h-6' />
             </div>
             <div className='text-end w-full absolute top-1 right-3'>
-              <Link to='/admin/students' className='text-[.6rem] underline'>
+              <Link
+                to='/admin/students'
+                className='text-[.6rem] underline decoration-blue-600 text text-blue-600'
+              >
                 View
               </Link>
             </div>
@@ -132,7 +135,10 @@ const DashboardPage = () => {
               />
             </div>
             <div className='text-end w-full absolute top-1 right-3'>
-              <Link to='/admin/active-users' className='text-[.6rem] underline'>
+              <Link
+                to='/admin/active-users'
+                className='text-[.6rem] underline decoration-blue-600 text text-blue-600'
+              >
                 View
               </Link>
             </div>
@@ -153,7 +159,7 @@ const DashboardPage = () => {
             <div className='text-end w-full absolute top-1 right-3'>
               <Link
                 to='/admin/inactive-users'
-                className='text-[.6rem] underline'
+                className='text-[.6rem] underline decoration-blue-600 text text-blue-600'
               >
                 View
               </Link>
@@ -169,7 +175,10 @@ const DashboardPage = () => {
               <img src={FeedbackIcon} alt='Feedback Icon' className='w-6 h-6' />
             </div>
             <div className='text-end w-full absolute top-1 right-3'>
-              <Link to='/admin/feedbacks' className='text-[.6rem] underline'>
+              <Link
+                to='/admin/feedbacks'
+                className='text-[.6rem] underline decoration-blue-600 text text-blue-600'
+              >
                 View
               </Link>
             </div>

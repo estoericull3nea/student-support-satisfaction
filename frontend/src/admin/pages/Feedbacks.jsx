@@ -7,15 +7,17 @@ import { Button } from 'primereact/button'
 import { Dialog } from 'primereact/dialog'
 import { toast } from 'react-hot-toast'
 import { Link } from 'react-router-dom'
+import FeedbacksAnalytics from '../components/feedbacksAnalytics.jsx'
+import ServiceAnalytics from '../components/Services/ServiceAnalytics.jsx'
 
 import 'primereact/resources/themes/saga-blue/theme.css'
 import 'primereact/resources/primereact.min.css'
 import 'primeicons/primeicons.css'
 
 const Feedbacks = () => {
-  const [inactiveUsers, setInactiveUsers] = useState([])
+  const [feedbacks, setFeedbacks] = useState([])
   const [globalFilter, setGlobalFilter] = useState('')
-  const [selectedUser, setSelectedUser] = useState(null)
+  const [selectedFeedback, setSelectedFeedback] = useState(null)
   const [isDialogVisible, setIsDialogVisible] = useState(false)
   const [isUpdateDialogVisible, setIsUpdateDialogVisible] = useState(false)
   const [updatedUserDetails, setUpdatedUserDetails] = useState({
@@ -38,50 +40,10 @@ const Feedbacks = () => {
 
   const errorShownRef = useRef(false)
 
-  // Function to open "Add User" dialog
-  const openAddUserDialog = () => {
-    setIsAddUserDialogVisible(true)
-  }
-
-  // Function to handle adding a user
-  const handleAddStudent = async () => {
-    if (
-      !newUserDetails.firstName ||
-      !newUserDetails.lastName ||
-      !newUserDetails.email ||
-      !newUserDetails.password
-    ) {
-      toast.error('All fields are required')
-      return
-    }
-
+  const fetchAllFeedbacks = async () => {
     try {
-      const response = await axios.post(
-        'http://localhost:5000/api/users/add-user',
-        newUserDetails
-      )
-      const addedUser = response.data.newUser
-      setInactiveUsers((prevUsers) => [...prevUsers, addedUser])
-      toast.success('User added successfully')
-      setIsAddUserDialogVisible(false)
-      setNewUserDetails({
-        firstName: '',
-        lastName: '',
-        email: '',
-        password: '',
-        active: false,
-        isVerified: false,
-      })
-    } catch (error) {
-      console.error('Error adding user:', error)
-      toast.error('Failed to add user')
-    }
-  }
-
-  const fetchAllStudents = async () => {
-    try {
-      const response = await axios.get('http://localhost:5000/api/users')
-      setInactiveUsers(response.data.format)
+      const response = await axios.get('http://localhost:5000/api/feedbacks')
+      setFeedbacks(response.data)
       errorShownRef.current = false
     } catch (error) {
       if (error.response && error.response.status === 404) {
@@ -89,7 +51,7 @@ const Feedbacks = () => {
           toast.error('No active users found.')
           errorShownRef.current = true
         }
-        setInactiveUsers([])
+        setFeedbacks([])
       } else {
         toast.error(error.response?.data?.message || 'An error occurred')
       }
@@ -97,55 +59,16 @@ const Feedbacks = () => {
   }
 
   useEffect(() => {
-    fetchAllStudents()
+    fetchAllFeedbacks()
   }, [])
 
   const onGlobalFilterChange = (e) => {
     setGlobalFilter(e.target.value)
   }
 
-  const viewUserDetails = (rowData) => {
-    setSelectedUser(rowData)
+  const viewFeedbackDetails = (rowData) => {
+    setSelectedFeedback(rowData)
     setIsDialogVisible(true)
-  }
-
-  const openUpdateDialog = (rowData) => {
-    setSelectedUser(rowData)
-    setUpdatedUserDetails({
-      firstName: rowData.firstName,
-      lastName: rowData.lastName,
-      password: '',
-      active: rowData.active,
-      isVerified: rowData.isVerified,
-    })
-    setIsUpdateDialogVisible(true)
-  }
-
-  const handleUpdateUser = async () => {
-    if (!updatedUserDetails.firstName || !updatedUserDetails.lastName) {
-      toast.error('All fields required')
-      return
-    }
-
-    try {
-      const { _id } = selectedUser
-      const response = await axios.put(
-        `http://localhost:5000/api/users/${_id}`,
-        updatedUserDetails
-      )
-      const updatedUser = response.data.updatedUser
-      setInactiveUsers((prevUsers) =>
-        prevUsers.map((user) =>
-          user._id === updatedUser._id ? updatedUser : user
-        )
-      )
-      toast.success('User updated successfully')
-      setIsUpdateDialogVisible(false)
-      fetchAllStudents()
-    } catch (error) {
-      console.error('Error updating user:', error)
-      toast.error('Failed to update user')
-    }
   }
 
   const actionBodyTemplate = (rowData) => {
@@ -155,16 +78,16 @@ const Feedbacks = () => {
           label='View'
           icon='pi pi-eye'
           className='p-button-info border p-2 text-[.7rem] rounded'
-          onClick={() => viewUserDetails(rowData)}
+          onClick={() => viewFeedbackDetails(rowData)}
           style={{ marginRight: '.5em' }}
         />
 
-        <Button
+        {/* <Button
           label='Update'
           icon='pi pi-pencil'
           className='p-button-warning border p-2 text-[.7rem] rounded'
           onClick={() => openUpdateDialog(rowData)}
-        />
+        /> */}
       </div>
     )
   }
@@ -183,17 +106,16 @@ const Feedbacks = () => {
         </ul>
       </div>
 
-      {/* Add User Button */}
-      <div className='text-end'>
-        <Button
-          label='Add Student'
-          icon='pi pi-plus'
-          className='p-button-success my-3 border text-sm p-2 rounded'
-          onClick={openAddUserDialog}
-        />
+      <FeedbacksAnalytics />
+
+      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 justify-center items-start gap-4 mt-10'>
+        <ServiceAnalytics serviceName='Library' />
+        <ServiceAnalytics serviceName='Office of the School Principal' />
+        <ServiceAnalytics serviceName='Office of the School Administrator' />
+        <ServiceAnalytics serviceName='Office of the Registrar' />
       </div>
 
-      <div className='p-inputgroup my-3'>
+      <div className='p-inputgroup my-10'>
         <InputText
           value={globalFilter}
           onChange={onGlobalFilterChange}
@@ -203,82 +125,111 @@ const Feedbacks = () => {
       </div>
 
       <DataTable
-        value={inactiveUsers}
+        value={feedbacks}
         paginator
         rows={10}
         globalFilter={globalFilter}
         className='text-xs'
       >
         <Column
-          field='firstName'
-          header='First Name'
+          field='serviceName'
+          header='Service Name'
           sortable
           filter
-          filterPlaceholder='Filter by First Name'
+          filterPlaceholder='Filter by Service Name'
         />
+
         <Column
-          field='lastName'
-          header='Last Name'
+          field='comment'
+          header='Comment'
           sortable
           filter
-          filterPlaceholder='Filter by Last Name'
+          filterPlaceholder='Filter by Comment'
         />
+
+        <Column
+          field='rating'
+          header='Rating'
+          sortable
+          filter
+          filterPlaceholder='Filter by Rating'
+        />
+
+        <Column
+          field='user'
+          header='Student Fullname'
+          sortable
+          filter
+          filterPlaceholder='Filter by Fullname'
+          body={(rowData) =>
+            rowData.user
+              ? `${rowData.user.firstName} ${rowData.user.lastName}`
+              : 'Unknown User'
+          }
+        />
+
         <Column
           field='email'
-          header='Email'
+          header='Student Email'
           sortable
           filter
-          filterPlaceholder='Filter by Email'
+          filterPlaceholder='Filter by Student Email'
         />
+
         <Column
-          field='isVerified'
-          header='Is Verified'
+          field='createdAt'
+          header='Feedback At'
           sortable
           filter
-          filterPlaceholder='Filter by Status'
+          filterPlaceholder='Filter by Feedback At'
         />
+
         <Column header='Actions' body={actionBodyTemplate} />
       </DataTable>
 
       <Dialog
-        header='User Details'
+        header='Feedback Details'
         visible={isDialogVisible}
         style={{ width: '400px' }}
         modal
         onHide={() => setIsDialogVisible(false)}
       >
-        {selectedUser && (
+        {console.log(selectedFeedback)}
+        {selectedFeedback && (
           <div>
+            <h1 className='font-medium'>Feedback Details</h1>
+            <hr className='mt-1' />
             <p>
-              <strong>ID:</strong> {selectedUser._id}
+              <strong>Feedback ID:</strong> {selectedFeedback._id}
             </p>
             <p>
-              <strong>First Name:</strong> {selectedUser.firstName}
+              <strong>Service Name:</strong> {selectedFeedback.serviceName}
+            </p>
+
+            <p>
+              <strong>Comment:</strong> {selectedFeedback.comment}
+            </p>
+
+            <p>
+              <strong>Rating:</strong> {selectedFeedback.rating}
+            </p>
+
+            <p>
+              <strong>Feedback At:</strong>{' '}
+              {new Date(selectedFeedback.createdAt).toLocaleString()}
+            </p>
+
+            <h1 className='font-medium mt-3'>Students Details</h1>
+            <hr className='mt-1' />
+
+            <p>
+              <strong>First Name:</strong> {selectedFeedback.user.firstName}
             </p>
             <p>
-              <strong>Last Name:</strong> {selectedUser.lastName}
+              <strong>Last Name:</strong> {selectedFeedback.user.lastName}
             </p>
             <p>
-              <strong>Email:</strong> {selectedUser.email}
-            </p>
-            <p>
-              <strong>Role:</strong> {selectedUser.role}
-            </p>
-            <p>
-              <strong>Active:</strong>{' '}
-              {selectedUser.active ? 'Active' : 'Not Active'}
-            </p>
-            <p>
-              <strong>Verified:</strong>{' '}
-              {selectedUser.isVerified ? 'Verified' : 'Not Verified'}
-            </p>
-            <p>
-              <strong>Registered At:</strong>{' '}
-              {new Date(selectedUser.createdAt).toLocaleString()}
-            </p>
-            <p>
-              <strong>Updated At:</strong>{' '}
-              {new Date(selectedUser.updatedAt).toLocaleString()}
+              <strong>Email:</strong> {selectedFeedback.email}
             </p>
           </div>
         )}
@@ -408,15 +359,6 @@ const Feedbacks = () => {
               }
             />
           </div>
-
-          {/* Submit Button */}
-          <div className='p-field'>
-            <Button
-              label='Add Student'
-              onClick={handleAddStudent}
-              className='border mt-3 py-2 bg-primary hover:bg-primary-hover text-white rounded'
-            />
-          </div>
         </div>
       </Dialog>
 
@@ -509,14 +451,14 @@ const Feedbacks = () => {
               }
             />
           </div>
-
+          {/* 
           <div className='p-field'>
             <Button
               label='Update'
               onClick={handleUpdateUser}
               className='border mt-3 py-2 bg-primary hover:bg-primary-hover text-white rounded'
             />
-          </div>
+          </div> */}
         </div>
       </Dialog>
     </div>
