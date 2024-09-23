@@ -1,6 +1,7 @@
 import User from '../models/user.model.js'
 
 import dotenv from 'dotenv'
+import bcrypt from 'bcryptjs'
 import mongoose from 'mongoose'
 import { formatTime } from '../utils/formatTime.js'
 import { formatToMMDDYYYY } from '../utils/formatToMonthDayYear.js'

@@ -11,6 +11,7 @@ import { formatTime } from '../../utils.js'
 import FeedbacksAnalytics from '../components/feedbacksAnalytics.jsx'
 import StudentRegistersAnalytics from '../components/StudentRegistersAnalytics.jsx'
 import ServiceAnalytics from '../components/Services/ServiceAnalytics.jsx'
+import { Link } from 'react-router-dom'
 
 const DashboardPage = () => {
   const [time, setTime] = useState(new Date())
@@ -103,20 +104,25 @@ const DashboardPage = () => {
         <div className='text-sm font-medium'>{getFormattedTime(time)}</div>
       </div>
 
-      <div className='flex flex-wrap gap-3 items-center justify-center xl:justify-between'>
+      <div className='flex flex-wrap gap-3 items-center justify-center my-10'>
         <div className='mt-10'>
-          <div className='w-[200px] p-3 bg-base-100 shadow flex items-start gap-x-2 flex-col gap-y-3'>
+          <div className='w-[200px] p-3 bg-base-100 shadow flex items-start gap-x-2 flex-col gap-y-3 relative'>
             <p className='text-xs text-gray-500'>Users</p>
             <div className='w-full flex justify-between items-center'>
               <h1 className='text-4xl font-bold'>{stats.totalUsers}</h1>
               <img src={Group} alt='Manage Users Icon' className='w-6 h-6' />
             </div>
+            <div className='text-end w-full absolute top-1 right-3'>
+              <Link to='/admin/students' className='text-[.6rem] underline'>
+                View
+              </Link>
+            </div>
           </div>
         </div>
 
         <div className='mt-10'>
-          <div className='w-[200px] p-3 bg-base-100 shadow flex items-start gap-x-2 flex-col gap-y-3'>
-            <p className='text-xs text-gray-500'>Active Users</p>
+          <div className='w-[200px] p-3 bg-base-100 shadow flex items-start gap-x-2 flex-col gap-y-3 relative'>
+            <p className='text-xs text-gray-500'>Active Students</p>
             <div className='w-full flex justify-between items-center'>
               <h1 className='text-4xl font-bold'>{stats.activeUsers}</h1>
               <img
@@ -125,11 +131,16 @@ const DashboardPage = () => {
                 className='w-6 h-6'
               />
             </div>
+            <div className='text-end w-full absolute top-1 right-3'>
+              <Link to='/admin/active-users' className='text-[.6rem] underline'>
+                View
+              </Link>
+            </div>
           </div>
         </div>
 
         <div className='mt-10'>
-          <div className='w-[200px] p-3 bg-base-100 shadow flex items-start gap-x-2 flex-col gap-y-3'>
+          <div className='w-[200px] p-3 bg-base-100 shadow flex items-start gap-x-2 flex-col gap-y-3 relative'>
             <p className='text-xs text-gray-500'>Inactive Users</p>
             <div className='w-full flex justify-between items-center'>
               <h1 className='text-4xl font-bold'>{stats.inactiveUsers}</h1>
@@ -138,6 +149,14 @@ const DashboardPage = () => {
                 alt='Inactive Users Icon'
                 className='w-6 h-6'
               />
+            </div>
+            <div className='text-end w-full absolute top-1 right-3'>
+              <Link
+                to='/admin/inactive-users'
+                className='text-[.6rem] underline'
+              >
+                View
+              </Link>
             </div>
           </div>
         </div>

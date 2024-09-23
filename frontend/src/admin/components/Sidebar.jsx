@@ -17,6 +17,7 @@ import User from '../../assets/images/icons/user.png'
 import NotStudent from '../../assets/images/icons/not-student.png'
 import Students from '../../assets/images/icons/students.png'
 import Logout from '../../assets/images/icons/logout.png'
+import Graduation from '../../assets/images/icons/graduation.png'
 import App from '../../assets/images/icons/app.png'
 
 const Sidebar = ({ isCollapsed, toggleSidebar }) => {
@@ -58,9 +59,21 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
           >
             <div className='collapse-title  font-medium  text-center flex items-center justify-start gap-3 text-xs'>
               <img src={Group} alt='Manage Users Icon' className='w-6 h-6' />
-              Manage Users
+              Manage Students
             </div>
             <div className='collapse-content'>
+              <li>
+                <Link to='/admin/students'>
+                  <div className='flex items-center gap-5 justify-start px-0 md:py-2'>
+                    <img
+                      src={Graduation}
+                      alt='Inactive Users Icon'
+                      className='w-6 h-6'
+                    />
+                    {!isCollapsed && <span>All Students</span>}
+                  </div>
+                </Link>
+              </li>
               <li>
                 <Link to='/admin/active-users'>
                   <div className='flex items-center gap-5 justify-start px-0 md:py-2'>
@@ -69,7 +82,7 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
                       alt='Inactive Users Icon'
                       className='w-6 h-6'
                     />
-                    {!isCollapsed && <span>Active Users</span>}
+                    {!isCollapsed && <span>Active Students</span>}
                   </div>
                 </Link>
               </li>
@@ -81,7 +94,7 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
                       alt='Inactive Users Icon'
                       className='w-6 h-6'
                     />
-                    {!isCollapsed && <span>Inactive Users</span>}
+                    {!isCollapsed && <span>Inactive Students</span>}
                   </div>
                 </Link>
               </li>
