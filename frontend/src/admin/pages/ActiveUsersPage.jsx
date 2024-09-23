@@ -88,7 +88,7 @@ const ActiveUsersPage = () => {
     } catch (error) {
       if (error.response && error.response.status === 404) {
         if (!errorShownRef.current) {
-          toast.error('No active users found.')
+          toast.error('No active students found.')
           errorShownRef.current = true
         }
         setInactiveUsers([])

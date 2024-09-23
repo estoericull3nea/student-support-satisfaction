@@ -35,7 +35,7 @@ const NonStudentsQueryPage = () => {
     } catch (error) {
       if (error.response && error.response.status === 404) {
         if (!errorShownRef.current) {
-          toast.error('No inactive users found.')
+          toast.error('No queries found.')
           errorShownRef.current = true
         }
         setStudentsQuery([])

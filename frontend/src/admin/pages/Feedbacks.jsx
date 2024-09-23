@@ -48,7 +48,7 @@ const Feedbacks = () => {
     } catch (error) {
       if (error.response && error.response.status === 404) {
         if (!errorShownRef.current) {
-          toast.error('No active users found.')
+          toast.error('No feedbacks found.')
           errorShownRef.current = true
         }
         setFeedbacks([])
