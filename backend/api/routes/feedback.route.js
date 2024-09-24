@@ -10,7 +10,7 @@ import {
 
 const router = express.Router()
 
-router.post('/', createFeedback)
+router.post('/', protect, createFeedback)
 router.get('/', getAllFeedbacks)
 router.get('/:userId', getAllFeedbacksByUserId)
 router.delete('/clear-feedbacks', clearAllFeedbacks)

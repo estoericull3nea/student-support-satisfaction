@@ -165,7 +165,7 @@ const Contact = () => {
 
               {/* Terms and Conditions */}
               <div className='form-control'>
-                <label className='label cursor-pointer gap-x-2'>
+                <label className='label cursor-pointer gap-x-2 flex justify-start'>
                   <input
                     type='checkbox'
                     className='checkbox'

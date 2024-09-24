@@ -108,7 +108,7 @@ const Feedbacks = () => {
       </div>
 
       <FeedbacksByAllServicesInOne />
-      <FeedbacksAnalytics />
+      {/* <FeedbacksAnalytics /> */}
 
       <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 justify-center items-start gap-4 mt-10'>
         <ServiceAnalytics serviceName='Library' />
