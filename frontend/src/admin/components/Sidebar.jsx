@@ -129,7 +129,7 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
             </div>
             <div className='collapse-content'>
               <li>
-                <Link to='/admin/active-users'>
+                <Link to='/admin/library'>
                   <div className='flex items-center gap-5 justify-start px-0 md:py-2'>
                     <img
                       src={Book}
@@ -141,7 +141,7 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
                 </Link>
               </li>
               <li>
-                <Link to='/admin/inactive-users'>
+                <Link to='/admin/principal'>
                   <div className='flex items-center gap-5 justify-start px-0 md:py-2'>
                     <img
                       src={Principal}
@@ -155,7 +155,7 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
                 </Link>
               </li>
               <li>
-                <Link to='/admin/inactive-users'>
+                <Link to='/admin/administrator'>
                   <div className='flex items-center gap-5 justify-start px-0 md:py-2'>
                     <img
                       src={Blogger}
@@ -169,7 +169,7 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
                 </Link>
               </li>
               <li>
-                <Link to='/admin/inactive-users'>
+                <Link to='/admin/registrar'>
                   <div className='flex items-center gap-5 justify-start px-0 md:py-2'>
                     <img
                       src={People}

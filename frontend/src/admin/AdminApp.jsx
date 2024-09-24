@@ -11,6 +11,11 @@ import AdminsPage from './pages/AdminsPage'
 import AllUsers from './pages/AllUsers'
 import Feedbacks from './pages/Feedbacks'
 
+import Administrator from './components/Services/Administrator'
+import Library from './components/Services/Library'
+import Principal from './components/Services/Principal'
+import Registrar from './components/Services/Registrar'
+
 const AdminApp = () => {
   const [isSidebarCollapsed, setSidebarCollapsed] = useState(false)
 
@@ -39,6 +44,11 @@ const AdminApp = () => {
       <div className='flex-1 p-6 overflow-hidden'>
         <Routes>
           <Route path='/' element={<DashboardPage />} />
+
+          <Route path='/library' element={<Library />} />
+          <Route path='/administrator' element={<Administrator />} />
+          <Route path='/principal' element={<Principal />} />
+          <Route path='/registrar' element={<Registrar />} />
 
           <Route path='/dashboard' element={<DashboardPage />} />
           <Route path='/feedbacks' element={<Feedbacks />} />

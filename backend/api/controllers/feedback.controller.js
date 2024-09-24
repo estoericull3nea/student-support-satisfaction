@@ -5,7 +5,6 @@ import User from '../models/user.model.js'
 export const createFeedback = async (req, res) => {
   const { serviceName, rating, comment, email } = req.body
 
-  // All fields required
   if (!serviceName || !rating || !comment || !email) {
     return res.status(400).json({ message: 'All fields are required' })
   }
@@ -25,7 +24,6 @@ export const createFeedback = async (req, res) => {
       })
     }
 
-    // Success response
     res
       .status(201)
       .json({ message: 'Feedback submitted successfully', feedback })
@@ -60,6 +58,23 @@ export const getAllFeedbacks = async (_, res) => {
   }
 }
 
+export const getAllFeedbacksByService = async (req, res) => {
+  const { serviceName } = req.params
+  try {
+    const feedbacks = await Feedback.find({
+      serviceName,
+    }).populate('user')
+
+    if (!feedbacks.length) {
+      return res.status(404).json({ message: 'No Feedbacks Found' })
+    }
+
+    res.status(200).json(feedbacks)
+  } catch (error) {
+    res.status(500).json({ message: 'Server error: ' + error.message })
+  }
+}
+
 // ================================== Get All Feedbacks By User ID ==================================
 export const getAllFeedbacksByUserId = async (req, res) => {
   const { userId } = req.params // Extract userId from route parameters
@@ -75,7 +90,6 @@ export const getAllFeedbacksByUserId = async (req, res) => {
         .json({ message: 'No feedbacks found for this user' })
     }
 
-    // Success response
     res.status(200).json(feedbacks)
   } catch (error) {
     res.status(500).json({ message: 'Server error: ' + error.message })
