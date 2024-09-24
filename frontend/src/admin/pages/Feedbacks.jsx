@@ -9,6 +9,7 @@ import { toast } from 'react-hot-toast'
 import { Link } from 'react-router-dom'
 import FeedbacksAnalytics from '../components/feedbacksAnalytics.jsx'
 import ServiceAnalytics from '../components/Services/ServiceAnalytics.jsx'
+import FeedbacksByAllServicesInOne from '../components/FeedbacksByAllServicesInOne.jsx'
 
 import 'primereact/resources/themes/saga-blue/theme.css'
 import 'primereact/resources/primereact.min.css'
@@ -106,6 +107,7 @@ const Feedbacks = () => {
         </ul>
       </div>
 
+      <FeedbacksByAllServicesInOne />
       <FeedbacksAnalytics />
 
       <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 justify-center items-start gap-4 mt-10'>

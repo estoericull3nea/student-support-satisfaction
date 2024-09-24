@@ -1,5 +1,6 @@
 import User from '../models/user.model.js'
 import Feedback from '../models/feedback.model.js'
+import moment from 'moment'
 
 export const getUserRegistrationStats = async (req, res) => {
   try {
@@ -121,12 +122,10 @@ export const getFeedbackStats = async (req, res) => {
   }
 }
 
-// Get feedbacks for a specific service (e.g., "Library") grouped by day, week, and month
 export const getFeedbackStatsByService = async (req, res) => {
   try {
     const { serviceName } = req.params
 
-    // Validate serviceName
     if (
       ![
         'Library',
@@ -138,7 +137,6 @@ export const getFeedbackStatsByService = async (req, res) => {
       return res.status(400).json({ error: 'Invalid service name' })
     }
 
-    // Filter and group feedbacks by day
     const dailyFeedbacks = await Feedback.aggregate([
       { $match: { serviceName } },
       {
@@ -152,7 +150,6 @@ export const getFeedbackStatsByService = async (req, res) => {
       { $sort: { _id: 1 } },
     ])
 
-    // Filter and group feedbacks by week
     const weeklyFeedbacks = await Feedback.aggregate([
       { $match: { serviceName } },
       {
@@ -167,7 +164,6 @@ export const getFeedbackStatsByService = async (req, res) => {
       { $sort: { '_id.isoWeekYear': 1, '_id.isoWeek': 1 } },
     ])
 
-    // Filter and group feedbacks by month
     const monthlyFeedbacks = await Feedback.aggregate([
       { $match: { serviceName } },
       {
@@ -184,7 +180,7 @@ export const getFeedbackStatsByService = async (req, res) => {
     res.json({
       daily: dailyFeedbacks,
       weekly: weeklyFeedbacks.map((w) => ({
-        _id: `${w._id.isoWeekYear}-W${w._id.isoWeek}`, // Week format for display
+        _id: `${w._id.isoWeekYear}-W${w._id.isoWeek}`,
         count: w.count,
       })),
       monthly: monthlyFeedbacks,
@@ -192,5 +188,37 @@ export const getFeedbackStatsByService = async (req, res) => {
   } catch (error) {
     console.error(error)
     res.status(500).json({ error: 'Failed to fetch feedback stats by service' })
+  }
+}
+
+export const getFeedbackByServices = async (req, res) => {
+  // API to get feedback count grouped by serviceName and date
+  const { period } = req.query // 'daily', 'weekly', 'monthly'
+
+  let groupBy
+  if (period === 'daily') {
+    groupBy = { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } }
+  } else if (period === 'weekly') {
+    groupBy = { $isoWeek: '$createdAt' }
+  } else if (period === 'monthly') {
+    groupBy = { $dateToString: { format: '%Y-%m', date: '$createdAt' } }
+  } else {
+    return res.status(400).json({ error: 'Invalid period selected' })
+  }
+
+  try {
+    const stats = await Feedback.aggregate([
+      {
+        $group: {
+          _id: { serviceName: '$serviceName', date: groupBy },
+          count: { $sum: 1 },
+        },
+      },
+      { $sort: { '_id.date': 1 } },
+    ])
+
+    res.json(stats)
+  } catch (err) {
+    res.status(500).json({ error: 'Server error' })
   }
 }

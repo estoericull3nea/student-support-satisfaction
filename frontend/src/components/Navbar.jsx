@@ -32,14 +32,13 @@ const Navbar = () => {
           }
         )
         setUser(response.data)
-        console.log(response.data)
       } catch (error) {
         console.log(error)
       }
     }
 
     fetchActiveUsers()
-  }, [user])
+  }, [])
 
   return (
     <div className='container z-10 '>
