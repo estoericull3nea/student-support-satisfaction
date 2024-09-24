@@ -105,7 +105,7 @@ const DashboardPage = () => {
         <div className='text-sm font-medium'>{getFormattedTime(time)}</div>
       </div>
 
-      <div className='flex flex-wrap gap-3 items-center justify-center lg:justify-between my-10'>
+      <div className='flex flex-wrap gap-3 items-center justify-center lg:justify-between my-10 w-full'>
         <div className='mt-10'>
           <div className='w-[200px] p-3 bg-base-100 shadow flex items-start gap-x-2 flex-col gap-y-3 relative'>
             <p className='text-xs text-gray-500'>All Students Registered</p>

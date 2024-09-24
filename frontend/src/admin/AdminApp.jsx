@@ -34,9 +34,9 @@ const AdminApp = () => {
   }, [])
 
   return (
-    <div className='flex h-screen'>
+    <div className='flex w-screen'>
       <Sidebar isCollapsed={isSidebarCollapsed} toggleSidebar={toggleSidebar} />
-      <div className='flex-1 p-6'>
+      <div className='flex-1 p-6 overflow-hidden'>
         <Routes>
           <Route path='/' element={<DashboardPage />} />
 

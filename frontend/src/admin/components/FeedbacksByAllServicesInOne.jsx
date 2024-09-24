@@ -66,7 +66,7 @@ const FeedbacksByAllServicesInOne = () => {
   }
 
   return (
-    <div className='mt-5 w-screen'>
+    <div className='mt-5'>
       <h2>Student Feedback Chart</h2>
 
       <div className='mb-4'>
