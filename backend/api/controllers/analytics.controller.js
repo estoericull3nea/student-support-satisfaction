@@ -46,6 +46,20 @@ export const getUserRegistrationStats = async (req, res) => {
       },
     ])
 
+    const yearlyRegistrations = await User.aggregate([
+      {
+        $group: {
+          _id: {
+            $dateToString: { format: '%Y', date: '$createdAt' },
+          },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $sort: { _id: 1 },
+      },
+    ])
+
     res.json({
       daily: dailyRegistrations,
       weekly: weeklyRegistrations.map((w) => ({
@@ -53,6 +67,7 @@ export const getUserRegistrationStats = async (req, res) => {
         count: w.count,
       })),
       monthly: monthlyRegistrations,
+      yearly: yearlyRegistrations, // Add yearly data here
     })
   } catch (error) {
     console.error(error)
@@ -105,6 +120,20 @@ export const getFeedbackStats = async (req, res) => {
       },
     ])
 
+    const yearlyFeedbacks = await Feedback.aggregate([
+      {
+        $group: {
+          _id: {
+            $dateToString: { format: '%Y', date: '$createdAt' },
+          },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $sort: { _id: 1 },
+      },
+    ])
+
     const formattedWeeklyFeedbacks = weeklyFeedbacks.map((w) => ({
       _id: `${w._id.isoWeekYear}-W${w._id.isoWeek}`,
       count: w.count,
@@ -114,6 +143,7 @@ export const getFeedbackStats = async (req, res) => {
       daily: dailyFeedbacks,
       weekly: formattedWeeklyFeedbacks,
       monthly: monthlyFeedbacks,
+      yearly: yearlyFeedbacks, // Add yearly data here
     })
   } catch (error) {
     console.error(error)
@@ -176,6 +206,19 @@ export const getFeedbackStatsByService = async (req, res) => {
       { $sort: { _id: 1 } },
     ])
 
+    const yearlyFeedbacks = await Feedback.aggregate([
+      { $match: { serviceName } },
+      {
+        $group: {
+          _id: {
+            $dateToString: { format: '%Y', date: '$createdAt' },
+          },
+          count: { $sum: 1 },
+        },
+      },
+      { $sort: { _id: 1 } },
+    ])
+
     res.json({
       daily: dailyFeedbacks,
       weekly: weeklyFeedbacks.map((w) => ({
@@ -183,6 +226,7 @@ export const getFeedbackStatsByService = async (req, res) => {
         count: w.count,
       })),
       monthly: monthlyFeedbacks,
+      yearly: yearlyFeedbacks, // Added yearly data
     })
   } catch (error) {
     console.error(error)
@@ -200,6 +244,8 @@ export const getFeedbackByServices = async (req, res) => {
     groupBy = { $isoWeek: '$createdAt' }
   } else if (period === 'monthly') {
     groupBy = { $dateToString: { format: '%Y-%m', date: '$createdAt' } }
+  } else if (period === 'yearly') {
+    groupBy = { $dateToString: { format: '%Y', date: '$createdAt' } } // Group by year
   } else {
     return res.status(400).json({ error: 'Invalid period selected' })
   }

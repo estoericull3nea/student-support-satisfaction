@@ -2,14 +2,14 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { Pie } from 'react-chartjs-2'
 import 'chart.js/auto'
-import ChartDataLabels from 'chartjs-plugin-datalabels' // Import the plugin
+import ChartDataLabels from 'chartjs-plugin-datalabels'
 import { Chart } from 'chart.js'
 
-Chart.register(ChartDataLabels) // Register the plugin
+Chart.register(ChartDataLabels)
 
 const LibraryAnalytics = ({ serviceName }) => {
   const [chartData, setChartData] = useState(null)
-  const [selectedOption, setSelectedOption] = useState('daily') // Default to daily
+  const [selectedOption, setSelectedOption] = useState('daily')
 
   useEffect(() => {
     const fetchFeedbackStats = async () => {
@@ -19,14 +19,13 @@ const LibraryAnalytics = ({ serviceName }) => {
         )
         const data = response.data
 
-        // Process data for charting
         const processedData = {
           daily: {
-            labels: data.daily.map((d) => d._id), // dates
+            labels: data.daily.map((d) => d._id),
             datasets: [
               {
                 label: 'Daily Feedbacks',
-                data: data.daily.map((d) => d.count), // feedback counts
+                data: data.daily.map((d) => d.count),
                 backgroundColor: [
                   'rgba(75, 192, 192, 0.6)',
                   'rgba(153, 102, 255, 0.6)',
@@ -41,7 +40,7 @@ const LibraryAnalytics = ({ serviceName }) => {
             ],
           },
           weekly: {
-            labels: data.weekly.map((d) => d._id), // week numbers
+            labels: data.weekly.map((d) => d._id),
             datasets: [
               {
                 label: 'Weekly Feedbacks',
@@ -60,11 +59,30 @@ const LibraryAnalytics = ({ serviceName }) => {
             ],
           },
           monthly: {
-            labels: data.monthly.map((d) => d._id), // months
+            labels: data.monthly.map((d) => d._id),
             datasets: [
               {
                 label: 'Monthly Feedbacks',
                 data: data.monthly.map((d) => d.count),
+                backgroundColor: [
+                  'rgba(75, 192, 192, 0.6)',
+                  'rgba(153, 102, 255, 0.6)',
+                  'rgba(255, 159, 64, 0.6)',
+                ],
+                hoverBackgroundColor: [
+                  'rgba(75, 192, 192, 1)',
+                  'rgba(153, 102, 255, 1)',
+                  'rgba(255, 159, 64, 1)',
+                ],
+              },
+            ],
+          },
+          yearly: {
+            labels: data.yearly.map((d) => d._id),
+            datasets: [
+              {
+                label: 'Yearly Feedbacks',
+                data: data.yearly.map((d) => d.count),
                 backgroundColor: [
                   'rgba(75, 192, 192, 0.6)',
                   'rgba(153, 102, 255, 0.6)',
@@ -98,13 +116,13 @@ const LibraryAnalytics = ({ serviceName }) => {
   const options = {
     plugins: {
       datalabels: {
-        color: '#fff', // Set the color of the labels
+        color: '#fff',
         display: 'auto',
         align: 'center',
         anchor: 'center',
         formatter: (value, context) => {
           const label = context.chart.data.labels[context.dataIndex]
-          return `${label}: ${value}` // Display date and count inside the pie chart
+          return `${label}: ${value}`
         },
       },
     },
@@ -124,6 +142,7 @@ const LibraryAnalytics = ({ serviceName }) => {
           <option value='daily'>Daily</option>
           <option value='weekly'>Weekly</option>
           <option value='monthly'>Monthly</option>
+          <option value='yearly'>Yearly</option> {/* Added yearly option */}
         </select>
       </div>
 
@@ -153,6 +172,15 @@ const LibraryAnalytics = ({ serviceName }) => {
               <span className='font-bold'>{serviceName}</span>
             </h2>
             <Pie data={chartData.monthly} options={options} />
+          </>
+        )}
+        {selectedOption === 'yearly' && (
+          <>
+            <h2 className='my-3 text-sm'>
+              Yearly Feedbacks for{' '}
+              <span className='font-bold'>{serviceName}</span>
+            </h2>
+            <Pie data={chartData.yearly} options={options} />
           </>
         )}
       </div>

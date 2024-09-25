@@ -1,4 +1,3 @@
-// components/FeedbackChart.js
 import React, { useState, useEffect } from 'react'
 import { Line } from 'react-chartjs-2'
 import axios from 'axios'
@@ -8,7 +7,6 @@ const FeedbacksByAllServicesInOne = () => {
   const [chartData, setChartData] = useState({ labels: [], datasets: [] })
 
   useEffect(() => {
-    // Fetch feedback statistics based on the selected period
     const fetchFeedbackStats = async () => {
       try {
         const response = await axios.get(
@@ -16,7 +14,6 @@ const FeedbacksByAllServicesInOne = () => {
         )
         const feedbackStats = response.data
 
-        // Extract labels (dates) and data (counts for each service)
         const services = [
           'Library',
           'Office of the School Principal',
@@ -54,7 +51,6 @@ const FeedbacksByAllServicesInOne = () => {
     fetchFeedbackStats()
   }, [period])
 
-  // Generate random color for each line (optional)
   const getRandomColor = () => {
     const letters = '0123456789ABCDEF'
     let color = '#'
@@ -78,6 +74,7 @@ const FeedbacksByAllServicesInOne = () => {
           <option value='daily'>Daily</option>
           <option value='weekly'>Weekly</option>
           <option value='monthly'>Monthly</option>
+          <option value='yearly'>Yearly</option> {/* Added yearly option */}
         </select>
       </div>
 

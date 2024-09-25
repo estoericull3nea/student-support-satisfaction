@@ -50,6 +50,17 @@ const FeedbacksAnalytics = () => {
               },
             ],
           },
+          yearly: {
+            labels: data.yearly.map((d) => d._id), // years
+            datasets: [
+              {
+                label: 'Feedbacks per Year',
+                data: data.yearly.map((d) => d.count), // feedback counts
+                borderColor: 'rgba(54, 162, 235, 1)',
+                fill: false,
+              },
+            ],
+          },
         }
 
         setChartData(processedData)
@@ -81,6 +92,7 @@ const FeedbacksAnalytics = () => {
           <option value='daily'>Per Day</option>
           <option value='weekly'>Per Week</option>
           <option value='monthly'>Per Month</option>
+          <option value='yearly'>Per Year</option> {/* Add yearly option */}
         </select>
       </div>
 
@@ -101,6 +113,12 @@ const FeedbacksAnalytics = () => {
           <>
             <h2>Monthly Feedbacks</h2>
             <Line data={chartData.monthly} />
+          </>
+        )}
+        {selectedOption === 'yearly' && (
+          <>
+            <h2>Yearly Feedbacks</h2>
+            <Line data={chartData.yearly} />
           </>
         )}
       </div>
