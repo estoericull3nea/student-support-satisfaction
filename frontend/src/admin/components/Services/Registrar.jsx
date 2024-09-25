@@ -10,6 +10,8 @@ import { Link } from 'react-router-dom'
 
 import ServiceAnalytics from './ServiceAnalytics'
 
+import ViewServiceVists from '../ViewServiceVists'
+
 import 'primereact/resources/themes/saga-blue/theme.css'
 import 'primereact/resources/primereact.min.css'
 import 'primeicons/primeicons.css'
@@ -197,6 +199,8 @@ const Registrar = () => {
           <li>Office of the School Principal</li>
         </ul>
       </div>
+
+      <ViewServiceVists serviceName='Office of the Registrar' />
 
       <div className='my-10 w-[30rem]'>
         <ServiceAnalytics serviceName='Office of the Registrar' />

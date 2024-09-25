@@ -12,6 +12,7 @@ import ServiceAnalytics from './ServiceAnalytics'
 import 'primereact/resources/themes/saga-blue/theme.css'
 import 'primereact/resources/primereact.min.css'
 import 'primeicons/primeicons.css'
+import ViewServiceVists from '../ViewServiceVists'
 
 const Principal = () => {
   const [inactiveUsers, setLibraryService] = useState([])
@@ -196,6 +197,8 @@ const Principal = () => {
           <li>Office of the School Principal</li>
         </ul>
       </div>
+
+      <ViewServiceVists serviceName='Office of the School Principal' />
 
       <div className='p-inputgroup my-3'>
         <InputText

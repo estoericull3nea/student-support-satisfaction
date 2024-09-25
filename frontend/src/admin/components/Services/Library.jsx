@@ -12,6 +12,7 @@ import ServiceAnalytics from './ServiceAnalytics'
 import 'primereact/resources/themes/saga-blue/theme.css'
 import 'primereact/resources/primereact.min.css'
 import 'primeicons/primeicons.css'
+import ViewServiceVists from '../ViewServiceVists'
 
 const Library = () => {
   const [inactiveUsers, setLibraryService] = useState([])
@@ -196,6 +197,8 @@ const Library = () => {
           <li>Library</li>
         </ul>
       </div>
+
+      <ViewServiceVists serviceName='Library' />
 
       <div className='my-10 w-[30rem]'>
         <ServiceAnalytics serviceName='Library' />

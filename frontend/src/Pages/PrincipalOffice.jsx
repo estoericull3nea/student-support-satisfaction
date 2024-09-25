@@ -56,6 +56,22 @@ const PrincipalOffice = () => {
     }
   }, [location, token])
 
+  const countVisit = async (serviceName) => {
+    try {
+      const response = await axios.post('http://localhost:5000/api/visit', {
+        serviceName,
+      })
+
+      console.log(response.data.message)
+    } catch (error) {
+      console.error('Error counting visit:', error)
+    }
+  }
+
+  useEffect(() => {
+    countVisit('Office of the School Principal')
+  }, [])
+
   const handleFeedbackSubmit = async (e) => {
     e.preventDefault()
 

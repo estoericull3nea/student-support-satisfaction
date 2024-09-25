@@ -28,6 +28,22 @@ const Library = () => {
 
   const feedbackFormRef = useRef(null)
 
+  const countVisit = async (serviceName) => {
+    try {
+      const response = await axios.post('http://localhost:5000/api/visit', {
+        serviceName,
+      })
+
+      console.log(response.data.message)
+    } catch (error) {
+      console.error('Error counting visit:', error)
+    }
+  }
+
+  useEffect(() => {
+    countVisit('Library')
+  }, [])
+
   useEffect(() => {
     const storedRating = localStorage.getItem('feedback_rating')
     const storedComment = localStorage.getItem('feedback_comment')

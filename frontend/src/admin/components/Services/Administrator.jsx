@@ -9,6 +9,8 @@ import { toast } from 'react-hot-toast'
 import { Link } from 'react-router-dom'
 import ServiceAnalytics from './ServiceAnalytics'
 
+import ViewServiceVists from '../ViewServiceVists'
+
 import 'primereact/resources/themes/saga-blue/theme.css'
 import 'primereact/resources/primereact.min.css'
 import 'primeicons/primeicons.css'
@@ -196,6 +198,8 @@ const Admnistrator = () => {
           <li>Office of the School Administrator</li>
         </ul>
       </div>
+
+      <ViewServiceVists serviceName='Office of the School Administrator' />
 
       <div className='my-10 w-[30rem]'>
         <ServiceAnalytics serviceName='Office of the School Administrator' />
