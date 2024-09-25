@@ -93,8 +93,7 @@ const AllUsers = () => {
       setUserFeedbacks(response.data)
       setIsFeedbackDialogVisible(true)
     } catch (error) {
-      console.error('Error fetching feedbacks:', error)
-      toast.error('Failed to fetch feedbacks')
+      toast.error(error.response.data.message)
     }
   }
 

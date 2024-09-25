@@ -71,18 +71,7 @@ const Register = () => {
         confirmPassword: '',
       })
     } catch (error) {
-      if (error.response) {
-        toast.error(
-          error.response.data.errors[0].msg ||
-            'Something went wrong. Please try again later.'
-        )
-      } else if (error.request) {
-        console.error('Error request:', error.request)
-        toast.error('No response from the server. Please try again later.')
-      } else {
-        console.error('Error', error.message)
-        toast.error('An unknown error occurred. Please try again later.')
-      }
+      toast.error(error.response.data.message)
     } finally {
       setIsLoading(false)
     }
