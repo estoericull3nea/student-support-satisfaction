@@ -4,6 +4,7 @@ import {
   deleteAllUsers,
   deleteUserById,
   getAllActiveUser,
+  getAllFeedbacksByUserEmail,
   getAllInactiveUser,
   getAllUsers,
   getUserById,
@@ -92,5 +93,7 @@ router.put('/:id', updateUserById)
 router.patch('/:id/status', toggleActive)
 router.delete('/:id', protect, deleteUserById)
 router.get('/search/q', searchAnythingOnUser)
+
+router.get('/search/user-feedbacks', getAllFeedbacksByUserEmail)
 
 export default router

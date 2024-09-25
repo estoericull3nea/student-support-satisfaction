@@ -11,10 +11,8 @@ dotenv.config()
 // ================================== Get All Users ==================================
 export const getAllUsers = async (_, res) => {
   try {
-    // Finding all users, excluding sensitive fields like password
     const users = await User.find().select('-password')
 
-    // Check if no users were found
     if (!users.length) {
       return res.status(404).json({ message: 'No Users Found' })
     }
@@ -24,7 +22,6 @@ export const getAllUsers = async (_, res) => {
       createAt: formatTime(user.createdAt),
     }))
 
-    // Return user data along with count
     return res.status(200).json({
       count: users.length,
       format,
@@ -38,13 +35,11 @@ export const getAllUsers = async (_, res) => {
 export const getUserById = async (req, res) => {
   const { id } = req.params
 
-  // Check if the ID is valid for MongoDB or not
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(404).json({ message: 'Invalid ID' })
   }
 
   try {
-    // Find the user by ID and populate feedbacks and lastLoginDate
     const user = await User.findById(id)
       .select('-password')
       .populate('feedbacks')
@@ -90,7 +85,6 @@ export const updateUserById = async (req, res) => {
       return res.status(404).json({ message: 'User not found' })
     }
 
-    // Update fields
     if (firstName) user.firstName = firstName
     if (lastName) user.lastName = lastName
     if (password) user.password = await bcrypt.hash(password, 10)
@@ -112,7 +106,6 @@ export const updateUserById = async (req, res) => {
 export const deleteUserById = async (req, res) => {
   const { id } = req.params
 
-  // Checking if the id is valid for mongodb or not
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(404).json({ message: 'Invalid ID' })
   }
@@ -120,12 +113,10 @@ export const deleteUserById = async (req, res) => {
   try {
     const user = await User.findByIdAndDelete(id)
 
-    // If the user does not exist
     if (!user) {
       return res.status(404).json({ message: 'User not found' })
     }
 
-    // Success response
     return res.status(200).json({ message: 'User deleted successfully' })
   } catch (error) {
     return res.status(500).json({ message: 'Server error: ' + error.message })
@@ -159,9 +150,8 @@ export const makeUserInactive = async (req, res) => {
 export const toggleActive = async (req, res) => {
   try {
     const { id } = req.params
-    const { active } = req.body // Get new active status from request body
+    const { active } = req.body
 
-    // Update user status
     const user = await User.findByIdAndUpdate(id, { active })
 
     if (!user) {
@@ -178,17 +168,14 @@ export const toggleActive = async (req, res) => {
 // ================================== Delete All Users ==================================
 export const deleteAllUsers = async (_, res) => {
   try {
-    // Check if there are any registered users
     const userCount = await User.countDocuments()
 
-    // If no users are found, return a message
     if (userCount === 0) {
       return res.status(400).json({
         message: 'No users found, nothing to delete',
       })
     }
 
-    // Perform deletion of all users
     const result = await User.deleteMany({})
 
     return res.status(200).json({
@@ -204,7 +191,6 @@ export const searchAnythingOnUser = async (req, res) => {
   const { query = '', sortField, sortOrder, page = 1, limit = 10 } = req.query
 
   try {
-    // Handle specific queries like 'isVerified' or 'active'
     let booleanFilters = {}
     if (query.toLowerCase() === 'isverified') {
       booleanFilters.isVerified = true
@@ -216,7 +202,6 @@ export const searchAnythingOnUser = async (req, res) => {
       booleanFilters.active = false
     }
 
-    // Build a search condition for text-based fields
     const textSearchCondition = query
       ? {
           $or: [
@@ -233,26 +218,21 @@ export const searchAnythingOnUser = async (req, res) => {
       ...booleanFilters,
     }
 
-    // Determine sorting
     const sortOptions = {}
     if (sortField) {
       sortOptions[sortField] = sortOrder === 'desc' ? -1 : 1
     }
 
-    // Convert page and limit to integers
     const skip = (parseInt(page) - 1) * parseInt(limit)
     const userLimit = parseInt(limit)
 
-    // Query the database with filters, sorting, pagination
     const users = await User.find(filters)
       .sort(sortOptions)
       .skip(skip)
       .limit(userLimit)
 
-    // Count the total number of matching documents
     const totalUsers = await User.countDocuments(filters)
 
-    // Return paginated users with total count
     res.status(200).json({
       users,
       totalUsers,
@@ -352,5 +332,30 @@ export const addUserFromAdmin = async (req, res) => {
     })
   } catch (error) {
     return res.status(500).json({ message: 'Server error: ' + error.message })
+  }
+}
+
+export const getAllFeedbacksByUserEmail = async (req, res) => {
+  const { email } = req.query
+  try {
+    const users = await Feedback.find({ email }).select('-password')
+
+    if (!users.length) {
+      return res
+        .status(404)
+        .json({ message: 'No Feedbacks of this User Found' })
+    }
+
+    const format = users.map((user) => ({
+      ...user.toObject(),
+      createAt: formatTime(user.createdAt),
+    }))
+
+    return res.status(200).json({
+      count: users.length,
+      format,
+    })
+  } catch (error) {
+    return res.status(500).json({ message: 'Server Error: ' + error.message })
   }
 }

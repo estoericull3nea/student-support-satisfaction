@@ -11,6 +11,7 @@ import { Link } from 'react-router-dom'
 import 'primereact/resources/themes/saga-blue/theme.css'
 import 'primereact/resources/primereact.min.css'
 import 'primeicons/primeicons.css'
+import { formatToMMDDYYYY } from '../../../../backend/api/utils/formatToMonthDayYear'
 
 const AllUsers = () => {
   const [inactiveUsers, setInactiveUsers] = useState([])
@@ -37,6 +38,9 @@ const AllUsers = () => {
   })
 
   const errorShownRef = useRef(false)
+
+  const [isFeedbackDialogVisible, setIsFeedbackDialogVisible] = useState(false)
+  const [userFeedbacks, setUserFeedbacks] = useState([])
 
   // Function to open "Add User" dialog
   const openAddUserDialog = () => {
@@ -78,6 +82,25 @@ const AllUsers = () => {
       console.error('Error adding user:', error)
       toast.error('Failed to add user')
     }
+  }
+
+  // Fetch feedbacks for the selected user based on email
+  const fetchFeedbacksByEmail = async (userId) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/api/feedbacks/${userId}`
+      )
+      setUserFeedbacks(response.data)
+      setIsFeedbackDialogVisible(true)
+    } catch (error) {
+      console.error('Error fetching feedbacks:', error)
+      toast.error('Failed to fetch feedbacks')
+    }
+  }
+
+  // Open feedback dialog when "Feedbacks" button is clicked
+  const openFeedbackDialog = (rowData) => {
+    fetchFeedbacksByEmail(rowData._id)
   }
 
   const fetchAllStudents = async () => {
@@ -161,10 +184,10 @@ const AllUsers = () => {
         />
 
         <Button
-          label='View All Feedbacks'
-          icon='pi pi-pencil'
+          label='Feedbacks'
+          icon='pi pi-eye'
           className='p-button-warning border p-2 text-[.7rem] rounded'
-          onClick={() => openUpdateDialog(rowData)}
+          onClick={() => openFeedbackDialog(rowData)}
         />
 
         <Button
@@ -249,7 +272,7 @@ const AllUsers = () => {
       </DataTable>
 
       <Dialog
-        header='User Details'
+        header='Student Details'
         visible={isDialogVisible}
         style={{ width: '400px' }}
         modal
@@ -289,6 +312,42 @@ const AllUsers = () => {
               {new Date(selectedUser.updatedAt).toLocaleString()}
             </p>
           </div>
+        )}
+      </Dialog>
+
+      {/* Feedbacks Dialog */}
+      <Dialog
+        header='Students Feedbacks'
+        visible={isFeedbackDialogVisible}
+        style={{ width: '700px' }}
+        modal
+        onHide={() => setIsFeedbackDialogVisible(false)}
+      >
+        {userFeedbacks.length > 0 ? (
+          <div className='overflow-x-auto'>
+            <table className='table w-full'>
+              <thead>
+                <tr>
+                  <th>Feedback ID</th>
+                  <th>Rating</th>
+                  <th>Comment</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {userFeedbacks.map((feedback, index) => (
+                  <tr key={index}>
+                    <td>{feedback._id}</td>
+                    <td>{feedback.rating}</td>
+                    <td>{feedback.comment}</td>
+                    <td>{formatToMMDDYYYY(feedback.createdAt)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <p>No feedbacks found for this user.</p>
         )}
       </Dialog>
 
