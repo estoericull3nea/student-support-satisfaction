@@ -152,13 +152,19 @@ const AllUsers = () => {
 
   const actionBodyTemplate = (rowData) => {
     return (
-      <div>
+      <div className='space-x-2'>
         <Button
           label='View'
           icon='pi pi-eye'
           className='p-button-info border p-2 text-[.7rem] rounded'
           onClick={() => viewUserDetails(rowData)}
-          style={{ marginRight: '.5em' }}
+        />
+
+        <Button
+          label='View All Feedbacks'
+          icon='pi pi-pencil'
+          className='p-button-warning border p-2 text-[.7rem] rounded'
+          onClick={() => openUpdateDialog(rowData)}
         />
 
         <Button
