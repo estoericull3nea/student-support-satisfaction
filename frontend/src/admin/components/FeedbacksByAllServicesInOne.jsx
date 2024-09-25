@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react'
 import { Line } from 'react-chartjs-2'
 import axios from 'axios'
-import moment from 'moment'
 
 const FeedbacksByAllServicesInOne = () => {
   const [period, setPeriod] = useState('daily')
@@ -67,7 +66,7 @@ const FeedbacksByAllServicesInOne = () => {
 
   return (
     <div className='mt-5'>
-      <h2>Student Feedback Chart</h2>
+      <h2>Student Feedback Chart (Count)</h2>
 
       <div className='mb-4'>
         <label className='block mb-2 text-sm font-bold'>Select Period</label>

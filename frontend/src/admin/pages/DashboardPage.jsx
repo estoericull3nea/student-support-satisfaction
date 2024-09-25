@@ -13,6 +13,7 @@ import StudentRegistersAnalytics from '../components/StudentRegistersAnalytics.j
 import ServiceAnalytics from '../components/Services/ServiceAnalytics.jsx'
 import { Link } from 'react-router-dom'
 import FeedbacksByAllServicesInOne from '../components/FeedbacksByAllServicesInOne.jsx'
+import FeedbacksByRating from '../components/FeedbacksByRating.jsx'
 
 const DashboardPage = () => {
   const [time, setTime] = useState(new Date())
@@ -297,8 +298,9 @@ const DashboardPage = () => {
         <ServiceAnalytics serviceName='Office of the Registrar' />
       </div>
 
-      <div>
+      <div className='grid grid-cols-1 lg:grid-cols-2'>
         <FeedbacksByAllServicesInOne />
+        <FeedbacksByRating />
       </div>
     </>
   )

@@ -220,3 +220,64 @@ export const getFeedbackByServices = async (req, res) => {
     res.status(500).json({ error: 'Server error' })
   }
 }
+
+// testing
+
+const getTimeInterval = (period) => {
+  switch (period) {
+    case 'daily':
+      return { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } }
+    case 'weekly':
+      return { $dateToString: { format: '%Y-%U', date: '$createdAt' } }
+    case 'monthly':
+      return { $dateToString: { format: '%Y-%m', date: '$createdAt' } }
+    case 'yearly':
+      return { $dateToString: { format: '%Y', date: '$createdAt' } }
+    default:
+      return { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } }
+  }
+}
+
+export const getFeedbackRatings = async (req, res) => {
+  const { period = 'daily' } = req.query
+
+  try {
+    const feedbacks = await Feedback.aggregate([
+      {
+        $addFields: {
+          // Add a new field that converts the string rating to a numeric value
+          numericRating: {
+            $switch: {
+              branches: [
+                { case: { $eq: ['$rating', 'very-dissatisfied'] }, then: 1 },
+                { case: { $eq: ['$rating', 'dissatisfied'] }, then: 2 },
+                { case: { $eq: ['$rating', 'neutral'] }, then: 3 },
+                { case: { $eq: ['$rating', 'satisfied'] }, then: 4 },
+                { case: { $eq: ['$rating', 'very-satisfied'] }, then: 5 },
+              ],
+              default: 3, // Default to 'neutral' if none matches
+            },
+          },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            serviceName: '$serviceName',
+            time: getTimeInterval(period),
+          },
+          averageRating: { $avg: '$numericRating' }, // Use numeric rating now
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $sort: { '_id.time': 1 },
+      },
+    ])
+
+    res.json(feedbacks)
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Failed to fetch feedback data' })
+  }
+}
