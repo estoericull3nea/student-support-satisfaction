@@ -1,16 +1,17 @@
 import express from 'express'
 import {
-  getAdmin,
+  getAdminById,
   getAllAdmins,
   registerAdmin,
-  updateAdmin,
+  updateAdminById,
 } from '../controllers/admin.controller.js'
 
 const router = express.Router()
+
 router.post('/register', registerAdmin)
 router.get('/get-all-admins', getAllAdmins)
-router.get('/single-admin', getAdmin)
+router.get('/single-admin', getAdminById)
 
-router.put('/update-admin/:id', updateAdmin)
+router.put('/update-admin/:id', updateAdminById)
 
 export default router

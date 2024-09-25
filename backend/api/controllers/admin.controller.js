@@ -51,7 +51,7 @@ export const loginAdmin = async (req, res) => {
   }
 }
 
-export const getAllAdmins = async (req, res) => {
+export const getAllAdmins = async (_, res) => {
   try {
     const admins = await Admin.find()
     return res.status(200).json(admins)
@@ -60,7 +60,7 @@ export const getAllAdmins = async (req, res) => {
   }
 }
 
-export const getAdmin = async (req, res) => {
+export const getAdminById = async (req, res) => {
   try {
     const { id } = req.params
     const admin = await Admin.findById(id)
@@ -73,7 +73,7 @@ export const getAdmin = async (req, res) => {
   }
 }
 
-export const updateAdmin = async (req, res) => {
+export const updateAdminById = async (req, res) => {
   try {
     const { id } = req.params
     const updatedData = req.body
@@ -106,7 +106,7 @@ export const updateAdmin = async (req, res) => {
   }
 }
 
-export const deleteAdmin = async (req, res) => {
+export const deleteAdminById = async (req, res) => {
   try {
     const { id } = req.params
     const deletedAdmin = await Admin.findByIdAndDelete(id)
@@ -121,7 +121,7 @@ export const deleteAdmin = async (req, res) => {
   }
 }
 
-export const clearAdmin = async (req, res) => {
+export const clearAdmins = async (_, res) => {
   try {
     await Admin.deleteMany({})
 

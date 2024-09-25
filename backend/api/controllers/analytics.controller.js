@@ -1,6 +1,5 @@
 import User from '../models/user.model.js'
 import Feedback from '../models/feedback.model.js'
-import moment from 'moment'
 
 export const getUserRegistrationStats = async (req, res) => {
   try {
@@ -192,8 +191,7 @@ export const getFeedbackStatsByService = async (req, res) => {
 }
 
 export const getFeedbackByServices = async (req, res) => {
-  // API to get feedback count grouped by serviceName and date
-  const { period } = req.query // 'daily', 'weekly', 'monthly'
+  const { period } = req.query
 
   let groupBy
   if (period === 'daily') {
