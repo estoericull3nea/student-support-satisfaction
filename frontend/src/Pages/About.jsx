@@ -16,6 +16,8 @@ import trophy from '../assets/images/icons/trophy.png'
 import businessWorld from '../assets/images/icons/business-world.png'
 import Breadcrumbs from '../components/Breadcrumbs'
 
+import { Link } from 'react-router-dom'
+
 const About = () => {
   return (
     <>
@@ -52,9 +54,12 @@ const About = () => {
                 compassion. Our focus is on providing a holistic education that
                 fosters both academic excellence and spiritual development.
               </p>
-              <button className='btn bg-primary hover:bg-primary-hover text-white'>
+              <Link
+                to='/contact-us'
+                className='btn bg-primary hover:bg-primary-hover text-white'
+              >
                 Get in Touch with Us
-              </button>
+              </Link>
             </div>
           </div>
         </div>

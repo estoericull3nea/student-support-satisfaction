@@ -6,7 +6,7 @@ const Services = ({ title, description, btnText, images, index, link }) => {
   const reverse = index % 2 !== 0
 
   return (
-    <div className='py-3 md:py-14'>
+    <div className='py-3 md:py-14' id='services'>
       <div className='container mx-auto flex flex-col md:flex-row items-center justify-between gap-x-20'>
         {/* Image Section */}
         <div

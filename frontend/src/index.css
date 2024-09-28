@@ -6,6 +6,10 @@
   @apply font-poppins;
 }
 
+body {
+  scroll-behavior: smooth;
+}
+
 @layer components {
   .primary-btn-outline {
     background-color: transparent;

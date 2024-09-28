@@ -19,7 +19,7 @@ const Hero = () => {
                 services offered by our school.
               </p>
               <a
-                href='#'
+                href='/#services'
                 className='btn bg-primary hover:bg-primary-hover text-white'
               >
                 Explore Our Services

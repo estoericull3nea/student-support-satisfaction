@@ -278,9 +278,9 @@ const Profile = () => {
           </div>
 
           <div className='right w-full lg:w-auto'>
-            <div className='box h-auto w-full lg:w-[600px] border shadow-xl rounded-lg p-3'>
-              <div className='flex flex-col lg:flex-row justify-between'>
-                <div className='h-40 w-full lg:w-auto border m-3 rounded-lg p-2'>
+            <div className='box h-auto  w-full lg:w-[600px] border shadow-xl rounded-lg p-3 space-y-3 lg:space-y-3'>
+              <div className='flex flex-col lg:flex-row justify-between space-y-3 lg:space-y-0 lg:space-x-3'>
+                <div className='h-40 w-full lg:w-auto border rounded-lg p-2'>
                   <div className='flex flex-col items-center'>
                     <p className='text-sm font-medium'>
                       Total Service Feedback
@@ -291,7 +291,7 @@ const Profile = () => {
                   </div>
                 </div>
 
-                <div className='h-40 w-full lg:w-auto border m-3 rounded-lg p-2'>
+                <div className='h-40 w-full lg:w-auto border rounded-lg p-2'>
                   <div className='flex flex-col items-center'>
                     <p className='text-sm font-medium'>
                       Recent Service Feedback
@@ -304,7 +304,7 @@ const Profile = () => {
                   </div>
                 </div>
 
-                <div className='h-40 w-full lg:w-auto border m-3 rounded-lg p-2'>
+                <div className='h-40 w-full lg:w-auto border rounded-lg p-2'>
                   <div className='flex flex-col items-center'>
                     <p className='text-sm font-medium'>Recent Login Date</p>
                     <span className='font-bold mt-5 text-sm text-center'>
@@ -314,7 +314,7 @@ const Profile = () => {
                 </div>
               </div>
 
-              <div className='h-40 w-full border m-3 rounded-lg p-2'>
+              <div className='h-40 w-full border rounded-lg p-2'>
                 <p className='text-sm font-medium'>Account Overview</p>
 
                 <div className='overflow-x-auto h-full w-full mt-3'>
@@ -363,7 +363,7 @@ const Profile = () => {
           />
           <div
             role='tabpanel'
-            className='tab-content bg-base-100 border-base-300 rounded-box p-6'
+            className='tab-content bg-base-100 border-base-300 rounded-box p-6 overflow-hidden'
           >
             <div>
               <div className='flex flex-col md:flex-row gap-3'>
@@ -434,7 +434,7 @@ const Profile = () => {
           />
           <div
             role='tabpanel'
-            className='tab-content bg-base-100 border-base-300 rounded-box p-6'
+            className='tab-content bg-base-100 border-base-300 rounded-box p-6 overflow-hidden'
           >
             <div className='overflow-x-auto'>
               <table className='table w-full'>
@@ -509,7 +509,7 @@ const Profile = () => {
 
           <div
             role='tabpanel'
-            className='tab-content bg-base-100 border-base-300 rounded-box p-6'
+            className='tab-content bg-base-100 border-base-300 rounded-box p-6 overflow-hidden'
           >
             <div className='overflow-x-auto'>
               <table className='table w-full'>
@@ -582,7 +582,7 @@ const Profile = () => {
 
           <div
             role='tabpanel'
-            className='tab-content bg-base-100 border-base-300 rounded-box p-6'
+            className='tab-content bg-base-100 border-base-300 rounded-box p-6 overflow-hidden'
           >
             <div className='overflow-x-auto'>
               <table className='table w-full'>
