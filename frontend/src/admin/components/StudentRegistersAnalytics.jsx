@@ -12,7 +12,9 @@ const StudentRegistersAnalytics = () => {
     const fetchRegistrationStats = async () => {
       try {
         const response = await axios.get(
-          'http://localhost:5000/api/analytics/user-registration-stats'
+          `${
+            import.meta.env.VITE_BACKEND_URL
+          }/api/analytics/user-registration-stats`
         )
 
         const data = response.data

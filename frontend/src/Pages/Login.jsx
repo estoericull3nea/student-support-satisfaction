@@ -29,7 +29,7 @@ const Login = () => {
       setIsSubmitting(true)
 
       const response = await axios.post(
-        'http://localhost:5000/api/auth/login',
+        `${import.meta.env.VITE_BACKEND_URL}/api/auth/login`,
         {
           email,
           password,
@@ -69,9 +69,12 @@ const Login = () => {
   const resendVerification = async () => {
     try {
       setIsSendingVerification(true)
-      await axios.post('http://localhost:5000/api/auth/resend-verification', {
-        email,
-      })
+      await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/auth/resend-verification`,
+        {
+          email,
+        }
+      )
       toast.success('Verification email has been sent.')
       setIsSendingVerification(false)
       setModalVisible(false)

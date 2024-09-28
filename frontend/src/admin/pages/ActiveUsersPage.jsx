@@ -57,7 +57,7 @@ const ActiveUsersPage = () => {
 
     try {
       const response = await axios.post(
-        'http://localhost:5000/api/users/add-user',
+        `${import.meta.env.VITE_BACKEND_URL}/api/users/add-user`,
         newUserDetails
       )
       const addedUser = response.data.newUser
@@ -81,7 +81,7 @@ const ActiveUsersPage = () => {
   const fetchActiveUsers = async () => {
     try {
       const response = await axios.get(
-        'http://localhost:5000/api/users/active-users'
+        `${import.meta.env.VITE_BACKEND_URL}/api/users/active-users`
       )
       setInactiveUsers(response.data)
       errorShownRef.current = false
@@ -109,7 +109,7 @@ const ActiveUsersPage = () => {
   const makeUserInactive = async (id) => {
     try {
       const response = await axios.patch(
-        `http://localhost:5000/api/users/${id}/inactive`
+        `${import.meta.env.VITE_BACKEND_URL}/api/users/${id}/inactive`
       )
       const updatedUser = response.data.data
       setInactiveUsers((prevUsers) =>
@@ -150,7 +150,7 @@ const ActiveUsersPage = () => {
     try {
       const { _id } = selectedUser
       const response = await axios.put(
-        `http://localhost:5000/api/users/${_id}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/users/${_id}`,
         updatedUserDetails
       )
       const updatedUser = response.data.updatedUser

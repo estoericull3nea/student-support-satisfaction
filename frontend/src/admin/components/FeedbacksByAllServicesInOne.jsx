@@ -10,7 +10,9 @@ const FeedbacksByAllServicesInOne = () => {
     const fetchFeedbackStats = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/analytics/feedback-services-stats?period=${period}`
+          `${
+            import.meta.env.VITE_BACKEND_URL
+          }/api/analytics/feedback-services-stats?period=${period}`
         )
         const feedbackStats = response.data
 

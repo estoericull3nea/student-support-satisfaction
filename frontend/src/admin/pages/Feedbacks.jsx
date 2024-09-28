@@ -44,7 +44,9 @@ const Feedbacks = () => {
 
   const fetchAllFeedbacks = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/feedbacks')
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/feedbacks`
+      )
       setFeedbacks(response.data)
       errorShownRef.current = false
     } catch (error) {

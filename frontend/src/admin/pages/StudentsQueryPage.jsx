@@ -27,7 +27,7 @@ const StudentsQueryPage = () => {
   const fetchStudentsQueries = async () => {
     try {
       const response = await axios.get(
-        'http://localhost:5000/api/contacts/users'
+        `${import.meta.env.VITE_BACKEND_URL}/api/contacts/users`
       )
       setStudentsQuery(response.data)
     } catch (error) {
@@ -108,7 +108,9 @@ const StudentsQueryPage = () => {
 
   const deleteContact = async (contactId) => {
     try {
-      await axios.delete(`http://localhost:5000/api/contacts/${contactId}`)
+      await axios.delete(
+        `${import.meta.env.VITE_BACKEND_URL}/api/contacts/${contactId}`
+      )
       toast.success('Contact deleted successfully')
       fetchStudentsQueries()
     } catch (error) {
@@ -119,7 +121,9 @@ const StudentsQueryPage = () => {
   // Clear all contacts function
   const clearAllContacts = async () => {
     try {
-      await axios.delete('http://localhost:5000/api/contacts/users/clear')
+      await axios.delete(
+        `${import.meta.env.VITE_BACKEND_URL}/api/contacts/users/clear`
+      )
       toast.success('All contacts cleared successfully')
       fetchStudentsQueries()
       setShowConfirm(false)

@@ -8,7 +8,7 @@ import toast from 'react-hot-toast'
 import Breadcrumbs from '../components/Breadcrumbs'
 
 const Register = () => {
-  const SERVER_URL = `http://localhost:5000/api`
+  const SERVER_URL = `${import.meta.env.VITE_BACKEND_URL}/api`
 
   const [formData, setFormData] = useState({
     firstName: '',

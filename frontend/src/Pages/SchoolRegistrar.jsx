@@ -58,9 +58,12 @@ const SchoolRegistrar = () => {
 
   const countVisit = async (serviceName) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/visit', {
-        serviceName,
-      })
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/visit`,
+        {
+          serviceName,
+        }
+      )
 
       console.log(response.data.message)
     } catch (error) {
@@ -99,7 +102,7 @@ const SchoolRegistrar = () => {
       setIsSubmitting(true)
 
       await axios.post(
-        'http://localhost:5000/api/feedbacks',
+        `${import.meta.env.VITE_BACKEND_URL}/api/feedbacks`,
         {
           serviceName: 'Office of the Registrar',
           rating,

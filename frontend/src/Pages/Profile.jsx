@@ -36,7 +36,7 @@ const Profile = () => {
     const fetchUserWithId = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/users/${decoded.id}`,
+          `${import.meta.env.VITE_BACKEND_URL}/api/users/${decoded.id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -48,7 +48,9 @@ const Profile = () => {
         setFirstName(response.data.firstName)
         setLastName(response.data.lastName)
         setEmail(response.data.email)
-        setProfilePic(`http://localhost:5000${response.data.profilePic}`)
+        setProfilePic(
+          `${import.meta.env.VITE_BACKEND_URL}${response.data.profilePic}`
+        )
       } catch (err) {
         setErrorUser(err.message)
       } finally {
@@ -63,7 +65,9 @@ const Profile = () => {
     const fetchContactsQuery = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/contacts/users/${decoded.id}`,
+          `${import.meta.env.VITE_BACKEND_URL}/api/contacts/users/${
+            decoded.id
+          }`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -84,7 +88,7 @@ const Profile = () => {
 
     try {
       await axios.put(
-        `http://localhost:5000/api/users/${decoded.id}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/users/${decoded.id}`,
         { [field]: value },
         {
           headers: {
@@ -128,7 +132,9 @@ const Profile = () => {
     try {
       setUploading(true)
       const response = await axios.put(
-        `http://localhost:5000/api/users/${decoded.id}/upload-profile-pic`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/users/${
+          decoded.id
+        }/upload-profile-pic`,
         formData,
         {
           headers: {
@@ -225,7 +231,7 @@ const Profile = () => {
                   className='w-24 rounded-full cursor-pointer relative group'
                   onClick={triggerFileInput}
                 >
-                  {profilePic === 'http://localhost:5000' ? (
+                  {profilePic === `${import.meta.env.VITE_BACKEND_URL}` ? (
                     <div className='avatar placeholder w-full'>
                       <div className='bg-neutral text-neutral-content w-full rounded-full'>
                         <span className='font-bold tracking-tighter text-center text-3xl'>

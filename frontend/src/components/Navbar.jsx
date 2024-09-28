@@ -24,7 +24,7 @@ const Navbar = () => {
     const fetchActiveUsers = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/users/${userId}`,
+          `${import.meta.env.VITE_BACKEND_URL}/api/users/${userId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -191,7 +191,9 @@ const Navbar = () => {
                     <span className='font-bold tracking-tighter text-center text-sm'>
                       {/* {`${decoded.firstName[0].toUpperCase()} ${decoded.lastName[0].toUpperCase()}`} */}
                       <img
-                        src={`http://localhost:5000${user.profilePic}`}
+                        src={`${import.meta.env.VITE_BACKEND_URL}${
+                          user.profilePic
+                        }`}
                         alt=''
                       />
                     </span>

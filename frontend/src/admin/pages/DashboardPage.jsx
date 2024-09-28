@@ -41,7 +41,7 @@ const DashboardPage = () => {
     const fetchStats = async () => {
       try {
         const response = await axios.get(
-          'http://localhost:5000/api/count/stats'
+          `${import.meta.env.VITE_BACKEND_URL}/api/count/stats`
         )
         setStats(response.data.data)
       } catch (error) {
@@ -56,7 +56,7 @@ const DashboardPage = () => {
     const fetchTopTenMostRatedService = async () => {
       try {
         const response = await axios.get(
-          'http://localhost:5000/api/count/top-service-feedbacks'
+          `${import.meta.env.VITE_BACKEND_URL}/api/count/top-service-feedbacks`
         )
         setTopTenServiceFeedback(response.data.data)
       } catch (error) {
@@ -71,7 +71,7 @@ const DashboardPage = () => {
     const fetchTopTenRecentRegisteredUsers = async () => {
       try {
         const response = await axios.get(
-          'http://localhost:5000/api/count/top-ten-users'
+          `${import.meta.env.VITE_BACKEND_URL}/api/count/top-ten-users`
         )
         setTopTenRecentRegisteredUsers(response.data.data)
       } catch (error) {

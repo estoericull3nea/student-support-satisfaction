@@ -43,7 +43,7 @@ const AdminsPage = () => {
 
     try {
       const response = await axios.post(
-        'http://localhost:5000/api/admin/register',
+        `${import.meta.env.VITE_BACKEND_URL}/api/admin/register`,
         newAdminDetails
       )
       const addedAdmin = response.data.newAdmin
@@ -63,7 +63,7 @@ const AdminsPage = () => {
   const fetchAdmins = async () => {
     try {
       const response = await axios.get(
-        'http://localhost:5000/api/admin/get-all-admins'
+        '${import.meta.env.VITE_BACKEND_URL}/api/admin/get-all-admins'
       )
       setFetchAdmin(response.data)
       errorShownRef.current = false
@@ -112,7 +112,7 @@ const AdminsPage = () => {
       console.log(updatedAdminDetails)
       const { _id } = selectedAdmin
       const response = await axios.put(
-        `http://localhost:5000/api/admin/update-admin/${_id}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/admin/update-admin/${_id}`,
         updatedAdminDetails
       )
       toast.success('Admin updated successfully')

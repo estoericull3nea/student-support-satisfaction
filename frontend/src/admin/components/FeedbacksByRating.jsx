@@ -12,7 +12,9 @@ const FeedbacksByRating = () => {
     const fetchData = async () => {
       try {
         const { data } = await axios.get(
-          `http://localhost:5000/api/analytics/ratings/data?period=${period}`
+          `${
+            import.meta.env.VITE_BACKEND_URL
+          }/api/analytics/ratings/data?period=${period}`
         )
 
         const services = [

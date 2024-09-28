@@ -28,7 +28,7 @@ const NonStudentsQueryPage = () => {
   const fetchStudentsQueries = async () => {
     try {
       const response = await axios.get(
-        'http://localhost:5000/api/contacts/guest'
+        `${import.meta.env.VITE_BACKEND_URL}/api/contacts/guest`
       )
       setStudentsQuery(response.data)
       console.log(response.data)
@@ -61,7 +61,9 @@ const NonStudentsQueryPage = () => {
   // Clear all contacts function
   const clearAllContacts = async () => {
     try {
-      await axios.delete('http://localhost:5000/api/contacts/guest/clear')
+      await axios.delete(
+        `${import.meta.env.VITE_BACKEND_URL}/api/contacts/guest/clear`
+      )
       toast.success('All contacts cleared successfully')
       fetchStudentsQueries()
       setShowConfirm(false)
@@ -80,7 +82,9 @@ const NonStudentsQueryPage = () => {
 
   const deleteContact = async (contactId) => {
     try {
-      await axios.delete(`http://localhost:5000/api/contacts/${contactId}`)
+      await axios.delete(
+        `${import.meta.env.VITE_BACKEND_URL}/api/contacts/${contactId}`
+      )
       toast.success('Contact deleted successfully')
       fetchStudentsQueries()
     } catch (error) {

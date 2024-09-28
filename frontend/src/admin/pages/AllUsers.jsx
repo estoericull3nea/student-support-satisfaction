@@ -63,7 +63,7 @@ const AllUsers = () => {
 
     try {
       const response = await axios.post(
-        'http://localhost:5000/api/users/add-user',
+        `${import.meta.env.VITE_BACKEND_URL}/api/users/add-user`,
         newUserDetails
       )
       const addedUser = response.data.newUser
@@ -88,7 +88,7 @@ const AllUsers = () => {
   const fetchFeedbacksByEmail = async (userId) => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/feedbacks/${userId}`
+        `${import.meta.env.VITE_BACKEND_URL}/api/feedbacks/${userId}`
       )
       setUserFeedbacks(response.data)
       setIsFeedbackDialogVisible(true)
@@ -104,7 +104,9 @@ const AllUsers = () => {
 
   const fetchAllStudents = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/users')
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/users`
+      )
       setInactiveUsers(response.data.format)
       errorShownRef.current = false
     } catch (error) {
@@ -154,7 +156,7 @@ const AllUsers = () => {
     try {
       const { _id } = selectedUser
       const response = await axios.put(
-        `http://localhost:5000/api/users/${_id}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/users/${_id}`,
         updatedUserDetails
       )
       const updatedUser = response.data.updatedUser

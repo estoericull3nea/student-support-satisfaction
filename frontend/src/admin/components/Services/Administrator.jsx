@@ -60,7 +60,7 @@ const Admnistrator = () => {
 
     try {
       const response = await axios.post(
-        'http://localhost:5000/api/users/add-user',
+        `${import.meta.env.VITE_BACKEND_URL}/api/users/add-user`,
         newUserDetails
       )
       const addedUser = response.data.newUser
@@ -84,7 +84,9 @@ const Admnistrator = () => {
   const fetchLibraryService = async () => {
     try {
       const response = await axios.get(
-        'http://localhost:5000/api/feedbacks/get-service/Office of the School Administrator'
+        `${
+          import.meta.env.VITE_BACKEND_URL
+        }/api/feedbacks/get-service/Office of the School Administrator`
       )
       setLibraryService(response.data)
       errorShownRef.current = false
@@ -112,7 +114,7 @@ const Admnistrator = () => {
   const makeUserInactive = async (id) => {
     try {
       const response = await axios.patch(
-        `http://localhost:5000/api/users/${id}/inactive`
+        `${import.meta.env.VITE_BACKEND_URL}/api/users/${id}/inactive`
       )
       const updatedUser = response.data.data
       setLibraryService((prevUsers) =>
@@ -153,7 +155,7 @@ const Admnistrator = () => {
     try {
       const { _id } = selectedUser
       const response = await axios.put(
-        `http://localhost:5000/api/users/${_id}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/users/${_id}`,
         updatedUserDetails
       )
       const updatedUser = response.data.updatedUser
