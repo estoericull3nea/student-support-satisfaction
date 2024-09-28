@@ -68,7 +68,7 @@ export const registerUser = async (req, res) => {
 
     await newUser.save()
 
-    const verificationUrl = `http://localhost:5173/verify?token=${verificationToken}`
+    const verificationUrl = `https://student-support-satisfaction.vercel.app/verify?token=${verificationToken}`
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: newUser.email,
@@ -191,7 +191,7 @@ export const resendVerificationEmail = async (req, res) => {
     await user.save()
 
     // Send the verification email
-    const verificationUrl = `http://localhost:5173/verify?token=${verificationToken}`
+    const verificationUrl = `https://student-support-satisfaction.vercel.app/verify?token=${verificationToken}`
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: user.email,
