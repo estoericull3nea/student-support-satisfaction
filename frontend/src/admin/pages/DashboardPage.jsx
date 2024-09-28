@@ -8,12 +8,12 @@ import FeedbackIcon from '../../assets/images/icons/feedback.png'
 import Registered from '../../assets/images/icons/registered.png'
 import SignIn from '../../assets/images/icons/log-out.png'
 import { formatTime } from '../../utils.js'
-import FeedbacksAnalytics from '../components/feedbacksAnalytics.jsx'
-import StudentRegistersAnalytics from '../components/StudentRegistersAnalytics.jsx'
-import ServiceAnalytics from '../components/Services/ServiceAnalytics.jsx'
+import FeedbacksAnalytics from '../components/feedbacksAnalytics'
+import StudentRegistersAnalytics from '../components/StudentRegistersAnalytics'
+import ServiceAnalytics from '../components/Services/ServiceAnalytics'
 import { Link } from 'react-router-dom'
-import FeedbacksByAllServicesInOne from '../components/FeedbacksByAllServicesInOne.jsx'
-import FeedbacksByRating from '../components/FeedbacksByRating.jsx'
+import FeedbacksByAllServicesInOne from '../components/FeedbacksByAllServicesInOne'
+import FeedbacksByRating from '../components/FeedbacksByRating'
 
 const DashboardPage = () => {
   const [time, setTime] = useState(new Date())
