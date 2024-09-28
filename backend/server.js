@@ -17,6 +17,11 @@ import analyticsRouter from './api/routes/analytics.route.js'
 import visitRouter from './api/routes/visit.route.js'
 import connectDB from './api/utils/connectDB.js'
 
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://student-support-satisfaction.vercel.app/',
+]
+
 // Cleaning of expired token every hour
 import './api/utils/cronJobs.js'
 
@@ -31,7 +36,17 @@ const __dirname = path.dirname(__filename)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 // http://localhost:5000/api/uploads/profile-pics/1726394178484-Screenshot-(254).png
 
-app.use(cors({ origin: 'http://localhost:5173' }))
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true)
+      } else {
+        callback(new Error('Not allowed by CORS'))
+      }
+    },
+  })
+)
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
