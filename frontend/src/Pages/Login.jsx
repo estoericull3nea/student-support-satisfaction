@@ -94,7 +94,10 @@ const Login = () => {
         {/* Toaster container */}
         <div className='container flex items-center justify-center  xl:gap-x-10 xl:shadow-2xl shadow-none py-10 xl:py-20'>
           {/* Left */}
-          <form className='max-w-[500px] p-5 xl:p-0' onSubmit={handleLogin}>
+          <form
+            className='max-w-[500px] p-5 xl:p-0 w-full'
+            onSubmit={handleLogin}
+          >
             {/* Top Text */}
             <div className='text-center'>
               <div className='flex items-center justify-center gap-x-2 w-full '>

@@ -84,7 +84,10 @@ const Register = () => {
 
       <div>
         <div className='container flex items-center justify-center xl:gap-x-10 xl:shadow-2xl shadow-none py-10 xl:py-20'>
-          <form className='max-w-[500px] p-5 xl:p-0' onSubmit={handleSubmit}>
+          <form
+            className='max-w-[500px] p-5 xl:p-0 w-full'
+            onSubmit={handleSubmit}
+          >
             <div className='text-center'>
               <div className='flex flex-col items-center gap-2 md:flex-row justify-center'>
                 <img
