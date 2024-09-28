@@ -19,7 +19,7 @@ import connectDB from './api/utils/connectDB.js'
 
 const allowedOrigins = [
   'http://localhost:5173',
-  'https://student-support-satisfaction.vercel.app/',
+  'https://student-support-satisfaction.vercel.app',
 ]
 
 // Cleaning of expired token every hour
