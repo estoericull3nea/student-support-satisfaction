@@ -1,7 +1,7 @@
 import React from 'react'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
-import LandingPage from './pages/LandingPage.jsx'
-import Register from './pages/Register.jsx'
+// import LandingPage from './pages/LandingPage'
+import Register from './pages/Register'
 import Login from './pages/Login'
 import Library from './Pages/Library'
 import PrincipalOffice from './Pages/PrincipalOffice'
@@ -51,10 +51,10 @@ const App = () => {
             }
           />
 
-          <Route
+          {/* <Route
             path='/'
             element={<ProtectedRoute element={<LandingPage />} />}
-          />
+          /> */}
 
           {/* <Route path='/' element={<LandingPage />} /> */}
           <Route
