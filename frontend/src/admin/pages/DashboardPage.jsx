@@ -191,7 +191,7 @@ const DashboardPage = () => {
           <div className='w-[200px] p-3 bg-base-100 shadow flex items-start gap-x-2 flex-col gap-y-3'>
             <p className='text-xs text-gray-500'>Recent Registered User</p>
             <div className='w-full flex justify-between items-center'>
-              <h1 className='text-4xl font-bold'>
+              <h1 className='text-xl font-bold'>
                 {stats.recentRegisteredUsers[0]?.firstName || 'N/A'}
               </h1>
               <img
@@ -207,7 +207,7 @@ const DashboardPage = () => {
           <div className='w-[200px] p-3 bg-base-100 shadow flex items-start gap-x-2 flex-col gap-y-3'>
             <p className='text-xs text-gray-500'>Recent Sign In User</p>
             <div className='w-full flex justify-between items-center'>
-              <h1 className='text-4xl font-bold'>
+              <h1 className='text-xl font-bold'>
                 {stats.recentSigninUsers[0]?.firstName || 'N/A'}
               </h1>
               <img src={SignIn} alt='Sign In Icon' className='w-6 h-6' />

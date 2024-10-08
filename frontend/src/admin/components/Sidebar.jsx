@@ -222,15 +222,6 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
           </div>
         </div>
 
-        {/* <li>
-          <Link to='/admin/settings'>
-            <div className='flex items-center gap-5 justify-start px-0 md:py-2'>
-              <img src={Settings} alt='Settings Icon' className='w-6 h-6' />
-              {!isCollapsed && <span>Settings</span>}
-            </div>
-          </Link>
-        </li> */}
-
         <li>
           <button onClick={handleLogout}>
             <div className='flex items-center gap-5 justify-start px-0 md:py-2'>
