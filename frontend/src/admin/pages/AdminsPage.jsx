@@ -63,7 +63,7 @@ const AdminsPage = () => {
   const fetchAdmins = async () => {
     try {
       const response = await axios.get(
-        '${import.meta.env.VITE_BACKEND_URL}/api/admin/get-all-admins'
+        `${import.meta.env.VITE_BACKEND_URL}/api/admin/get-all-admins`
       )
       setFetchAdmin(response.data)
       errorShownRef.current = false
