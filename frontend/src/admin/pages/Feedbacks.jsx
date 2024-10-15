@@ -162,27 +162,6 @@ const Feedbacks = () => {
         />
 
         <Column
-          field='user'
-          header='Student Fullname'
-          sortable
-          filter
-          filterPlaceholder='Filter by Fullname'
-          body={(rowData) =>
-            rowData.user
-              ? `${rowData.user.firstName} ${rowData.user.lastName}`
-              : 'Unknown User'
-          }
-        />
-
-        <Column
-          field='email'
-          header='Student Email'
-          sortable
-          filter
-          filterPlaceholder='Filter by Student Email'
-        />
-
-        <Column
           field='createdAt'
           header='Feedback At'
           sortable
@@ -223,19 +202,6 @@ const Feedbacks = () => {
             <p>
               <strong>Feedback At:</strong>{' '}
               {new Date(selectedFeedback.createdAt).toLocaleString()}
-            </p>
-
-            <h1 className='font-medium mt-3'>Students Details</h1>
-            <hr className='mt-1' />
-
-            <p>
-              <strong>First Name:</strong> {selectedFeedback.user.firstName}
-            </p>
-            <p>
-              <strong>Last Name:</strong> {selectedFeedback.user.lastName}
-            </p>
-            <p>
-              <strong>Email:</strong> {selectedFeedback.email}
             </p>
           </div>
         )}
