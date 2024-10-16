@@ -48,7 +48,7 @@ const Feedbacks = () => {
   const fetchAllFeedbacks = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_DEV_BACKEND_URL}/api/feedbacks`
+        `${import.meta.env.VITE_PROD_BACKEND_URL}/api/feedbacks`
       )
       setFeedbacks(response.data)
       errorShownRef.current = false

@@ -85,7 +85,7 @@ const PrincipalOffice = () => {
   const countVisit = async (serviceName) => {
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_DEV_BACKEND_URL}/api/visit`,
+        `${import.meta.env.VITE_PROD_BACKEND_URL}/api/visit`,
         {
           serviceName,
         }
@@ -135,7 +135,7 @@ const PrincipalOffice = () => {
       }
 
       await axios.post(
-        `${import.meta.env.VITE_DEV_BACKEND_URL}/api/feedbacks`,
+        `${import.meta.env.VITE_PROD_BACKEND_URL}/api/feedbacks`,
         feedbackData,
         {
           headers: {

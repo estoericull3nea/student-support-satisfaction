@@ -30,7 +30,7 @@ const ResetPassword = () => {
 
       const response = await axios.post(
         `${
-          import.meta.env.VITE_DEV_BACKEND_URL
+          import.meta.env.VITE_PROD_BACKEND_URL
         }/api/auth/reset-password/${resetToken}`,
         { password }
       )

@@ -43,7 +43,7 @@ const AdminsPage = () => {
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_DEV_BACKEND_URL}/api/admin/register`,
+        `${import.meta.env.VITE_PROD_BACKEND_URL}/api/admin/register`,
         newAdminDetails
       )
       const addedAdmin = response.data.newAdmin
@@ -63,7 +63,7 @@ const AdminsPage = () => {
   const fetchAdmins = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_DEV_BACKEND_URL}/api/admin/get-all-admins`
+        `${import.meta.env.VITE_PROD_BACKEND_URL}/api/admin/get-all-admins`
       )
       setFetchAdmin(response.data)
       errorShownRef.current = false
@@ -112,7 +112,9 @@ const AdminsPage = () => {
       console.log(updatedAdminDetails)
       const { _id } = selectedAdmin
       const response = await axios.put(
-        `${import.meta.env.VITE_DEV_BACKEND_URL}/api/admin/update-admin/${_id}`,
+        `${
+          import.meta.env.VITE_PROD_BACKEND_URL
+        }/api/admin/update-admin/${_id}`,
         updatedAdminDetails
       )
       toast.success('Admin updated successfully')

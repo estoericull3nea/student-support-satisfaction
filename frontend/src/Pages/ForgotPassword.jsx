@@ -22,7 +22,7 @@ const ForgotPassword = () => {
       setIsLoading(true)
 
       const response = await axios.post(
-        `${import.meta.env.VITE_DEV_BACKEND_URL}/api/auth/forgot-password`,
+        `${import.meta.env.VITE_PROD_BACKEND_URL}/api/auth/forgot-password`,
         { email }
       )
 
@@ -48,7 +48,7 @@ const ForgotPassword = () => {
     try {
       setIsSendingVerification(true)
       await axios.post(
-        `${import.meta.env.VITE_DEV_BACKEND_URL}/api/auth/resend-verification`,
+        `${import.meta.env.VITE_PROD_BACKEND_URL}/api/auth/resend-verification`,
         {
           email,
         }

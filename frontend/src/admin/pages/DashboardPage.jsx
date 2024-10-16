@@ -87,7 +87,7 @@ const DashboardPage = () => {
     const fetchStats = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_DEV_BACKEND_URL}/api/count/stats`
+          `${import.meta.env.VITE_PROD_BACKEND_URL}/api/count/stats`
         )
         setStats(response.data.data)
       } catch (error) {
@@ -103,7 +103,7 @@ const DashboardPage = () => {
       try {
         const response = await axios.get(
           `${
-            import.meta.env.VITE_DEV_BACKEND_URL
+            import.meta.env.VITE_PROD_BACKEND_URL
           }/api/count/top-service-feedbacks`
         )
         setTopTenServiceFeedback(response.data.data)
@@ -119,7 +119,7 @@ const DashboardPage = () => {
     const fetchTopTenRecentRegisteredUsers = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_DEV_BACKEND_URL}/api/count/top-ten-users`
+          `${import.meta.env.VITE_PROD_BACKEND_URL}/api/count/top-ten-users`
         )
         setTopTenRecentRegisteredUsers(response.data.data)
       } catch (error) {

@@ -30,7 +30,7 @@ const StudentsQueryPage = () => {
   const fetchStudentsQueries = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_DEV_BACKEND_URL}/api/contacts/users`
+        `${import.meta.env.VITE_PROD_BACKEND_URL}/api/contacts/users`
       )
       setStudentsQuery(response.data)
     } catch (error) {
@@ -120,7 +120,7 @@ const StudentsQueryPage = () => {
   const deleteContact = async (contactId) => {
     try {
       await axios.delete(
-        `${import.meta.env.VITE_DEV_BACKEND_URL}/api/contacts/${contactId}`
+        `${import.meta.env.VITE_PROD_BACKEND_URL}/api/contacts/${contactId}`
       )
       toast.success('Contact deleted successfully')
       fetchStudentsQueries()
@@ -133,7 +133,7 @@ const StudentsQueryPage = () => {
   const clearAllContacts = async () => {
     try {
       await axios.delete(
-        `${import.meta.env.VITE_DEV_BACKEND_URL}/api/contacts/users/clear`
+        `${import.meta.env.VITE_PROD_BACKEND_URL}/api/contacts/users/clear`
       )
       toast.success('All contacts cleared successfully')
       fetchStudentsQueries()

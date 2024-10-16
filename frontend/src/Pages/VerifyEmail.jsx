@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
 const VerifyEmail = () => {
-  const SERVER_URL = `${import.meta.env.VITE_DEV_BACKEND_URL}`
+  const SERVER_URL = `${import.meta.env.VITE_PROD_BACKEND_URL}`
   const [message, setMessage] = useState('')
   const [isVerified, setIsVerified] = useState(false)
   const [countdown, setCountdown] = useState(8)

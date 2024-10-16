@@ -36,7 +36,7 @@ const Profile = () => {
     const fetchUserWithId = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_DEV_BACKEND_URL}/api/users/${decoded.id}`,
+          `${import.meta.env.VITE_PROD_BACKEND_URL}/api/users/${decoded.id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -49,7 +49,7 @@ const Profile = () => {
         setLastName(response.data.lastName)
         setEmail(response.data.email)
         setProfilePic(
-          `${import.meta.env.VITE_DEV_BACKEND_URL}${response.data.profilePic}`
+          `${import.meta.env.VITE_PROD_BACKEND_URL}${response.data.profilePic}`
         )
       } catch (err) {
         setErrorUser(err.message)
@@ -65,7 +65,7 @@ const Profile = () => {
     const fetchContactsQuery = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_DEV_BACKEND_URL}/api/contacts/users/${
+          `${import.meta.env.VITE_PROD_BACKEND_URL}/api/contacts/users/${
             decoded.id
           }`,
           {
@@ -88,7 +88,7 @@ const Profile = () => {
 
     try {
       await axios.put(
-        `${import.meta.env.VITE_DEV_BACKEND_URL}/api/users/${decoded.id}`,
+        `${import.meta.env.VITE_PROD_BACKEND_URL}/api/users/${decoded.id}`,
         { [field]: value },
         {
           headers: {
@@ -132,7 +132,7 @@ const Profile = () => {
     try {
       setUploading(true)
       const response = await axios.put(
-        `${import.meta.env.VITE_DEV_BACKEND_URL}/api/users/${
+        `${import.meta.env.VITE_PROD_BACKEND_URL}/api/users/${
           decoded.id
         }/upload-profile-pic`,
         formData,
@@ -231,7 +231,7 @@ const Profile = () => {
                   className='w-24 rounded-full cursor-pointer relative group'
                   onClick={triggerFileInput}
                 >
-                  {profilePic === `${import.meta.env.VITE_DEV_BACKEND_URL}` ? (
+                  {profilePic === `${import.meta.env.VITE_PROD_BACKEND_URL}` ? (
                     <div className='avatar placeholder w-full'>
                       <div className='bg-neutral text-neutral-content w-full rounded-full'>
                         <span className='font-bold tracking-tighter text-center text-3xl'>

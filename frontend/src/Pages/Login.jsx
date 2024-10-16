@@ -29,7 +29,7 @@ const Login = () => {
       setIsSubmitting(true)
 
       const response = await axios.post(
-        `${import.meta.env.VITE_DEV_BACKEND_URL}/api/auth/login`,
+        `${import.meta.env.VITE_PROD_BACKEND_URL}/api/auth/login`,
         {
           email,
           password,
@@ -70,7 +70,7 @@ const Login = () => {
     try {
       setIsSendingVerification(true)
       await axios.post(
-        `${import.meta.env.VITE_DEV_BACKEND_URL}/api/auth/resend-verification`,
+        `${import.meta.env.VITE_PROD_BACKEND_URL}/api/auth/resend-verification`,
         {
           email,
         }

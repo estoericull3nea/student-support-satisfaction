@@ -9,7 +9,7 @@ const ViewServiceVisits = ({ serviceName, trigger }) => {
       try {
         const response = await axios.get(
           `${
-            import.meta.env.VITE_DEV_BACKEND_URL
+            import.meta.env.VITE_PROD_BACKEND_URL
           }/api/visit/service/${serviceName}`
         )
         setVisit(response.data[0].visitCount) // Make sure to set response.data

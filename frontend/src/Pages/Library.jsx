@@ -57,7 +57,7 @@ const Library = () => {
   const countVisit = async (serviceName) => {
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_DEV_BACKEND_URL}/api/visit`,
+        `${import.meta.env.VITE_PROD_BACKEND_URL}/api/visit`,
         {
           serviceName,
         }
@@ -136,7 +136,7 @@ const Library = () => {
       console.log('Submitting feedback:', feedbackData)
 
       await axios.post(
-        `${import.meta.env.VITE_DEV_BACKEND_URL}/api/feedbacks`,
+        `${import.meta.env.VITE_PROD_BACKEND_URL}/api/feedbacks`,
         feedbackData,
         {
           headers: {
