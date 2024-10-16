@@ -28,6 +28,8 @@ const DashboardPage = () => {
     activeUsers: 0,
     inactiveUsers: 0,
     totalFeedbacks: 0,
+    contactStudentCount: 0,
+    contactNonStudentCount: 0,
     recentRegisteredUsers: [],
     recentSigninUsers: [],
   })
@@ -38,10 +40,10 @@ const DashboardPage = () => {
       console.log('New feedback received:', newFeedback)
       setTrigger((prevTrigger) => prevTrigger + 1)
 
-      setStats((prevStats) => ({
-        ...prevStats,
-        totalFeedbacks: prevStats.totalFeedbacks + 1,
-      }))
+      // setStats((prevStats) => ({
+      //   ...prevStats,
+      //   totalFeedbacks: prevStats.totalFeedbacks + 1,
+      // }))
 
       setTopTenServiceFeedback((prevFeedbacks) => {
         const existingService = prevFeedbacks.find(
@@ -63,8 +65,13 @@ const DashboardPage = () => {
       })
     })
 
+    socket.on('newContact', (data) => {
+      setTrigger((prevTrigger) => prevTrigger + 1)
+    })
+
     return () => {
       socket.off('newFeedback')
+      socket.off('newContact')
     }
   }, [])
 
@@ -89,7 +96,7 @@ const DashboardPage = () => {
     }
 
     fetchStats()
-  }, [])
+  }, [trigger])
 
   useEffect(() => {
     const fetchTopTenMostRatedService = async () => {
@@ -178,7 +185,7 @@ const DashboardPage = () => {
             </div>
             <div className='text-end w-full absolute top-1 right-3'>
               <Link
-                to='/admin/students'
+                to='/admin/student-queries'
                 className='text-[.6rem] underline decoration-blue-600 text text-blue-600'
               >
                 View
@@ -198,7 +205,7 @@ const DashboardPage = () => {
             </div>
             <div className='text-end w-full absolute top-1 right-3'>
               <Link
-                to='/admin/students'
+                to='/admin/non-student-quries'
                 className='text-[.6rem] underline decoration-blue-600 text text-blue-600'
               >
                 View

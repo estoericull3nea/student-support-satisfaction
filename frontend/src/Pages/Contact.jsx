@@ -5,7 +5,29 @@ import axios from 'axios'
 import toast from 'react-hot-toast'
 import { jwtDecode } from 'jwt-decode'
 import Breadcrumbs from '../components/Breadcrumbs'
+
+import { io } from 'socket.io-client'
+const socket = io('http://localhost:5000')
+
 const Contact = () => {
+  // testing
+  // Log connection status with the server
+  useEffect(() => {
+    socket.on('connect', () => {
+      console.log('Connected to Socket.IO server:', socket.id)
+    })
+
+    socket.on('newContact', (data) => {
+      console.log('New contact received from server:', data)
+    })
+
+    return () => {
+      socket.off('connect')
+      socket.off('newContact')
+    }
+  }, [])
+  // testing
+
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
@@ -61,6 +83,14 @@ const Contact = () => {
         userId,
       })
 
+      const result = {
+        firstName,
+        lastName,
+        email,
+        message,
+        userId,
+      }
+
       toast.success('Message sent successfully!')
 
       // Only clear the fields if the user is not logged in
@@ -71,6 +101,8 @@ const Contact = () => {
       }
       setMessage('')
       setTermsAccepted(false)
+
+      socket.emit('submitContact', result)
     } catch (error) {
       toast.error('Failed to send message. Please try again.')
     }

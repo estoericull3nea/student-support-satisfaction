@@ -61,6 +61,10 @@ io.on('connection', (socket) => {
     io.emit('newOfficeVisited', data)
   })
 
+  socket.on('submitContact', (data) => {
+    io.emit('newContact', data)
+  })
+
   socket.on('disconnect', () => {
     console.log('Client disconnected:', socket.id)
   })
