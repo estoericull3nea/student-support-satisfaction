@@ -15,12 +15,16 @@ import 'primereact/resources/themes/saga-blue/theme.css'
 import 'primereact/resources/primereact.min.css'
 import 'primeicons/primeicons.css'
 
+import { io } from 'socket.io-client'
+const socket = io('http://localhost:5000')
+
 const Feedbacks = () => {
   const [feedbacks, setFeedbacks] = useState([])
   const [globalFilter, setGlobalFilter] = useState('')
   const [selectedFeedback, setSelectedFeedback] = useState(null)
   const [isDialogVisible, setIsDialogVisible] = useState(false)
   const [isUpdateDialogVisible, setIsUpdateDialogVisible] = useState(false)
+  const [trigger, setTrigger] = useState(0)
   const [updatedUserDetails, setUpdatedUserDetails] = useState({
     firstName: '',
     lastName: '',
@@ -62,7 +66,22 @@ const Feedbacks = () => {
   }
 
   useEffect(() => {
+    // Initial fetch for feedback data
     fetchAllFeedbacks()
+
+    // Listen for real-time updates when new feedback is added
+    socket.on('newFeedback', (newFeedback) => {
+      console.log('New feedback received via Socket.IO:', newFeedback)
+
+      // Update the feedbacks state with the new feedback
+      setFeedbacks((prevFeedbacks) => [newFeedback, ...prevFeedbacks])
+      setTrigger((prevTrigger) => prevTrigger + 1)
+    })
+
+    // Cleanup socket listener when component unmounts
+    return () => {
+      socket.off('newFeedback')
+    }
   }, [])
 
   const onGlobalFilterChange = (e) => {
@@ -110,15 +129,24 @@ const Feedbacks = () => {
       </div>
 
       <div className='grid grid-cols-1 lg:grid-cols-2'>
-        <FeedbacksByAllServicesInOne />
-        <FeedbacksByRating />
+        <FeedbacksByAllServicesInOne trigger={trigger} />
+        <FeedbacksByRating trigger={trigger} />
       </div>
 
       <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 justify-center items-start gap-4 mt-10'>
-        <ServiceAnalytics serviceName='Library' />
-        <ServiceAnalytics serviceName='Office of the School Principal' />
-        <ServiceAnalytics serviceName='Office of the School Administrator' />
-        <ServiceAnalytics serviceName='Office of the Registrar' />
+        <ServiceAnalytics trigger={trigger} serviceName='Library' />
+        <ServiceAnalytics
+          trigger={trigger}
+          serviceName='Office of the School Principal'
+        />
+        <ServiceAnalytics
+          trigger={trigger}
+          serviceName='Office of the School Administrator'
+        />
+        <ServiceAnalytics
+          trigger={trigger}
+          serviceName='Office of the Registrar'
+        />
       </div>
 
       <div className='p-inputgroup my-10'>

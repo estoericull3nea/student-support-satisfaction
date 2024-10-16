@@ -7,7 +7,7 @@ import { Chart } from 'chart.js'
 
 Chart.register(ChartDataLabels)
 
-const LibraryAnalytics = ({ serviceName }) => {
+const LibraryAnalytics = ({ serviceName, trigger }) => {
   const [chartData, setChartData] = useState(null)
   const [selectedOption, setSelectedOption] = useState('daily')
 
@@ -107,7 +107,7 @@ const LibraryAnalytics = ({ serviceName }) => {
     }
 
     fetchFeedbackStats()
-  }, [serviceName])
+  }, [serviceName, trigger])
 
   const handleSelectChange = (event) => {
     setSelectedOption(event.target.value)

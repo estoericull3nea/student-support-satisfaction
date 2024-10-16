@@ -33,6 +33,35 @@ dotenv.config()
 const PORT = process.env.PORT || 5000
 const app = express()
 
+const server = http.createServer(app) // Create HTTP server
+const io = new Server(server, {
+  cors: {
+    origin: allowedOrigins, // Allow frontend origins
+  },
+})
+
+// Socket.IO connection
+io.on('connection', (socket) => {
+  console.log('A client connected:', socket.id)
+
+  // Listening for feedback submission event
+  socket.on('feedbackSubmitted', (data) => {
+    console.log('Feedback received:', data)
+    // Emit feedback to all connected clients
+
+    const feedbackWithTimestamp = {
+      ...data,
+      createdAt: new Date().toISOString(), // Add current timestamp
+    }
+
+    io.emit('newFeedback', feedbackWithTimestamp)
+  })
+
+  socket.on('disconnect', () => {
+    console.log('Client disconnected:', socket.id)
+  })
+})
+
 // Serve static files (for serving the uploaded profile pictures)
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -68,7 +97,7 @@ app.use('/api/visit', visitRouter)
 // ================================== Connection to MongoDB ==================================
 connectDB()
   .then(() => {
-    app.listen(PORT, () =>
+    server.listen(PORT, () =>
       console.log(`Server is Running on PORT ${PORT} and Connected to Database`)
     )
   })

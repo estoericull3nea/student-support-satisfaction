@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Line } from 'react-chartjs-2'
 import axios from 'axios'
 
-const FeedbacksByAllServicesInOne = () => {
+const FeedbacksByAllServicesInOne = ({ trigger }) => {
   const [period, setPeriod] = useState('daily')
   const [chartData, setChartData] = useState({ labels: [], datasets: [] })
 
@@ -51,7 +51,7 @@ const FeedbacksByAllServicesInOne = () => {
     }
 
     fetchFeedbackStats()
-  }, [period])
+  }, [period, trigger])
 
   const getRandomColor = () => {
     const letters = '0123456789ABCDEF'

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { Line } from 'react-chartjs-2'
 import axios from 'axios'
 
-const FeedbacksByRating = () => {
+const FeedbacksByRating = ({ trigger }) => {
   const [period, setPeriod] = useState('daily')
   const [chartData, setChartData] = useState({})
 
@@ -53,7 +53,7 @@ const FeedbacksByRating = () => {
     }
 
     fetchData()
-  }, [period])
+  }, [period, trigger])
 
   // Function to generate random colors for each dataset line
   const getRandomColor = () => {

@@ -15,7 +15,28 @@ import { BsFillEmojiSmileFill } from 'react-icons/bs'
 import { BsEmojiGrinFill } from 'react-icons/bs'
 import Breadcrumbs from '../components/Breadcrumbs'
 
+import { io } from 'socket.io-client'
+const socket = io('http://localhost:5000')
+
 const Library = () => {
+  // testing
+  // Log connection status with the server
+  useEffect(() => {
+    socket.on('connect', () => {
+      console.log('Connected to Socket.IO server:', socket.id)
+    })
+
+    socket.on('newFeedback', (data) => {
+      console.log('New feedback received from server:', data)
+    })
+
+    return () => {
+      socket.off('connect')
+      socket.off('newFeedback')
+    }
+  }, [])
+  // testing
+
   const [rating, setRating] = useState('')
   const [comment, setComment] = useState('')
   const [email, setEmail] = useState('')
@@ -100,14 +121,18 @@ const Library = () => {
     try {
       setIsSubmitting(true)
 
+      const feedbackData = {
+        serviceName: 'Library',
+        rating,
+        comment,
+        email,
+      }
+
+      console.log('Submitting feedback:', feedbackData)
+
       await axios.post(
         `${import.meta.env.VITE_DEV_BACKEND_URL}/api/feedbacks`,
-        {
-          serviceName: 'Library', // Hardcoded for Library feedback
-          rating,
-          comment,
-          email,
-        },
+        feedbackData,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -122,6 +147,11 @@ const Library = () => {
       localStorage.removeItem('feedback_rating')
       localStorage.removeItem('feedback_comment')
       localStorage.removeItem('feedback_email')
+
+      // testing
+      console.log('Emitting feedbackSubmitted event with data:', feedbackData) // Log event emission
+      socket.emit('feedbackSubmitted', feedbackData)
+      // testing
     } catch (error) {
       if (error.response?.status === 401) {
         toast.error('Unauthorized. Please log in to submit feedback.')
