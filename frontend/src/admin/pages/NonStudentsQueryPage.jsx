@@ -273,9 +273,9 @@ const NonStudentsQueryPage = () => {
           <div>
             <h1 className='font-medium'>Message Details</h1>
             <hr className='mt-1' />
-            <p>
+            {/* <p>
               <strong>Message ID:</strong> {selectedUser._id}
-            </p>
+            </p> */}
             <p>
               <strong>Message:</strong> {selectedUser.message}
             </p>
