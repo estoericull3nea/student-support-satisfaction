@@ -3,7 +3,7 @@ import axios from 'axios'
 import { Line } from 'react-chartjs-2'
 import 'chart.js/auto'
 
-const FeedbacksAnalytics = () => {
+const FeedbacksAnalytics = ({ trigger }) => {
   const [chartData, setChartData] = useState(null)
   const [selectedOption, setSelectedOption] = useState('daily') // Default to daily
 
@@ -70,7 +70,7 @@ const FeedbacksAnalytics = () => {
     }
 
     fetchFeedbackStats()
-  }, [])
+  }, [trigger])
 
   const handleSelectChange = (event) => {
     setSelectedOption(event.target.value)

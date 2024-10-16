@@ -15,6 +15,9 @@ import { Link } from 'react-router-dom'
 import FeedbacksByAllServicesInOne from '../components/FeedbacksByAllServicesInOne'
 import FeedbacksByRating from '../components/FeedbacksByRating'
 
+import { io } from 'socket.io-client' // Import Socket.IO client
+const socket = io('http://localhost:5000')
+
 const DashboardPage = () => {
   const [time, setTime] = useState(new Date())
   const [topTenServiceFeedback, setTopTenServiceFeedback] = useState([])
@@ -28,6 +31,48 @@ const DashboardPage = () => {
     recentRegisteredUsers: [],
     recentSigninUsers: [],
   })
+  const [trigger, setTrigger] = useState(0)
+
+  // Real-time updates via Socket.IO
+  useEffect(() => {
+    // Listen for new feedback and update stats
+    socket.on('newFeedback', (newFeedback) => {
+      console.log('New feedback received:', newFeedback)
+      setTrigger((prevTrigger) => prevTrigger + 1)
+
+      // Update total feedback count
+      setStats((prevStats) => ({
+        ...prevStats,
+        totalFeedbacks: prevStats.totalFeedbacks + 1,
+      }))
+
+      // Check if the service already exists in the topTenServiceFeedback
+      setTopTenServiceFeedback((prevFeedbacks) => {
+        const existingService = prevFeedbacks.find(
+          (service) => service._id === newFeedback.serviceName
+        )
+
+        if (existingService) {
+          // Update the count if service exists
+          return prevFeedbacks.map((service) =>
+            service._id === newFeedback.serviceName
+              ? { ...service, totalCount: service.totalCount + 1 }
+              : service
+          )
+        } else {
+          // Optionally add the service if it doesn't exist (if needed)
+          return [
+            ...prevFeedbacks,
+            { _id: newFeedback.serviceName, totalCount: 1 },
+          ]
+        }
+      })
+    })
+
+    return () => {
+      socket.off('newFeedback')
+    }
+  }, [])
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -244,65 +289,32 @@ const DashboardPage = () => {
             </div>
           </div>
         </div>
-
-        <div className='shadow-lg p-3  bg-base-100 w-full'>
-          <div className='w-full mt-10'>
-            <h2 className='text-sm font-medium mb-4'>
-              Top 10 Recent Registered Users
-            </h2>
-            <div className='overflow-x-auto'>
-              <table className='table w-full text-xs'>
-                <thead>
-                  <tr>
-                    <th>Full Name</th>
-                    <th>Email</th>
-                    <th>Is Verified</th>
-                    <th>Role</th>
-                    <th>CreatedAt</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {topTenRecentRegisteredUsers.map((data, index) => (
-                    <tr key={index}>
-                      <td>
-                        {data.firstName} {data.lastName}
-                      </td>
-                      <td>{data.email}</td>
-                      <td
-                        className={
-                          data.isVerified
-                            ? 'text-green-700 font-bold'
-                            : 'text-red-700 font-bold'
-                        }
-                      >
-                        {data.isVerified ? 'Verified' : 'Not Verified'}
-                      </td>
-                      <td>{data.role}</td>
-                      <td>{formatTime(data.createdAt)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
       </div>
 
       <div className='grid grid-cols-1 xl:grid-cols-2 mt-10'>
-        <FeedbacksAnalytics />
+        <FeedbacksAnalytics trigger={trigger} />
         <StudentRegistersAnalytics />
       </div>
 
       <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 justify-center items-start gap-4 mt-10'>
-        <ServiceAnalytics serviceName='Library' />
-        <ServiceAnalytics serviceName='Office of the School Principal' />
-        <ServiceAnalytics serviceName='Office of the School Administrator' />
-        <ServiceAnalytics serviceName='Office of the Registrar' />
+        <ServiceAnalytics trigger={trigger} serviceName='Library' />
+        <ServiceAnalytics
+          trigger={trigger}
+          serviceName='Office of the School Principal'
+        />
+        <ServiceAnalytics
+          trigger={trigger}
+          serviceName='Office of the School Administrator'
+        />
+        <ServiceAnalytics
+          trigger={trigger}
+          serviceName='Office of the Registrar'
+        />
       </div>
 
       <div className='grid grid-cols-1 lg:grid-cols-2'>
-        <FeedbacksByAllServicesInOne />
-        <FeedbacksByRating />
+        <FeedbacksByAllServicesInOne trigger={trigger} />
+        <FeedbacksByRating trigger={trigger} />
       </div>
     </>
   )
