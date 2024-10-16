@@ -33,25 +33,22 @@ dotenv.config()
 const PORT = process.env.PORT || 5000
 const app = express()
 
-const server = http.createServer(app) // Create HTTP server
+const server = http.createServer(app)
 const io = new Server(server, {
   cors: {
-    origin: allowedOrigins, // Allow frontend origins
+    origin: allowedOrigins,
   },
 })
 
-// Socket.IO connection
 io.on('connection', (socket) => {
   console.log('A client connected:', socket.id)
 
-  // Listening for feedback submission event
   socket.on('feedbackSubmitted', (data) => {
     console.log('Feedback received:', data)
-    // Emit feedback to all connected clients
 
     const feedbackWithTimestamp = {
       ...data,
-      createdAt: new Date().toISOString(), // Add current timestamp
+      createdAt: new Date().toISOString(),
     }
 
     io.emit('newFeedback', feedbackWithTimestamp)
@@ -64,7 +61,7 @@ io.on('connection', (socket) => {
   socket.on('submitContact', (data) => {
     const submitContactwithTimestamp = {
       ...data,
-      createdAt: new Date().toISOString(), // Add current timestamp
+      createdAt: new Date().toISOString(),
     }
 
     io.emit('newContact', submitContactwithTimestamp)
