@@ -16,7 +16,7 @@ import 'primereact/resources/primereact.min.css'
 import 'primeicons/primeicons.css'
 
 import { io } from 'socket.io-client'
-const socket = io('http://localhost:5000')
+const socket = io(import.meta.env.VITE_PROD_BACKEND_URL)
 
 const Admnistrator = () => {
   const [inactiveUsers, setAdministratorService] = useState([])

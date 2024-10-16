@@ -16,7 +16,7 @@ import FeedbacksByAllServicesInOne from '../components/FeedbacksByAllServicesInO
 import FeedbacksByRating from '../components/FeedbacksByRating'
 
 import { io } from 'socket.io-client'
-const socket = io('http://localhost:5000')
+const socket = io(import.meta.env.VITE_PROD_BACKEND_URL)
 
 const DashboardPage = () => {
   const [time, setTime] = useState(new Date())
