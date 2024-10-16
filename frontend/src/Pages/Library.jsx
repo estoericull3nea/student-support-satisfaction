@@ -30,9 +30,14 @@ const Library = () => {
       console.log('New feedback received from server:', data)
     })
 
+    socket.on('newOfficeVisited', (data) => {
+      console.log('New feedbackfrom server:', data)
+    })
+
     return () => {
       socket.off('connect')
       socket.off('newFeedback')
+      socket.off('newOfficeVisited')
     }
   }, [])
   // testing
@@ -58,7 +63,7 @@ const Library = () => {
         }
       )
 
-      console.log(response.data.message)
+      socket.emit('officeVisited', serviceName)
     } catch (error) {
       console.error('Error counting visit:', error)
     }
@@ -149,7 +154,6 @@ const Library = () => {
       localStorage.removeItem('feedback_email')
 
       // testing
-      console.log('Emitting feedbackSubmitted event with data:', feedbackData) // Log event emission
       socket.emit('feedbackSubmitted', feedbackData)
       // testing
     } catch (error) {

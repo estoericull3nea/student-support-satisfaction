@@ -31,9 +31,14 @@ const SchoolRegistrar = () => {
       console.log('New feedback received from server:', data)
     })
 
+    socket.on('newOfficeVisited', (data) => {
+      console.log('New feedbackfrom server:', data)
+    })
+
     return () => {
       socket.off('connect')
       socket.off('newFeedback')
+      socket.off('newOfficeVisited')
     }
   }, [])
   // testing
@@ -86,7 +91,7 @@ const SchoolRegistrar = () => {
         }
       )
 
-      console.log(response.data.message)
+      socket.emit('officeVisited', serviceName)
     } catch (error) {
       console.error('Error counting visit:', error)
     }

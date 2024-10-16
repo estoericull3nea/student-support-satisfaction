@@ -57,6 +57,10 @@ io.on('connection', (socket) => {
     io.emit('newFeedback', feedbackWithTimestamp)
   })
 
+  socket.on('officeVisited', (data) => {
+    io.emit('newOfficeVisited', data)
+  })
+
   socket.on('disconnect', () => {
     console.log('Client disconnected:', socket.id)
   })

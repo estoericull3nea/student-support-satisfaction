@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 
-const ViewServiceVisits = ({ serviceName }) => {
+const ViewServiceVisits = ({ serviceName, trigger }) => {
   const [visits, setVisit] = useState()
 
   useEffect(() => {
@@ -19,7 +19,7 @@ const ViewServiceVisits = ({ serviceName }) => {
     }
 
     fetchVisits()
-  }, [serviceName])
+  }, [serviceName, trigger])
 
   return (
     <div className='p-3 border max-w-max my-5 rounded'>Visited: {visits}</div>
