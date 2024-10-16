@@ -33,34 +33,28 @@ const DashboardPage = () => {
   })
   const [trigger, setTrigger] = useState(0)
 
-  // Real-time updates via Socket.IO
   useEffect(() => {
-    // Listen for new feedback and update stats
     socket.on('newFeedback', (newFeedback) => {
       console.log('New feedback received:', newFeedback)
       setTrigger((prevTrigger) => prevTrigger + 1)
 
-      // Update total feedback count
       setStats((prevStats) => ({
         ...prevStats,
         totalFeedbacks: prevStats.totalFeedbacks + 1,
       }))
 
-      // Check if the service already exists in the topTenServiceFeedback
       setTopTenServiceFeedback((prevFeedbacks) => {
         const existingService = prevFeedbacks.find(
           (service) => service._id === newFeedback.serviceName
         )
 
         if (existingService) {
-          // Update the count if service exists
           return prevFeedbacks.map((service) =>
             service._id === newFeedback.serviceName
               ? { ...service, totalCount: service.totalCount + 1 }
               : service
           )
         } else {
-          // Optionally add the service if it doesn't exist (if needed)
           return [
             ...prevFeedbacks,
             { _id: newFeedback.serviceName, totalCount: 1 },
@@ -153,7 +147,7 @@ const DashboardPage = () => {
         <div className='text-sm font-medium'>{getFormattedTime(time)}</div>
       </div>
 
-      <div className='flex flex-wrap gap-3 items-center justify-center lg:justify-between my-10 w-full'>
+      <div className='flex flex-wrap gap-3 items-center justify-start  my-10 w-full'>
         <div className='mt-10'>
           <div className='w-[200px] p-3 bg-base-100 shadow flex items-start gap-x-2 flex-col gap-y-3 relative'>
             <p className='text-xs text-gray-500'>All Students Registered</p>
@@ -171,6 +165,48 @@ const DashboardPage = () => {
             </div>
           </div>
         </div>
+
+        {/*  dev */}
+        <div className='mt-10'>
+          <div className='w-[200px] p-3 bg-base-100 shadow flex items-start gap-x-2 flex-col gap-y-3 relative'>
+            <p className='text-xs text-gray-500'>All Students Queries</p>
+            <div className='w-full flex justify-between items-center'>
+              <h1 className='text-4xl font-bold'>
+                {stats.contactStudentCount}
+              </h1>
+              <img src={Group} alt='Manage Users Icon' className='w-6 h-6' />
+            </div>
+            <div className='text-end w-full absolute top-1 right-3'>
+              <Link
+                to='/admin/students'
+                className='text-[.6rem] underline decoration-blue-600 text text-blue-600'
+              >
+                View
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        <div className='mt-10'>
+          <div className='w-[200px] p-3 bg-base-100 shadow flex items-start gap-x-2 flex-col gap-y-3 relative'>
+            <p className='text-xs text-gray-500'>All Non-Students Queries</p>
+            <div className='w-full flex justify-between items-center'>
+              <h1 className='text-4xl font-bold'>
+                {stats.contactNonStudentCount}
+              </h1>
+              <img src={Group} alt='Manage Users Icon' className='w-6 h-6' />
+            </div>
+            <div className='text-end w-full absolute top-1 right-3'>
+              <Link
+                to='/admin/students'
+                className='text-[.6rem] underline decoration-blue-600 text text-blue-600'
+              >
+                View
+              </Link>
+            </div>
+          </div>
+        </div>
+        {/*  dev */}
 
         <div className='mt-10'>
           <div className='w-[200px] p-3 bg-base-100 shadow flex items-start gap-x-2 flex-col gap-y-3 relative'>

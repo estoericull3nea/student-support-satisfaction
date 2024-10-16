@@ -1,5 +1,6 @@
 import User from '../models/user.model.js'
 import Feedback from '../models/feedback.model.js'
+import Contact from '../models/contact.model.js'
 
 export const getStats = async (req, res) => {
   try {
@@ -10,6 +11,14 @@ export const getStats = async (req, res) => {
     const inactiveUsers = await User.countDocuments({ active: false })
 
     const feedbackCount = await Feedback.countDocuments()
+
+    const contactStudentCount = await Contact.countDocuments({
+      owner: { $ne: null },
+    })
+
+    const contactNonStudentCount = await Contact.countDocuments({
+      owner: { $eq: null },
+    })
 
     const recentRegisteredUsers = await User.find()
       .sort({ createdAt: -1 })
@@ -28,6 +37,8 @@ export const getStats = async (req, res) => {
         totalFeedbacks: feedbackCount,
         recentRegisteredUsers,
         recentSigninUsers,
+        contactStudentCount,
+        contactNonStudentCount,
       },
     })
   } catch (error) {
