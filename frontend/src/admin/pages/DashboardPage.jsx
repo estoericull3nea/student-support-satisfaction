@@ -15,7 +15,7 @@ import { Link } from 'react-router-dom'
 import FeedbacksByAllServicesInOne from '../components/FeedbacksByAllServicesInOne'
 import FeedbacksByRating from '../components/FeedbacksByRating'
 
-import { io } from 'socket.io-client' // Import Socket.IO client
+import { io } from 'socket.io-client'
 const socket = io('http://localhost:5000')
 
 const DashboardPage = () => {

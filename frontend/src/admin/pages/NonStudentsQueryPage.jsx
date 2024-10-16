@@ -15,6 +15,9 @@ import 'primereact/resources/primereact.min.css'
 import 'primeicons/primeicons.css'
 import { formatTime } from '../../utils'
 
+import { io } from 'socket.io-client'
+const socket = io('http://localhost:5000')
+
 const NonStudentsQueryPage = () => {
   const [studentsQuery, setStudentsQuery] = useState([])
   const [globalFilter, setGlobalFilter] = useState('')
@@ -47,6 +50,14 @@ const NonStudentsQueryPage = () => {
 
   useEffect(() => {
     fetchStudentsQueries()
+
+    socket.on('newContact', (newFeedback) => {
+      setStudentsQuery((prevFeedbacks) => [newFeedback, ...prevFeedbacks])
+    })
+
+    return () => {
+      socket.off('newContact')
+    }
   }, [])
 
   const onGlobalFilterChange = (e) => {
