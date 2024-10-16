@@ -62,7 +62,12 @@ io.on('connection', (socket) => {
   })
 
   socket.on('submitContact', (data) => {
-    io.emit('newContact', data)
+    const submitContactwithTimestamp = {
+      ...data,
+      createdAt: new Date().toISOString(), // Add current timestamp
+    }
+
+    io.emit('newContact', submitContactwithTimestamp)
   })
 
   socket.on('disconnect', () => {
