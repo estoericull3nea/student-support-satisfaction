@@ -8,7 +8,9 @@ const ViewServiceVisits = ({ serviceName }) => {
     const fetchVisits = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/api/visit/service/${serviceName}`
+          `${
+            import.meta.env.VITE_DEV_BACKEND_URL
+          }/api/visit/service/${serviceName}`
         )
         setVisit(response.data[0].visitCount) // Make sure to set response.data
       } catch (error) {

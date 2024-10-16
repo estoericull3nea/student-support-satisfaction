@@ -11,7 +11,7 @@ const FeedbacksAnalytics = () => {
     const fetchFeedbackStats = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/api/analytics/feedback-stats`
+          `${import.meta.env.VITE_DEV_BACKEND_URL}/api/analytics/feedback-stats`
         )
         const data = response.data
 

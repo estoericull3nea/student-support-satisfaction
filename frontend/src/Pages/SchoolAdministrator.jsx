@@ -59,7 +59,7 @@ const SchoolAdministrator = () => {
   const countVisit = async (serviceName) => {
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/api/visit`,
+        `${import.meta.env.VITE_DEV_BACKEND_URL}/api/visit`,
         {
           serviceName,
         }
@@ -102,7 +102,7 @@ const SchoolAdministrator = () => {
       setIsSubmitting(true)
 
       await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/api/feedbacks`,
+        `${import.meta.env.VITE_DEV_BACKEND_URL}/api/feedbacks`,
         {
           serviceName: 'Office of the School Administrator',
           rating,

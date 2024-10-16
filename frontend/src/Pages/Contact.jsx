@@ -53,7 +53,7 @@ const Contact = () => {
 
     try {
       // Submit the form data to the server
-      await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/contacts`, {
+      await axios.post(`${import.meta.env.VITE_DEV_BACKEND_URL}/api/contacts`, {
         firstName,
         lastName,
         email,

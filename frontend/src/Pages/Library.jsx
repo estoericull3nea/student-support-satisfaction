@@ -31,7 +31,7 @@ const Library = () => {
   const countVisit = async (serviceName) => {
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/api/visit`,
+        `${import.meta.env.VITE_DEV_BACKEND_URL}/api/visit`,
         {
           serviceName,
         }
@@ -101,7 +101,7 @@ const Library = () => {
       setIsSubmitting(true)
 
       await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/api/feedbacks`,
+        `${import.meta.env.VITE_DEV_BACKEND_URL}/api/feedbacks`,
         {
           serviceName: 'Library', // Hardcoded for Library feedback
           rating,

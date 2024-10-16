@@ -61,7 +61,7 @@ const Registrar = () => {
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/api/users/add-user`,
+        `${import.meta.env.VITE_DEV_BACKEND_URL}/api/users/add-user`,
         newUserDetails
       )
       const addedUser = response.data.newUser
@@ -86,7 +86,7 @@ const Registrar = () => {
     try {
       const response = await axios.get(
         `${
-          import.meta.env.VITE_BACKEND_URL
+          import.meta.env.VITE_DEV_BACKEND_URL
         }/api/feedbacks/get-service/Office of the Registrar`
       )
       setLibraryService(response.data)
@@ -115,7 +115,7 @@ const Registrar = () => {
   const makeUserInactive = async (id) => {
     try {
       const response = await axios.patch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/users/${id}/inactive`
+        `${import.meta.env.VITE_DEV_BACKEND_URL}/api/users/${id}/inactive`
       )
       const updatedUser = response.data.data
       setLibraryService((prevUsers) =>
@@ -156,7 +156,7 @@ const Registrar = () => {
     try {
       const { _id } = selectedUser
       const response = await axios.put(
-        `${import.meta.env.VITE_BACKEND_URL}/api/users/${_id}`,
+        `${import.meta.env.VITE_DEV_BACKEND_URL}/api/users/${_id}`,
         updatedUserDetails
       )
       const updatedUser = response.data.updatedUser

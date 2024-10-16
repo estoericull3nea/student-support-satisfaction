@@ -24,7 +24,7 @@ const InactiveUsersTable = () => {
   const fetchInactiveUsers = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/api/users/not-active-users`
+        `${import.meta.env.VITE_DEV_BACKEND_URL}/api/users/not-active-users`
       )
       setInactiveUsers(response.data)
       errorShownRef.current = false
@@ -52,7 +52,7 @@ const InactiveUsersTable = () => {
   const makeUserActive = async (id) => {
     try {
       const response = await axios.patch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/users/${id}/activate`
+        `${import.meta.env.VITE_DEV_BACKEND_URL}/api/users/${id}/activate`
       )
       const updatedUser = response.data.data
 

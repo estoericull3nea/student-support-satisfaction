@@ -16,7 +16,7 @@ const LibraryAnalytics = ({ serviceName }) => {
       try {
         const response = await axios.get(
           `${
-            import.meta.env.VITE_BACKEND_URL
+            import.meta.env.VITE_DEV_BACKEND_URL
           }/api/analytics/feedback-stats/${serviceName}`
         )
         const data = response.data

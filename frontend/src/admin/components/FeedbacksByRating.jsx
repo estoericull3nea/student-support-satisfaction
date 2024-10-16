@@ -13,7 +13,7 @@ const FeedbacksByRating = () => {
       try {
         const { data } = await axios.get(
           `${
-            import.meta.env.VITE_BACKEND_URL
+            import.meta.env.VITE_DEV_BACKEND_URL
           }/api/analytics/ratings/data?period=${period}`
         )
 
