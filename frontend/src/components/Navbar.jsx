@@ -10,6 +10,8 @@ import { isTokenValid } from '../utils'
 const Navbar = () => {
   const token = localStorage.getItem('token')
 
+  const navigate = useNavigate()
+
   useEffect(() => {
     if (!isTokenValid(token)) {
       localStorage.clear()
@@ -18,7 +20,6 @@ const Navbar = () => {
     }
   }, [token, navigate])
 
-  const navigate = useNavigate()
   const decoded = token ? jwtDecode(token) : ''
   const userId = decoded.id
 
