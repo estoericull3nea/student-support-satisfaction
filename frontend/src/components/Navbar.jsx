@@ -5,14 +5,17 @@ import { services } from '../constants/index'
 import toast from 'react-hot-toast'
 import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
+import { isTokenValid } from '../utils'
 
 const Navbar = () => {
   const token = localStorage.getItem('token')
 
   const navigate = useNavigate()
+  const currentTime = Date.now() / 1000
 
   const decoded = token ? jwtDecode(token) : ''
-  const userId = decoded.id
+
+  const userId = decoded?.id
 
   const [user, setUser] = useState({})
 
@@ -169,17 +172,17 @@ const Navbar = () => {
         {/* Sign Up and Sign In/Logout */}
         <div className='navbar-end space-x-2'>
           {/* Only show Sign Up if the user is not logged in */}
-          {!token && (
+          {token && decoded.exp < currentTime ? (
             <Link to='/register'>
               <button className='btn text-xs px-[.5rem] md:px-[1rem] bg-primary hover:bg-primary-hover text-white'>
                 Sign Up
               </button>
             </Link>
-          )}
+          ) : null}
 
           {/* Conditionally render "Sign In" or "Logout" based on token existence */}
-          {token ? (
-            <div className='space-x-3 flex items-center '>
+          {token && decoded?.exp > currentTime ? (
+            <div className='space-x-3 flex items-center'>
               <button
                 onClick={handleLogout}
                 className='btn text-xs primary-btn-outline px-[.5rem] md:px-[1rem]'
@@ -187,21 +190,31 @@ const Navbar = () => {
                 Logout
               </button>
 
-              <Link to='/profile'>
-                <div className='avatar placeholder'>
-                  <div className='bg-neutral text-neutral-content w-11 rounded-full'>
-                    <span className='font-bold tracking-tighter text-center text-sm'>
-                      {/* {`${decoded.firstName[0].toUpperCase()} ${decoded.lastName[0].toUpperCase()}`} */}
+              {user?.profilePic ? (
+                <Link to='/profile'>
+                  <div className='avatar placeholder'>
+                    <div className='bg-neutral text-neutral-content w-11 rounded-full'>
                       <img
                         src={`${import.meta.env.VITE_PROD_BACKEND_URL}${
                           user.profilePic
                         }`}
-                        alt=''
+                        alt='User Avatar'
+                        className='rounded-full'
                       />
+                    </div>
+                  </div>
+                </Link>
+              ) : (
+                <div className='avatar placeholder'>
+                  <div className='bg-neutral text-neutral-content w-11 rounded-full'>
+                    <span className='font-bold tracking-tighter text-center text-sm'>
+                      {decoded?.firstName && decoded?.lastName
+                        ? `${decoded.firstName[0].toUpperCase()} ${decoded.lastName[0].toUpperCase()}`
+                        : '?'}
                     </span>
                   </div>
                 </div>
-              </Link>
+              )}
             </div>
           ) : (
             <Link to='/login'>
