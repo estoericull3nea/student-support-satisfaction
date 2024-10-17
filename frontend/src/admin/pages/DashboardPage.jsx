@@ -7,7 +7,6 @@ import InactiveUser from '../../assets/images/icons/inactive-user.png'
 import FeedbackIcon from '../../assets/images/icons/feedback.png'
 import Registered from '../../assets/images/icons/registered.png'
 import SignIn from '../../assets/images/icons/log-out.png'
-import { formatTime } from '../../utils.js'
 import FeedbacksAnalytics from '../components/FeedbacksAnalytics'
 import StudentRegistersAnalytics from '../components/StudentRegistersAnalytics'
 import ServiceAnalytics from '../components/Services/ServiceAnalytics'
@@ -146,17 +145,17 @@ const DashboardPage = () => {
   const year = time.getFullYear()
 
   return (
-    <>
-      <div className='w-max px-8 py-3 bg-base-100 shadow flex items-center gap-x-2'>
+    <div>
+      <div className='w-full text-end sm:w-max px-3 py-3 bg-base-100 shadow-xl rounded-lg flex items-center gap-x-2'>
         <div className='text-sm font-medium'>
           {month}/{day}/{year}
         </div>
         <div className='text-sm font-medium'>{getFormattedTime(time)}</div>
       </div>
 
-      <div className='flex flex-wrap gap-3 items-center justify-start  my-10 w-full'>
-        <div className='mt-10'>
-          <div className='w-[200px] p-3 bg-base-100 shadow flex items-start gap-x-2 flex-col gap-y-3 relative'>
+      <div className='grid grid-cols-1 md:grid-cols-2  lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 place-items-center'>
+        <div className='mt-5 w-full sm:w-[200px]'>
+          <div className='sm:w-[200px] p-3 bg-base-100 shadow-xl rounded-lg flex items-start gap-x-2 flex-col gap-y-3 relative'>
             <p className='text-xs text-gray-500'>All Students Registered</p>
             <div className='w-full flex justify-between items-center'>
               <h1 className='text-4xl font-bold'>{stats.totalUsers}</h1>
@@ -173,9 +172,8 @@ const DashboardPage = () => {
           </div>
         </div>
 
-        {/*  dev */}
-        <div className='mt-10'>
-          <div className='w-[200px] p-3 bg-base-100 shadow flex items-start gap-x-2 flex-col gap-y-3 relative'>
+        <div className='mt-5 w-full sm:w-[200px]'>
+          <div className='sm:w-[200px] p-3 bg-base-100 shadow-xl rounded-lg flex items-start gap-x-2 flex-col gap-y-3 relative'>
             <p className='text-xs text-gray-500'>All Students Queries</p>
             <div className='w-full flex justify-between items-center'>
               <h1 className='text-4xl font-bold'>
@@ -194,8 +192,8 @@ const DashboardPage = () => {
           </div>
         </div>
 
-        <div className='mt-10'>
-          <div className='w-[200px] p-3 bg-base-100 shadow flex items-start gap-x-2 flex-col gap-y-3 relative'>
+        <div className='mt-5 w-full sm:w-[200px]'>
+          <div className='sm:w-[200px] p-3 bg-base-100 shadow-xl rounded-lg flex items-start gap-x-2 flex-col gap-y-3 relative'>
             <p className='text-xs text-gray-500'>All Non-Students Queries</p>
             <div className='w-full flex justify-between items-center'>
               <h1 className='text-4xl font-bold'>
@@ -213,10 +211,9 @@ const DashboardPage = () => {
             </div>
           </div>
         </div>
-        {/*  dev */}
 
-        <div className='mt-10'>
-          <div className='w-[200px] p-3 bg-base-100 shadow flex items-start gap-x-2 flex-col gap-y-3 relative'>
+        <div className='mt-5 w-full sm:w-[200px]'>
+          <div className='sm:w-[200px] p-3 bg-base-100 shadow-xl rounded-lg flex items-start gap-x-2 flex-col gap-y-3 relative'>
             <p className='text-xs text-gray-500'>Active Students</p>
             <div className='w-full flex justify-between items-center'>
               <h1 className='text-4xl font-bold'>{stats.activeUsers}</h1>
@@ -237,8 +234,8 @@ const DashboardPage = () => {
           </div>
         </div>
 
-        <div className='mt-10'>
-          <div className='w-[200px] p-3 bg-base-100 shadow flex items-start gap-x-2 flex-col gap-y-3 relative'>
+        <div className='mt-5 w-full sm:w-[200px]'>
+          <div className='sm:w-[200px] p-3 bg-base-100 shadow-xl rounded-lg flex items-start gap-x-2 flex-col gap-y-3 relative'>
             <p className='text-xs text-gray-500'>Inactive Users</p>
             <div className='w-full flex justify-between items-center'>
               <h1 className='text-4xl font-bold'>{stats.inactiveUsers}</h1>
@@ -259,8 +256,8 @@ const DashboardPage = () => {
           </div>
         </div>
 
-        <div className='mt-10'>
-          <div className='w-[200px] p-3 bg-base-100 shadow flex items-start gap-x-2 flex-col gap-y-3 relative'>
+        <div className='mt-5 w-full sm:w-[200px]'>
+          <div className='sm:w-[200px] p-3 bg-base-100 shadow-xl rounded-lg flex items-start gap-x-2 flex-col gap-y-3 relative'>
             <p className='text-xs text-gray-500'>Total Feedbacks</p>
             <div className='w-full flex justify-between items-center'>
               <h1 className='text-4xl font-bold'>{stats.totalFeedbacks}</h1>
@@ -277,8 +274,8 @@ const DashboardPage = () => {
           </div>
         </div>
 
-        <div className='mt-10'>
-          <div className='w-[200px] p-3 bg-base-100 shadow flex items-start gap-x-2 flex-col gap-y-3'>
+        <div className='mt-5 w-full sm:w-[200px]'>
+          <div className='sm:w-[200px] p-3 bg-base-100 shadow-xl rounded-lg flex items-start gap-x-2 flex-col gap-y-3'>
             <p className='text-xs text-gray-500'>Recent Registered User</p>
             <div className='w-full flex justify-between items-center'>
               <h1 className='text-xl font-bold'>
@@ -293,8 +290,8 @@ const DashboardPage = () => {
           </div>
         </div>
 
-        <div className='mt-10'>
-          <div className='w-[200px] p-3 bg-base-100 shadow flex items-start gap-x-2 flex-col gap-y-3'>
+        <div className='mt-5 w-full sm:w-[200px]'>
+          <div className='sm:w-[200px] p-3 bg-base-100 shadow-xl rounded-lg flex items-start gap-x-2 flex-col gap-y-3'>
             <p className='text-xs text-gray-500'>Recent Sign In User</p>
             <div className='w-full flex justify-between items-center'>
               <h1 className='text-xl font-bold'>
@@ -307,8 +304,8 @@ const DashboardPage = () => {
       </div>
 
       <div className='grid grid-cols-1 lg:grid-cols-2 gap-5 mt-5'>
-        <div className='shadow-lg p-3  bg-base-100 w-full'>
-          <div className='w-full mt-10'>
+        <div className='shadow-xl rounded-lg-lg p-3  bg-base-100 w-full'>
+          <div className='w-full mt-5'>
             <h2 className='text-sm font-medium mb-4'>
               Top 10 Most Rated Feedback Services
             </h2>
@@ -334,12 +331,12 @@ const DashboardPage = () => {
         </div>
       </div>
 
-      <div className='grid grid-cols-1 xl:grid-cols-2 mt-10'>
+      <div className='grid grid-cols-1 xl:grid-cols-2 mt-5'>
         <FeedbacksAnalytics trigger={trigger} />
         <StudentRegistersAnalytics />
       </div>
 
-      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 justify-center items-start gap-4 mt-10'>
+      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 justify-center items-start gap-4 mt-5'>
         <ServiceAnalytics trigger={trigger} serviceName='Library' />
         <ServiceAnalytics
           trigger={trigger}
@@ -355,11 +352,11 @@ const DashboardPage = () => {
         />
       </div>
 
-      <div className='grid grid-cols-1 lg:grid-cols-2'>
+      <div className='grid grid-cols-1 lg:grid-cols-2 w-full'>
         <FeedbacksByAllServicesInOne trigger={trigger} />
         <FeedbacksByRating trigger={trigger} />
       </div>
-    </>
+    </div>
   )
 }
 
