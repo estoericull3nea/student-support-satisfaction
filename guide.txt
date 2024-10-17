@@ -1,9 +1,3 @@
 https://github.com/estoericull3nea/student-support-satisfaction.git
 
 status: production
-
-cd frontend && npm run dev
-cd backend && npm run dev
-
-cd frontend && npm i && npm run dev
-cd backend && npm i && npm run dev
