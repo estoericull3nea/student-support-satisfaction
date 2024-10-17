@@ -78,6 +78,17 @@ const FeedbacksAnalytics = ({ trigger }) => {
     setSelectedOption(event.target.value)
   }
 
+  const chartOptions = {
+    maintainAspectRatio: false,
+    responsive: true,
+    layout: {
+      padding: {
+        top: 10,
+        bottom: 10,
+      },
+    },
+  }
+
   if (!chartData) return <div>Loading...</div>
 
   return (
@@ -98,29 +109,29 @@ const FeedbacksAnalytics = ({ trigger }) => {
         </select>
       </div>
 
-      <div>
+      <div style={{ height: '400px' }}>
         {selectedOption === 'daily' && (
           <>
             <h2>Daily Feedbacks</h2>
-            <Line data={chartData.daily} />
+            <Line data={chartData.daily} options={chartOptions} />
           </>
         )}
         {selectedOption === 'weekly' && (
           <>
             <h2>Weekly Feedbacks</h2>
-            <Line data={chartData.weekly} />
+            <Line data={chartData.weekly} options={chartOptions} />
           </>
         )}
         {selectedOption === 'monthly' && (
           <>
             <h2>Monthly Feedbacks</h2>
-            <Line data={chartData.monthly} />
+            <Line data={chartData.monthly} options={chartOptions} />
           </>
         )}
         {selectedOption === 'yearly' && (
           <>
             <h2>Yearly Feedbacks</h2>
-            <Line data={chartData.yearly} />
+            <Line data={chartData.yearly} options={chartOptions} />
           </>
         )}
       </div>

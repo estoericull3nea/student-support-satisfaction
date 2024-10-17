@@ -117,7 +117,7 @@ const Profile = () => {
     } finally {
       setIsSaving(false)
     }
-  }, 100)
+  }, 500)
 
   const handleFirstNameChange = (e) => {
     setFirstName(e.target.value)

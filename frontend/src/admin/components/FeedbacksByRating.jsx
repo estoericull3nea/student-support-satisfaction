@@ -78,11 +78,13 @@ const FeedbacksByRating = ({ trigger }) => {
         </select>
       </div>
 
-      <div className='chart-container'>
+      <div className='chart-container' style={{ height: '400px' }}>
         {chartData.labels ? (
           <Line
             data={chartData}
             options={{
+              responsive: true,
+              maintainAspectRatio: false,
               scales: {
                 y: {
                   beginAtZero: true,

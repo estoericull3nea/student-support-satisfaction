@@ -79,22 +79,24 @@ const FeedbacksByAllServicesInOne = ({ trigger }) => {
           <option value='yearly'>Yearly</option> {/* Added yearly option */}
         </select>
       </div>
-
-      <Line
-        data={chartData}
-        options={{
-          responsive: true,
-          scales: {
-            x: {
-              title: { display: true, text: 'Date' },
+      <div style={{ height: '400px' }}>
+        <Line
+          data={chartData}
+          options={{
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              x: {
+                title: { display: true, text: 'Date' },
+              },
+              y: {
+                title: { display: true, text: 'Feedback Count' },
+                beginAtZero: true,
+              },
             },
-            y: {
-              title: { display: true, text: 'Feedback Count' },
-              beginAtZero: true,
-            },
-          },
-        }}
-      />
+          }}
+        />
+      </div>
     </div>
   )
 }
