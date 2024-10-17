@@ -318,6 +318,7 @@ export const loginUser = async (req, res) => {
           firstName: thisUser.firstName,
           lastName: thisUser.lastName,
           role: thisUser.role,
+          profile: thisUser.profilePic,
         },
         process.env.JWT_SECRET,
         { expiresIn: '1h' }

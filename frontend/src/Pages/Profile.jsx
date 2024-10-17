@@ -63,6 +63,10 @@ const Profile = () => {
         setProfilePic(
           `${import.meta.env.VITE_PROD_BACKEND_URL}${response.data.profilePic}`
         )
+        localStorage.setItem(
+          'profilePic',
+          `${import.meta.env.VITE_PROD_BACKEND_URL}${response.data.profilePic}`
+        )
       } catch (err) {
         setErrorUser(err.message)
       } finally {
@@ -156,6 +160,7 @@ const Profile = () => {
         }
       )
       setProfilePic(response.data.profilePic) // Update the profile picture state
+      localStorage.setItem('profilePic', response.data.profilePic)
     } catch (err) {
       console.error('Error uploading profile picture:', err)
     } finally {

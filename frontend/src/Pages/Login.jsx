@@ -37,9 +37,14 @@ const Login = () => {
       )
 
       const token = response.data.token
-      localStorage.setItem('token', token)
-
-      const decodedToken = jwtDecode(token)
+      let decodedToken
+      if (token) {
+        localStorage.setItem('token', token)
+        decodedToken = jwtDecode(token)
+        console.log(decodedToken)
+      } else {
+        localStorage.removeItem('token')
+      }
 
       if (decodedToken.role === 'admin') {
         toast.success('Login successful!')
