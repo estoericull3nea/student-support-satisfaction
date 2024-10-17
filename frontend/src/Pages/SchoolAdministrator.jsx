@@ -185,7 +185,7 @@ const SchoolAdministrator = () => {
               operation of our institution.
             </p>
             <a
-              href='#'
+              href='/office-of-the-school-administrator#details'
               className='btn bg-primary hover:bg-primary-hover text-white'
             >
               Read More
@@ -223,7 +223,10 @@ const SchoolAdministrator = () => {
         <div className='max-w-[850px] mx-auto space-y-10 py-10 rounded-md'>
           {/*Office of the School Administrator */}
           <div className='our-library space-y-4 '>
-            <h2 className='font-bold text-3xl tracking-wide text-primary'>
+            <h2
+              className='font-bold text-3xl tracking-wide text-primary'
+              id='details'
+            >
               Office of the School Administrator
             </h2>
 

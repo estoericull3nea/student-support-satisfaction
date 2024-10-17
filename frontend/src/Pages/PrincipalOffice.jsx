@@ -185,7 +185,7 @@ const PrincipalOffice = () => {
               environment for all students and staff.
             </p>
             <a
-              href='#'
+              href='/office-of-the-school-principal#details'
               className='btn bg-primary hover:bg-primary-hover text-white'
             >
               Read More
@@ -223,7 +223,10 @@ const PrincipalOffice = () => {
         <div className='max-w-[850px] mx-auto space-y-10 py-10 rounded-md'>
           {/* Office of the School Principal */}
           <div className='our-library space-y-4 '>
-            <h2 className='font-bold text-3xl tracking-wide text-primary'>
+            <h2
+              className='font-bold text-3xl tracking-wide text-primary'
+              id='details'
+            >
               Office of the School Principal
             </h2>
 

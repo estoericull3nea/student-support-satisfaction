@@ -182,7 +182,7 @@ const SchoolRegistrar = () => {
               all matters related to academic records and enrollment.
             </p>
             <a
-              href='#'
+              href='/office-of-the-registrar#details'
               className='btn bg-primary hover:bg-primary-hover text-white'
             >
               Read More
@@ -220,7 +220,10 @@ const SchoolRegistrar = () => {
         <div className='max-w-[850px] mx-auto space-y-10 py-10 rounded-md'>
           {/* Office of the Registrar */}
           <div className='our-library space-y-4 '>
-            <h2 className='font-bold text-3xl tracking-wide text-primary'>
+            <h2
+              className='font-bold text-3xl tracking-wide text-primary'
+              id='details'
+            >
               Office of the Registrar
             </h2>
 
