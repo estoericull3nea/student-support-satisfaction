@@ -169,9 +169,7 @@ const Navbar = () => {
           </ul>
         </div>
 
-        {/* Sign Up and Sign In/Logout */}
         <div className='navbar-end space-x-2'>
-          {/* Only show Sign Up if the user is not logged in */}
           {token && decoded.exp < currentTime ? (
             <Link to='/register'>
               <button className='btn text-xs px-[.5rem] md:px-[1rem] bg-primary hover:bg-primary-hover text-white'>
@@ -180,7 +178,6 @@ const Navbar = () => {
             </Link>
           ) : null}
 
-          {/* Conditionally render "Sign In" or "Logout" based on token existence */}
           {token && decoded?.exp > currentTime ? (
             <div className='space-x-3 flex items-center'>
               <button
