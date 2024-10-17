@@ -4,12 +4,24 @@ import Breadcrumbs from '../components/Breadcrumbs'
 import Footer from '../components/Footer'
 import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
-import { formatTime } from '../utils'
+import { formatTime, isTokenValid } from '../utils'
 import { debounce } from 'lodash'
 import { FaCamera } from 'react-icons/fa'
+import { useNavigate } from 'react-router-dom'
 
 const Profile = () => {
   const token = localStorage.getItem('token')
+
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (!isTokenValid(token)) {
+      localStorage.clear()
+      toast.error('Please login again')
+      navigate('/login')
+    }
+  }, [token, navigate])
+
   const decoded = token ? jwtDecode(token) : ''
 
   const [user, setUser] = useState(null)

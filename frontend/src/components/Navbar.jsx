@@ -5,20 +5,11 @@ import { services } from '../constants/index'
 import toast from 'react-hot-toast'
 import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
-import { isTokenValid } from '../utils'
 
 const Navbar = () => {
   const token = localStorage.getItem('token')
 
   const navigate = useNavigate()
-
-  useEffect(() => {
-    if (!isTokenValid(token)) {
-      localStorage.clear()
-      toast.error('Please login again')
-      navigate('/login')
-    }
-  }, [token, navigate])
 
   const decoded = token ? jwtDecode(token) : ''
   const userId = decoded.id
