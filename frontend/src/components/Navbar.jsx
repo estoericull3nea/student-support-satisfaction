@@ -172,13 +172,13 @@ const Navbar = () => {
         </div>
 
         <div className='navbar-end space-x-2'>
-          {token && decoded.exp < currentTime ? (
+          {/* {token && decoded.exp > currentTime ? (
             <Link to='/register'>
               <button className='btn text-xs px-[.5rem] md:px-[1rem] bg-primary hover:bg-primary-hover text-white'>
                 Sign Up
               </button>
             </Link>
-          ) : null}
+          ) : null} */}
 
           {token && decoded?.exp > currentTime ? (
             <div className='space-x-3 flex items-center'>
@@ -216,11 +216,19 @@ const Navbar = () => {
               )}
             </div>
           ) : (
-            <Link to='/login'>
-              <button className='btn text-xs primary-btn-outline px-[.5rem] md:px-[1rem]'>
-                Sign In
-              </button>
-            </Link>
+            <div className='flex gap-1'>
+              <Link to='/login'>
+                <button className='btn text-xs primary-btn-outline px-[.5rem] md:px-[1rem]'>
+                  Sign In
+                </button>
+              </Link>
+
+              <Link to='/register'>
+                <button className='btn text-xs px-[.5rem] md:px-[1rem] bg-primary hover:bg-primary-hover text-white'>
+                  Sign Up
+                </button>
+              </Link>
+            </div>
           )}
         </div>
       </div>
