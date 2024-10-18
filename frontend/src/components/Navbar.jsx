@@ -19,6 +19,8 @@ const Navbar = () => {
 
   const [user, setUser] = useState({})
 
+  console.log()
+
   const handleLogout = () => {
     localStorage.clear()
     toast.success('Logged out')

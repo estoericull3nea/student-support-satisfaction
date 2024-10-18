@@ -56,7 +56,7 @@ const AdminApp = () => {
     <div className='flex w-screen'>
       <Sidebar />
       <div className='flex-1 p-6 overflow-hidden'>
-        <div className='navbar bg-base-100 lg:hidden shadow-lg mb-4 rounded-lg sticky top-0 left-0'>
+        <div className='navbar bg-base-100 lg:hidden shadow-lg mb-4 rounded-lg sticky top-0 left-0 z-50'>
           <div className='navbar-start w-max pr-3'>
             <div className='dropdown'>
               <div tabIndex={0} role='button'>
